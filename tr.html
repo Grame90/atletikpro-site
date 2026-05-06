@@ -250,6 +250,26 @@ body.role-manager .finance-only{display:none!important}
 .sth::after{content:' ⇅';font-size:9px;color:var(--muted)}
 .sth.asc::after{content:' ▲';color:var(--accent)}
 .sth.desc::after{content:' ▼';color:var(--accent)}
+/* Person card grid */
+.person-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;padding:16px 18px}
+.person-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:18px 14px 14px;text-align:center;cursor:pointer;transition:transform .22s,box-shadow .22s,border-color .22s;animation:pcSlide .32s ease both}
+.person-card:hover{transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,.5);border-color:rgba(255,215,0,.35)}
+@keyframes pcSlide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.pc-avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;flex-shrink:0}
+.pc-name{font-size:13.5px;font-weight:700;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-sub{font-size:11px;color:var(--muted);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-actions{display:flex;gap:5px;justify-content:center;margin-top:9px}
+.view-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:7px;padding:4px 10px;color:var(--muted);cursor:pointer;font-size:13px;line-height:1;transition:all .15s}
+.view-btn.active,.view-btn:hover{background:var(--accent-d);border-color:rgba(255,215,0,.4);color:var(--accent)}
+/* Coach train discipline groups */
+.coach-train-groups{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.ctg-group{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.ctg-header{padding:9px 13px;font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;transition:background .15s}
+.ctg-header:hover{background:rgba(255,255,255,0.04)}
+.ctg-header::after{content:'▼';font-size:9px;color:var(--muted);transition:transform .2s}
+.ctg-group.open>.ctg-header::after{transform:rotate(-180deg)}
+.ctg-items{display:none;flex-wrap:wrap;gap:5px;padding:6px 12px 10px}
+.ctg-group.open>.ctg-items{display:flex}
 </style>
 </head>
 <body>
@@ -370,7 +390,7 @@ body.role-manager .finance-only{display:none!important}
     <!-- ─ COACHES ─ -->
     <div class="section" id="s-coaches">
       <div class="card">
-        <div class="card-header"><h3>👨‍🏫 Antrenör Kadrosu</h3><div style="display:flex;gap:7px;align-items:center"><button class="btn btn-secondary btn-sm admin-only" id="sel-mode-coaches-btn" onclick="toggleSelMode('coaches')" title="Seçim modu">☐ Seç</button><button class="btn btn-secondary btn-sm admin-only" onclick="findDuplicates('coaches')">🔍 Tekrarlar</button><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div></div>
+        <div class="card-header"><h3>👨‍🏫 Antrenör Kadrosu</h3><div style="display:flex;gap:7px;align-items:center"><div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden"><button id="coach-view-tbl" class="view-btn active" onclick="setCoachView('table')" title="Tablo">☰</button><button id="coach-view-grid" class="view-btn" onclick="setCoachView('cards')" title="Kartlar">⊞</button></div><button class="btn btn-secondary btn-sm admin-only" id="sel-mode-coaches-btn" onclick="toggleSelMode('coaches')" title="Seçim modu">☐ Seç</button><button class="btn btn-secondary btn-sm admin-only" onclick="findDuplicates('coaches')">🔍 Tekrarlar</button><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div></div>
         <div class="dup-banner admin-only" id="dup-coaches">
           <span class="dup-info">⚠️ <strong id="dup-count-coaches">0</strong> grup tekrar bulundu — <span id="dup-rec-coaches">0</span> kayıt renklendirилdi</span>
           <button class="btn btn-secondary btn-sm" onclick="clearDupMode('coaches')">✕ Temizle</button>
@@ -385,19 +405,20 @@ body.role-manager .finance-only{display:none!important}
         <div class="filter-row">
           <input type="text" id="fc-name" placeholder="🔍 Ad, telefon, e-posta ile ara..." oninput="renderCoaches()" style="flex:1;max-width:320px">
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" id="coaches-table-wrap">
           <table>
             <thead><tr><th style="width:36px"><input type="checkbox" id="chk-all-coaches" onchange="toggleAll('coaches')"></th><th>#</th><th>Ad Soyad</th><th>Kategori</th><th>Telefon</th><th>E-posta</th><th>Uzmanlık</th><th>İşe Başlama</th><th>İşlemler</th></tr></thead>
             <tbody id="coaches-tb"></tbody>
           </table>
         </div>
+        <div id="coaches-grid-wrap" style="display:none"></div>
       </div>
     </div>
 
     <!-- ─ ATHLETES ─ -->
     <div class="section" id="s-athletes">
       <div class="card">
-        <div class="card-header"><h3>🏃 Sporcu Listesi</h3><div style="display:flex;gap:7px;align-items:center"><button class="btn btn-secondary btn-sm admin-only" id="sel-mode-athletes-btn" onclick="toggleSelMode('athletes')" title="Seçim modu">☐ Seç</button><button class="btn btn-secondary btn-sm admin-only" onclick="findDuplicates('athletes')">🔍 Tekrarlar</button><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div></div>
+        <div class="card-header"><h3>🏃 Sporcu Listesi</h3><div style="display:flex;gap:7px;align-items:center"><div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden"><button id="ath-view-tbl" class="view-btn active" onclick="setAthView('table')" title="Tablo">☰</button><button id="ath-view-grid" class="view-btn" onclick="setAthView('cards')" title="Kartlar">⊞</button></div><button class="btn btn-secondary btn-sm admin-only" id="sel-mode-athletes-btn" onclick="toggleSelMode('athletes')" title="Seçim modu">☐ Seç</button><button class="btn btn-secondary btn-sm admin-only" onclick="findDuplicates('athletes')">🔍 Tekrarlar</button><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div></div>
         <div class="dup-banner admin-only" id="dup-athletes">
           <span class="dup-info">⚠️ <strong id="dup-count-athletes">0</strong> grup tekrar bulundu — <span id="dup-rec-athletes">0</span> kayıt renklendirилdi</span>
           <button class="btn btn-secondary btn-sm" onclick="clearDupMode('athletes')">✕ Temizle</button>
@@ -428,12 +449,13 @@ body.role-manager .finance-only{display:none!important}
           <button class="btn btn-danger btn-sm" onclick="bulkDelete('athletes')">✕ Sil</button>
           <button class="btn btn-secondary btn-sm" onclick="clearSelection('athletes')">Seçimi Kaldır</button>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" id="athletes-table-wrap">
           <table>
             <thead><tr><th style="width:36px"><input type="checkbox" id="chk-all-athletes" onchange="toggleAll('athletes')"></th><th>#</th><th class="sth" onclick="sortAthletes('name')">Ad Soyad</th><th class="sth" onclick="sortAthletes('license')">Lisans No</th><th class="sth" onclick="sortAthletes('bdate')">Doğum Tarihi</th><th class="sth" onclick="sortAthletes('age')">Yaş Gr.</th><th class="sth" onclick="sortAthletes('phone')">Telefon</th><th>Acil Durum Tel.</th><th class="sth" onclick="sortAthletes('coach')">Antrenör</th><th class="sth" onclick="sortAthletes('spec')">Uzmanlık</th><th>İşlemler</th></tr></thead>
             <tbody id="athletes-tb"></tbody>
           </table>
         </div>
+        <div id="athletes-grid-wrap" style="display:none"></div>
       </div>
     </div>
 
@@ -1403,6 +1425,38 @@ function renderDash(){
   document.getElementById('dash-bottom').innerHTML=coachCard+compCard;
 }
 
+let _coachViewMode='table';
+function setCoachView(mode){
+  _coachViewMode=mode;
+  document.getElementById('coach-view-tbl')?.classList.toggle('active',mode==='table');
+  document.getElementById('coach-view-grid')?.classList.toggle('active',mode==='cards');
+  renderCoaches();
+}
+
+function renderCoachCards(list){
+  const tblWrap=document.getElementById('coaches-table-wrap');
+  const gridWrap=document.getElementById('coaches-grid-wrap');
+  tblWrap.style.display='none';
+  gridWrap.style.display='';
+  if(!list.length){gridWrap.innerHTML=`<div style="padding:32px;text-align:center;color:var(--muted)">Antrenör bulunamadı</div>`;return;}
+  const palettes=[['#FFD700','#cc8800','#000'],['#3b82f6','#1d4ed8','#fff'],['#10b981','#065f46','#fff'],['#f59e0b','#92400e','#fff'],['#8b5cf6','#4c1d95','#fff'],['#ef4444','#991b1b','#fff']];
+  gridWrap.innerHTML=`<div class="person-grid">${list.map((c,i)=>{
+    const ini=(c.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+    const [c1,c2,ct]=palettes[i%palettes.length];
+    const isAdmin=document.body.classList.contains('role-admin');
+    return `<div class="person-card" style="animation-delay:${Math.min(i*0.04,0.4)}s" onclick="viewCoach('${c.id}')">
+      <div class="pc-avatar" style="background:linear-gradient(135deg,${c1},${c2});color:${ct}">${ini}</div>
+      <div class="pc-name" title="${esc(c.name)}">${esc(c.name)}</div>
+      <div class="pc-sub">${c.coachCategory||'Antrenör'}</div>
+      ${c.spec?`<div style="margin:4px 0">${specDisplay(c.spec,'bt')}</div>`:''}
+      <div class="pc-actions">
+        ${isAdmin?`<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();edit('coaches','${c.id}')">✏</button>`:``}
+        ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();del('coaches','${c.id}')">✕</button>`:''}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
 function renderCoaches(){
   const coaches=load('coaches').sort((a,b)=>(a.name||'').localeCompare(b.name||'','tr'));
   const fn=(document.getElementById('fc-name')?.value||'').toLowerCase();
@@ -1410,6 +1464,9 @@ function renderCoaches(){
     (c.name||'').toLowerCase().includes(fn)||
     (c.phone||'').toLowerCase().includes(fn)||
     (c.email||'').toLowerCase().includes(fn)):coaches;
+  if(_coachViewMode==='cards'){renderCoachCards(list);return;}
+  document.getElementById('coaches-table-wrap').style.display='';
+  document.getElementById('coaches-grid-wrap').style.display='none';
   const tb=document.getElementById('coaches-tb');
   if(!list.length){ tb.innerHTML=`<tr><td colspan="9">${emptyHtml('👨‍🏫',fn?'Sonuç bulunamadı':'Antrenör yok',fn?'Farklı bir arama deneyin':'İlk antrenörü eklemek için «＋ Ekle» düğmesine tıklayın')}</td></tr>`; return; }
   const selC=_selMode['coaches'];
@@ -1440,6 +1497,40 @@ function fillCoachFilter(){
   const sel=document.getElementById('fa-coach');
   const v=sel.value;
   sel.innerHTML='<option value="">Tüm Antrenörler</option>'+coaches.map(c=>`<option value="${c.id}"${c.id===v?' selected':''}>${esc(c.name)}</option>`).join('');
+}
+
+let _athViewMode='table';
+function setAthView(mode){
+  _athViewMode=mode;
+  document.getElementById('ath-view-tbl')?.classList.toggle('active',mode==='table');
+  document.getElementById('ath-view-grid')?.classList.toggle('active',mode==='cards');
+  renderAthletes();
+}
+
+function renderAthCards(list,coaches){
+  const tblWrap=document.getElementById('athletes-table-wrap');
+  const gridWrap=document.getElementById('athletes-grid-wrap');
+  tblWrap.style.display='none';
+  gridWrap.style.display='';
+  if(!list.length){gridWrap.innerHTML=`<div style="padding:32px;text-align:center;color:var(--muted)">Sporcu bulunamadı</div>`;return;}
+  const gColors={'E':['#3b82f6','#1e40af','#fff'],'K':['#ec4899','#9d174d','#fff'],'':['#6b7280','#374151','#fff']};
+  const isAdmin=document.body.classList.contains('role-admin');
+  gridWrap.innerHTML=`<div class="person-grid">${list.map((a,i)=>{
+    const ini=(a.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+    const [c1,c2,ct]=gColors[a.gender||''];
+    const co=coaches.find(c=>c.id===a.coachId);
+    const ag=ageGroup(a.bdate);
+    return `<div class="person-card" style="animation-delay:${Math.min(i*0.03,0.5)}s" onclick="viewAthlete('${a.id}')">
+      <div class="pc-avatar" style="background:linear-gradient(135deg,${c1},${c2});color:${ct}">${ini}</div>
+      <div class="pc-name" title="${esc(a.name)}">${esc(a.name)}</div>
+      <div class="pc-sub">${[ag,co?co.name.split(' ')[0]:null].filter(Boolean).join(' · ')||'—'}</div>
+      ${a.spec?`<div style="margin:4px 0">${specDisplay(a.spec,'bo')}</div>`:''}
+      <div class="pc-actions">
+        ${isAdmin?`<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();edit('athletes','${a.id}')">✏</button>`:''}
+        ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();del('athletes','${a.id}')">✕</button>`:''}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 let _athSort={col:null,dir:1};
@@ -1476,6 +1567,9 @@ function renderAthletes(){
       return typeof av==='number'?d*(av-bv):d*String(av).localeCompare(String(bv),'tr');
     });
   }
+  if(_athViewMode==='cards'){renderAthCards(athletes,coaches);return;}
+  document.getElementById('athletes-table-wrap').style.display='';
+  document.getElementById('athletes-grid-wrap').style.display='none';
   const tb=document.getElementById('athletes-tb');
   if(!athletes.length){ tb.innerHTML=`<tr><td colspan="11">${emptyHtml('🏃','Sporcu yok','İlk sporcuyu ekleyin')}</td></tr>`; return; }
   const selA=_selMode['athletes'];
@@ -1611,6 +1705,50 @@ function specGrid(){
   return `<div class="spec-grid" id="fsp-wrap">${getDiscs().map(d=>`<label class="spec-opt"><input type="checkbox" value="${d}" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">${esc(d)}</label>`).join('')}</div><input id="fsp-custom" class="spec-custom" placeholder="Diğer (virgülle ayır): Kros, GFA...">`;
 }
 
+const COACH_DISC_GROUPS=[
+  {name:'⚡ Sprint',items:['60m','100m','200m','400m']},
+  {name:'🏃 Orta Mesafe',items:['600m','800m','1000m','1500m']},
+  {name:'🌬️ Dayanıklılık',items:['3000m','5000m','10000m','Yarı Maraton','Maraton','Kros']},
+  {name:'🚧 Engelli Koşular',items:['60m Engel','100m Engel','110m Engel','400m Engel','3000m Engel']},
+  {name:'🦘 Atlamalar',items:['Uzun Atlama','Üç Adım Atlama','Yüksek Atlama','Sırıkla Atlama']},
+  {name:'🎯 Atmalar',items:['Gülle','Disk','Cirit','Çekiç']},
+  {name:'🚶 Yürüyüş',items:['3000m Yürüyüş','5000m Yürüyüş','10000m Yürüyüş','20km Yürüyüş']},
+  {name:'🔄 Çok Disiplinli',items:['Pentatlon','Heptatlon','Deklatlon','4×100m','4×400m']},
+];
+
+function coachTrainGrid(){
+  return `<div class="coach-train-groups" id="fctg-wrap">${COACH_DISC_GROUPS.map(grp=>`<div class="ctg-group"><div class="ctg-header" onclick="this.closest('.ctg-group').classList.toggle('open')">${grp.name}</div><div class="ctg-items">${grp.items.map(item=>`<label class="spec-opt"><input type="checkbox" value="${item}" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">${esc(item)}</label>`).join('')}</div></div>`).join('')}</div><input id="fctg-custom" class="spec-custom" placeholder="Diğer (virgülle ayır)...">`;
+}
+
+function readCoachTrain(){
+  const wrap=document.getElementById('fctg-wrap');
+  if(!wrap) return '';
+  const checked=[...wrap.querySelectorAll('input:checked')].map(i=>i.value);
+  const custom=(document.getElementById('fctg-custom')||{value:''}).value.split(',').map(s=>s.trim()).filter(Boolean);
+  return [...checked,...custom].join(', ');
+}
+
+function fillCoachTrain(val){
+  const wrap=document.getElementById('fctg-wrap');
+  if(!wrap) return;
+  const customEl=document.getElementById('fctg-custom');
+  wrap.querySelectorAll('input').forEach(cb=>{cb.checked=false;cb.closest('.spec-opt').classList.remove('checked');});
+  wrap.querySelectorAll('.ctg-group').forEach(g=>g.classList.remove('open'));
+  if(customEl) customEl.value='';
+  if(!val) return;
+  const parts=val.split(/[,;]/).map(s=>s.trim()).filter(Boolean);
+  const unmatched=[];
+  for(const part of parts){
+    const pn=norm(part);
+    let found=false;
+    wrap.querySelectorAll('input').forEach(cb=>{
+      if(!found){const cn=norm(cb.value);if(cn===pn||cn.includes(pn)||pn.includes(cn)){cb.checked=true;cb.closest('.spec-opt').classList.add('checked');cb.closest('.ctg-group')?.classList.add('open');found=true;}}
+    });
+    if(!found) unmatched.push(part);
+  }
+  if(customEl) customEl.value=unmatched.join(', ');
+}
+
 function readSpec(){
   const wrap=document.getElementById('fsp-wrap');
   if(!wrap) return '';
@@ -1671,15 +1809,15 @@ const FORMS={
           <option value="Devlet Antrenörü">Devlet Antrenörü</option>
         </select>
       </div>
-      <div class="fg full"><label>Uzmanlık (birden fazla seçilebilir)</label>${specGrid()}</div>
+      <div class="fg full"><label>Yetiştirdiği Branşlar (birden fazla seçilebilir)</label>${coachTrainGrid()}</div>
       <div class="fg"><label>Maaş (₺)</label><input id="fsal" type="number" placeholder="15000" min="0"></div>
       <div class="fg"><label>T.C. Kimlik No</label><input id="ftc" placeholder="12345678901" maxlength="11" style="font-family:monospace"></div>
       <div class="fg full"><label>IBAN (Banka Hesap No)</label><input id="fiban" placeholder="TR33 0006 1005 1978 6457 8413 26" style="font-family:monospace"></div>
       <div class="fg"><label>Adres</label><input id="fadr" placeholder="İstanbul, ..."></div>
       <div class="fg full"><label>Notlar</label><textarea id="fnt" rows="2" placeholder="Ek bilgiler..."></textarea></div>
     </div>`,
-    fill:d=>{V('fn',d.name);V('fph',d.phone);V('fem',d.email);V('fig',d.ig);V('fbd',d.bdate);V('fhd',d.hireDate);V('fccat',d.coachCategory||'');fillSpec(d.spec);V('fsal',d.salary);V('ftc',d.tc);V('fiban',d.iban);V('fadr',d.addr);V('fnt',d.notes);},
-    read:()=>({name:G('fn'),phone:G('fph'),email:G('fem'),ig:G('fig'),bdate:G('fbd'),hireDate:G('fhd'),coachCategory:G('fccat'),spec:readSpec(),salary:G('fsal'),tc:G('ftc'),iban:G('fiban'),addr:G('fadr'),notes:G('fnt')}),
+    fill:d=>{V('fn',d.name);V('fph',d.phone);V('fem',d.email);V('fig',d.ig);V('fbd',d.bdate);V('fhd',d.hireDate);V('fccat',d.coachCategory||'');fillCoachTrain(d.spec);V('fsal',d.salary);V('ftc',d.tc);V('fiban',d.iban);V('fadr',d.addr);V('fnt',d.notes);},
+    read:()=>({name:G('fn'),phone:G('fph'),email:G('fem'),ig:G('fig'),bdate:G('fbd'),hireDate:G('fhd'),coachCategory:G('fccat'),spec:readCoachTrain(),salary:G('fsal'),tc:G('ftc'),iban:G('fiban'),addr:G('fadr'),notes:G('fnt')}),
     valid:d=>d.name?null:'Ad Soyad giriniz',
   },
   athletes:{

@@ -4757,9 +4757,10 @@ function showSyncToast() {
 let syncInterval = null;
 function startAutoSync() {
   syncInterval = setInterval(async () => {
-    const changed = await syncFromServer(true); // addOnly: never overwrite local edits, only pick up new records
+    if (document.visibilityState !== 'visible') return;
+    const changed = await syncFromServer(true);
     if (changed) { render(cur); showSyncToast(); }
-  }, 30000);
+  }, 300000);
 }
 
 let _serverSyncDone = false;

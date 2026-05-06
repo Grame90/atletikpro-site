@@ -4952,12 +4952,13 @@ async function initApp() {
   renderDash();
   render(cur);
 
-  // Periodic sync every 30s: server wins for all items (not addOnly)
+  // Periodic sync every 5min (skip when tab is hidden to save function calls)
   setInterval(async () => {
-    if (_isPushing || _pushTimer) return; // skip pull if push is pending
+    if (document.visibilityState !== 'visible') return;
+    if (_isPushing || _pushTimer) return;
     const c = await syncFromServer(false);
     if (c) { renderDash(); render(cur); }
-  }, 30000);
+  }, 300000);
 }
 
 (function() {

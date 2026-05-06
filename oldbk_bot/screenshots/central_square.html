@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="ru"><head>
+  <title>ОлдБК</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+  <link rel="icon" type="image/png" href="/i/favicon.png">
+  <!--meta name=viewport content="width=800, initial-scale=1.0"-->
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link href="/assets/dsk.css?2cbf9b66ab74c8db7eaf55e8bf24328bd315f838" rel="stylesheet" type="text/css"><script src="/assets/vendor.hash-8dec249c1ae46fc1d46bc642ddb56973bbfca6f8.js"></script>
+<script src="/assets/mbox-dsk.hash-29711d642a6ce17da96a4fbec7f5712892f7f33a.js"></script>      <meta name="viewport" content="width=800, initial-scale=1.0"><script>$(importHandlersFromOutFrame);</script>
+  </head><body class="scl-dsk" data-legacy="v-800"><div id="ajaxContainer" style="display:none"></div><div class="mbox street3 contentContainer" data-time-arrival="5"><h1>Центральная площадь</h1><div class="buttonContainer mbox-dsk__btn-c">          <script>
+            $(function() {
+              const ticBySec = 12;
+              let counter = 5 * ticBySec;
+              let counterMax = counter;
+              const $routes = $('.buttonContainer .button-route');
+              $routes.attr('disabled', '');
+              $('.buttonContainer .arrivalProgress').progressbar({value: 0}).everyTime(1000 / ticBySec, function() {
+                if (0 === --counter) {
+                  $routes.removeAttr('disabled');
+                  $(this).progressbar('destroy').remove();
+                } else {
+                  $(this).progressbar('value', (1 - counter / counterMax) * 100);
+                }
+              }, counter);
+            });
+          </script>
+          <div class="arrivalProgress ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="55.00000000000001"><div class="ui-progressbar-value ui-widget-header ui-corner-left" style="display: block; width: 55%;"></div></div><button data-ctrl="core-load-mbox" data-mbox-url="__reload" class="mbox__btn mbox__btn--refresh">Обновить</button><button class="left mbox__btn mbox__btn--street-attack" onclick="street3Attack('square')">Напасть</button></div>  <div class="street3__arriving">Топаем   на Центральную площадь</div>
+  <div class="street3__arrived">
+    <svg class="street3__svg" viewBox="0 0 780 340" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <filter id="street3__dropshadow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2"></feGaussianBlur>
+        </filter>
+      </defs>
+      <image class="street3__img" xlink:href="/street/img/n_20.png" x="0" y="0" height="340" width="780"></image>
+        <polygon class="ctrl street3__polygon" data-place="19" data-ctrl="core-move-to" points="18,286 18,217 63,216 63,288" filter="url(#street3__dropshadow)"><title>На Парковую</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="1" data-ctrl="core-move-to" points="284,17 286,19 286,23 291,28 291,31 289,31 289,35 319,24 319,22 317,22 323,13 323,9 325,9 326,14 329,18 333,13 333,8 334,7 336,8 336,14 341,18 341,20 340,21 340,25 350,29 350,33 351,34 351,30 357,32 357,37 359,37 359,34 363,34 366,28 366,24 368,24 368,29 369,30 373,34 373,35 371,35 372,46 368,54 368,66 377,69 377,78 372,81 372,95 375,98 375,109 370,112 370,118 375,119 376,125 380,125 380,116 393,116 393,123 397,123 397,115 411,114 411,122 416,121 416,112 429,112 429,120 433,119 435,117 434,105 431,104 442,89 442,87 440,87 443,78 444,78 447,87 445,87 445,88 456,102 456,105 454,105 454,110 461,111 462,117 467,117 467,111 474,111 474,97 472,94 473,87 475,86 475,83 471,83 471,82 480,77 479,62 475,65 472,66 468,66 466,64 470,64 475,63 480,56 480,54 482,53 482,77 490,82 490,83 486,84 486,86 489,88 489,98 488,98 488,101 491,104 498,98 498,96 496,95 499,89 501,94 501,96 500,96 500,98 506,105 508,104 508,103 507,102 507,99 509,96 511,100 510,104 517,111 517,113 515,114 515,127 507,141 508,160 497,167 443,168 327,167 271,158 271,148 268,148 265,140 266,123 264,123 264,122 272,113 271,105 274,107 274,80 269,78 269,68 276,68 276,72 278,71 277,67 284,66 284,51 279,43 279,30 277,30 278,29 283,23" filter="url(#street3__dropshadow)"><title>Бойцовский клуб</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="22" data-ctrl="core-move-to" points="192,236 264,240 279,231 279,211 282,210 274,189 248,190 246,188 244,188 241,191 228,191 226,189 223,189 221,191 210,192 207,189 205,190 202,199 192,211 191,211 192,214" filter="url(#street3__dropshadow)"><title>Магазин</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="25" data-ctrl="core-move-to" points="75,244 75,227 73,227 81,203 86,203 139,206 159,225 156,226 156,247 144,247 144,250 121,253 110,251 90,252" filter="url(#street3__dropshadow)"><title>Комиссионный магазин</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="1703" data-ctrl="core-move-to" points="430,250 431,222 429,221 429,219 442,202 511,199 525,217 519,218 519,242 505,242 504,252 499,252 482,252 473,257 436,255 436,251 438,250" filter="url(#street3__dropshadow)"><title>Магазин "Березка"</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="23" data-ctrl="core-move-to" points="394,237 416,231 397,200 397,190 392,189 391,197 368,192 346,233" filter="url(#street3__dropshadow)"><title>Ремонтная мастерская</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="50" data-ctrl="core-move-to" points="5,113 11,108 15,108 19,105 19,103 25,99 27,98 32,101 39,107 42,107 46,110 56,119 69,120 73,123 65,132 60,131 58,135 55,137 47,140 46,145 42,147 27,135 14,129 6,125 5,125" filter="url(#street3__dropshadow)"><title>Южный склон</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="35" data-ctrl="core-move-to" points="23,205 23,194 26,191 26,187 21,186 34,170 70,170 84,188 79,188 79,191 89,197 88,198 88,202 88,203 81,203 77,217 60,218 52,216 43,216 27,209 26,208 23,207" filter="url(#street3__dropshadow)"><title>Сувенирный магазинчик</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="42" data-ctrl="core-move-to" points="616,273 617,246 615,243 612,246 607,235 613,233 630,214 680,214 695,230 696,231 687,232 687,238 693,245 693,253 690,259 698,271 678,279 674,279 643,282" filter="url(#street3__dropshadow)"><title>Лотерея</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="27" data-ctrl="core-move-to" points="549,242 566,243 578,245 612,248 612,245 607,235 612,232 631,213 644,213 643,208 646,208 597,178 586,186 575,187 575,182 571,182 569,182 568,189 550,190 550,192 545,192 545,204 549,205 548,207 547,209 547,222 549,225" filter="url(#street3__dropshadow)"><title>Почта</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="21" data-ctrl="core-move-to" points="719,287 719,214 766,214 764,284 719,290" filter="url(#street3__dropshadow)"><title>На Страшилкину</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="stickboard" data-ctrl="core-load-mbox" data-mbox-url="/fbpvp/stickboard.php" points="523,291 529,291 529,290 527,289 527,273 550,274 550,240 504,243 503,272 524,273 525,274 525,288" filter="url(#street3__dropshadow)"><title>Доска объявлений</title></polygon>    </svg>
+    <div class="street3__road-c"><button data-place="19" data-ctrl="core-move-to" class="street3__road">На Парковую</button> <button data-place="1" data-ctrl="core-move-to" class="street3__road">Бойцовский клуб</button> <button data-place="22" data-ctrl="core-move-to" class="street3__road">Магазин</button> <button data-place="25" data-ctrl="core-move-to" class="street3__road">Комиссионный магазин</button> <button data-place="1703" data-ctrl="core-move-to" class="street3__road">Магазин "Березка"</button> <button data-place="23" data-ctrl="core-move-to" class="street3__road">Ремонтная мастерская</button> <button data-place="50" data-ctrl="core-move-to" class="street3__road">Южный склон</button> <button data-place="35" data-ctrl="core-move-to" class="street3__road">Сувенирный магазинчик</button> <button data-place="42" data-ctrl="core-move-to" class="street3__road">Лотерея</button> <button data-place="27" data-ctrl="core-move-to" class="street3__road">Почта</button> <button data-place="21" data-ctrl="core-move-to" class="street3__road">На Страшилкину</button> <button class="street3__road" data-place="stickboard" data-ctrl="core-load-mbox" data-mbox-url="/fbpvp/stickboard.php">Доска объявлений</button></div>
+  </div>
+  <script>
+    $(function() {
+      let $street = $('.street3');
+      $street.oneTime($street.data('timeArrival') + 's', function() {
+        $street.addClass('street3--arrived');
+      }).on('mouseover mouseout', 'polygon, .street3__road', function(e) {
+        const place = $(this).data('place');
+//        $('.street3__polygon, .street3__road', e.delegateTarget).filter(function() { бага jQuery 1.8
+        $('polygon, .street3__road', e.delegateTarget).filter(function() {
+          if ($(this).data('place') === place) {
+            $(this).toggleClass('hover');
+          }
+        });
+      });
+    });
+  </script>
+</div>
+</body></html>

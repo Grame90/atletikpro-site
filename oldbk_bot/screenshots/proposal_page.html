@@ -1,0 +1,422 @@
+<!DOCTYPE html><html lang="ru"><head>
+  <title>ОлдБК</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+  <link rel="icon" type="image/png" href="/i/favicon.png">
+  <!--meta name=viewport content="width=800, initial-scale=1.0"-->
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link href="/assets/dsk.css?2cbf9b66ab74c8db7eaf55e8bf24328bd315f838" rel="stylesheet" type="text/css"><script src="/assets/vendor.hash-8dec249c1ae46fc1d46bc642ddb56973bbfca6f8.js"></script>
+<script src="/assets/mbox-dsk.hash-29711d642a6ce17da96a4fbec7f5712892f7f33a.js"></script>      <meta name="viewport" content="width=800, initial-scale=1.0"><script>$(importHandlersFromOutFrame);</script>
+  </head><body class="scl-dsk" data-legacy="v-800"><div id="ajaxContainer" style="display:none"></div><style type="text/css">
+#proposalHeader{
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+table#proposalHeader td{
+   background: #99CCCC;
+   text-align: center;
+   cursor: pointer;
+}
+div.proposalItem[forme="0"] {
+  display: none;
+}
+table#proposalHeader td.active{
+  background: #BBDDDD;
+}
+    table#proposalHeader td:hover{
+  background: #CCEEEE;
+}
+span.hpContainer{
+  display:inline;
+}
+margin: 0.5em 0;
+</style>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#proposalHeader td').click(function(){
+      document.location = $(this).find('a')[0].href;
+    });
+    ;
+    var f = Number(h.get('proposal.forme', 0));
+    $('div.proposalItem[forme=0]').toggle(!Boolean(f));
+    var a = $('<a href=javascript:void(0)></a>')
+      .attr('title-1','показать все заявки')
+      .attr('text-1','показать всё')
+      .attr('title-0', 'скрыть неподходящие заявки')
+      .attr('text-0','скрыть лишнее')
+      .click(function(){
+        var f;
+        var a = $(this);
+        h.set('proposal.forme', f = Number(h.get('proposal.forme', 0)) ? 0 : 1);
+        a.attr('title',a.attr('title-'+f)).text(a.attr('text-'+f));
+        $('div.proposalItem[forme=0]').toggle(!Boolean(f));
+        return false;
+      });
+    a.attr('title',a.attr('title-'+f))
+      .text(a.attr('text-'+f))
+      .appendTo('div.buttonContainer');
+  });
+</script>
+<div class="contentContainer adaptive">
+<div class="buttonContainer">
+<div style="float: left;padding-left: 50px;">
+<span class="nick"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="Grame" alt="&nbsp;" src="/i/clan/426.gif">&nbsp;<span class="login">Grame</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_601070" href="/inf.php?601070" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Grame"></a></span>&nbsp;
+<span id="hpKey_601070" class="hpContainer hpContainer-g"><img src="/i/herz.gif" width="10" height="10" alt="Уровень жизни"><img alt="" src="/i/1green.gif" width="106" height="10"><img src="/i/1silver.gif" width="0" height="10" alt="уровень жизни">: 1054/1054</span></div>
+<button data-ctrl="core-load-mbox" data-mbox-url="__reload" class="mbox__btn mbox__btn--refresh">Обновить</button><input type="button" class="button" value="Закрыть" onclick="document.location='/main.php'">
+<a href="javascript:void(0)" title-1="показать все заявки" text-1="показать всё" title-0="скрыть неподходящие заявки" text-0="скрыть лишнее" title="скрыть неподходящие заявки">скрыть лишнее</a></div>
+<table id="proposalHeader">
+<colgroup><col width="3%" span="1">
+<col width="19.4%" span="5">
+</colgroup><tbody><tr>
+<td class="proposalInfo"><a href="/fightclub/info.php">?</a></td>
+  <td class="proposalView "><a href="/fightclub/proposal.php?subtype=1">Физические</a></td><td class="proposalView "><a href="/fightclub/proposal.php?subtype=-4">Марафон</a></td><td class="proposalView active"><a href="/fightclub/proposal.php?subtype=3">Хаотические</a></td>  <td class="proposalCurrent"><a href="/fightclub/current.php">Текущие</a></td>
+  <td class="proposalArchive"><a href="/fightclub/archive.php">Завершенные</a></td>
+</tr>
+</tbody></table><style>
+div.proposalItem {
+  border-top: 1px solid green;
+  padding: 5px;
+  margin: 0.5em 0;
+}
+div.proposalItem img {
+  vertical-align: middle;
+}
+div.proposalItem span.timeoutValue{
+  font-weight: bold;
+}
+div.proposalItem span.delay{
+  color:gray;
+  font-family: cursive;
+}
+div.proposalItem span.delay a.destroy{
+  color:#b80000;
+  font-weight: bold;
+}
+div.proposalItem div.caption{
+  color:gray;
+  font-family: cursive;
+}
+div.proposalItem span.condition{
+  font-family: monospace;
+  font-weight: bold;
+}
+div.proposalItem a.delete{
+  color:#800000;
+}
+</style>
+<script>
+const proposal = {
+  formDelay: 1,
+  timeout: 30,
+  time: 0,
+  subtype: 0,
+  handle: '/fightclub/proposal.php',
+
+  append: function(proposalId,team){
+    this.submit('append','id='+proposalId+'&team='+team);
+  },
+
+  del: function(){
+    this.submit('delete');
+  },
+
+  remove: function(){
+    this.submit('remove');
+  },
+
+  start: function(){
+    this.submit('start');
+  },
+
+  destroy: function(proposalId){
+    this.submit('destroy','id='+proposalId);
+  },
+
+  submit: function(action,get){
+    document.location = this.handle+'?action='+action+'&subtype='+this.subtype+'&'+get;
+  },
+
+  setSubtype: function(subtype){
+    this.subtype = subtype;
+  },
+
+  refreshStart: function(){
+    if(this.timer){
+      return;
+    }
+    this.time = this.timeout;
+    const obj = this;
+    $('#coreBtnReferesh').val('Обновить ('+this.timeout+')');
+    this.timer = setInterval(function(){
+      obj.time -= 1;
+      if(obj.time < 0){
+        $('#coreBtnReferesh').val('Обновить!');
+      }else if(0 === obj.time){
+        core.refresh();
+        clearInterval(obj.timer);
+      }else{
+        let tmp = obj.time;
+        if(obj.time < 10){
+          tmp = '0' + tmp;
+        }
+        $('#coreBtnReferesh').val('Обновить ('+tmp+')');
+      }},1000);
+  },
+
+  refreshStop: function(){
+    clearTimeout(this.timer);
+    this.timer = null;
+    $('#coreBtnReferesh').val('Обновить');
+  },
+
+  formShow: function(){
+    this.refreshStop();
+    $('#proposalFormA').slideUp(this.formDelay);
+    $('#proposalFormB').slideDown(this.formDelay);
+  },
+
+  formHide: function(){
+    this.refreshStart()
+    $('#proposalFormB').slideUp(this.formDelay);
+    $('#proposalFormA').slideDown(this.formDelay);
+  }
+}
+</script>
+<div class="dentist-chaos dentist-chaos--pre-full">
+  <div class="dentist-chaos__points" data-ctrl="dentist-toggle"><b>Стоматология.</b> В мешке 1 915 зуб.
+    <span class="dentist-chaos__points--pre-full">Мешок почти полон!</span>
+    <span class="dentist-chaos__points--full">Мешок переполнен</span>
+    <a class="dentist-chaos__wiki" target="_blank" href="//lib.oldbk.game/holiday/dentistry">wiki</a>
+  </div>
+    <div class="dentist-chaos__rows">      <div class="dentist-chaos__row">
+      <span class="dentist-chaos__row__text">Сейчас мешок может хранить 2000 зуб.</span>
+      <button class="dentist-chaos__row__btn" data-ctrl="dentist-pay" data-boost="pouch">улучшить
+        за 28 зуб.
+      </button></div>
+          <div class="dentist-chaos__row">
+      <span class="dentist-chaos__row__text">Победа в бою приносит тебе 41 зуб.</span>
+      <button class="dentist-chaos__row__btn" data-ctrl="dentist-pay" data-boost="win">улучшить
+        за 15 зуб.
+      </button></div>
+          <div class="dentist-chaos__row">
+      <span class="dentist-chaos__row__text">При поражении в хаоте получишь 28 зуб.</span>
+      <button class="dentist-chaos__row__btn" data-ctrl="dentist-pay" data-boost="lose">улучшить
+        за 7 зуб.
+      </button></div>
+          <div class="dentist-chaos__row dentist-chaos__row--no-accruable">
+      <span class="dentist-chaos__row__text">Удачный удар добавляет в мешок 0 зуб.</span>
+      <button class="dentist-chaos__row__btn" data-ctrl="dentist-pay" data-boost="hit">улучшить
+        за 1 зуб.
+      </button></div>
+          <div class="dentist-chaos__row dentist-chaos__row--no-accruable">
+      <span class="dentist-chaos__row__text">За неудачный удар получаешь 0 зуб.</span>
+      <button class="dentist-chaos__row__btn" data-ctrl="dentist-pay" data-boost="miss">улучшить
+        за 1 зуб.
+      </button></div>
+    <div class="dentist-chaos__row"><span class="dentist-chaos__row__text">Проведено боев: 98 из 100 необходимых<br>1 915 зуб. будут обменяны на 1 357 735 оп.</span></div>    </div>
+</div>
+<script>
+  $(function() {
+    if(sessionStorage.getItem('dentist-chaos__expand') > 0){
+        $('.dentist-chaos__rows:hidden').show();
+        sessionStorage.setItem('dentist-chaos__expand', 0);
+    }
+    $('.dentist-chaos').on('click', '[data-ctrl|="dentist"]', function(e) {
+      const $t = $(this);
+      const action = $(this).data('ctrl');
+      if ('dentist-toggle' === action) {
+        const $a = $(e.delegateTarget).find('.dentist-chaos__rows');
+        $a.toggle();
+        if (proposal) {
+          if ($a.is(':visible')) {
+            proposal.refreshStop();
+          } else {
+            proposal.refreshStart();
+          }
+        }
+      }
+      if ('dentist-pay' === action) {
+      console.log('OLDBK dentistry. Request PAY BOOST ');
+        $.ajax({
+          url: '/holiday/dentistry/control.php',
+          dataType: 'json',
+          data: {
+            action: action.split('-')[1],
+            boost: $t.data('boost'),
+          },
+          beforeSend: function(jqXHR, settings) {
+            $t.addClass('ajaxLoadingBox');
+            sessionStorage.setItem('dentist-chaos__expand', 1);
+          },
+          success: function(data, textStatus, jqXHR) {
+            if ('success' === data.__result) {
+              h.loadMainbox2('__reload');
+            } else {
+              $t.removeClass('ajaxLoadingBox');
+            }
+          },
+        });
+      }
+    })
+  })
+</script><div id="proposalFormA" style="padding: 10px; border: 0 dashed green;">
+  <input type="button" class="button" value="Подать заявку" onclick="proposal.formShow()">
+</div>
+<div id="proposalFormB" style="border: 1px solid gray; padding:10px;margin-bottom: 10px;display:none">
+<h2 align="center">Новая заявка</h2>
+<form method="post" style="width: 400px;margin: 0 auto;">
+<input type="hidden" name="action" value="create">
+<input type="hidden" name="subtype" value="3"><br>
+Уровни бойцов &nbsp;&nbsp;<select name="condition"><option value="1" selected="">любой</option>
+<option value="2">только моего уровня</option>
+<option value="3">мой уровень +/- 1</option>
+</select>
+<br>&nbsp;<br><label><input type="checkbox" name="isBlood">Бой без правил</label><br><span style="font-size: 75%; color: gray;white-space: nowrap;">(проигравшая сторона получает травму)</span>
+<br>&nbsp;<br>Комментарий к бою:<br> <input type="text" name="caption" maxlength="100" style="width: 350px;">
+<br>&nbsp;
+<div style="text-align: center;">
+<input type="button" class="button" value="Вернуться" onclick="proposal.formHide()">
+&nbsp;<input type="submit" class="button" value="Подать заявку">
+</div>
+</form><div style="text-align: right; font-size: 80%; font-weight: bold;color: #800;">
+  автоматическое обновление страницы остановлено
+</div>
+</div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:19</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [11 - 11]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246311)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('АРЛЕКИН')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('АРЛЕКИН')">АРЛЕКИН</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_12296" href="/inf.php?12296" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о АРЛЕКИН"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Spartacus')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Spartacus')">Spartacus</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_12932" href="/inf.php?12932" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Spartacus"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Почтальон')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Почтальон')">Почтальон</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_13138" href="/inf.php?13138" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Почтальон"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Мидори')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Мидори')">Мидори</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_13553" href="/inf.php?13553" class="info"><img src="/i/inf_0.gif" alt="i" title="инф. о Мидори"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('el-macho')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('el-macho')">el-macho</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_14090" href="/inf.php?14090" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о el-macho"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:19</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [7 - 7]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>4</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246312)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('AMD')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="KeepersOfDragons" alt="&nbsp;" src="/i/clan/76.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('AMD')">AMD</span>&nbsp;<span class="level">[7]</span>&nbsp;<a target="persinfo_116" href="/inf.php?116" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о AMD"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Gerakl')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Gerakl')">Gerakl</span>&nbsp;<span class="level">[7]</span>&nbsp;<a target="persinfo_408" href="/inf.php?408" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Gerakl"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Preux')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Preux')">Preux</span>&nbsp;<span class="level">[7]</span>&nbsp;<a target="persinfo_7756" href="/inf.php?7756" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Preux"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Cyphoner')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Cyphoner')">Cyphoner</span>&nbsp;<span class="level">[7]</span>&nbsp;<a target="persinfo_22524" href="/inf.php?22524" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Cyphoner"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:19</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [9 - 9]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246313)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-Лиза-')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-Лиза-')">-Лиза-</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_148" href="/inf.php?148" class="info"><img src="/i/inf_0.gif" alt="i" title="инф. о -Лиза-"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-МПС-')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-МПС-')">-МПС-</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_150" href="/inf.php?150" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о -МПС-"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('NaOH')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('NaOH')">NaOH</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_8074" href="/inf.php?8074" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о NaOH"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Монах Шаолинь')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Монах Шаолинь')">Монах Шаолинь</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_9079" href="/inf.php?9079" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Монах Шаолинь"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('KVENTIN TARANTINO')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('KVENTIN TARANTINO')">KVENTIN TARANTINO</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_9642" href="/inf.php?9642" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о KVENTIN TARANTINO"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:19</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [8 - 8]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246314)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-Гомер-')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-Гомер-')">-Гомер-</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_145" href="/inf.php?145" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о -Гомер-"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-Марджери-')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-Марджери-')">-Марджери-</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_146" href="/inf.php?146" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о -Марджери-"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-Бартоломью-')"><img src="/i/align_1.01.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-Бартоломью-')">-Бартоломью-</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_147" href="/inf.php?147" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о -Бартоломью-"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('плюшка_мишка')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('плюшка_мишка')">плюшка_мишка</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_143976" href="/inf.php?143976" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о плюшка_мишка"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('sexybaby')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('sexybaby')">sexybaby</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_143979" href="/inf.php?143979" class="info"><img src="/i/inf_0.gif" alt="i" title="инф. о sexybaby"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:20</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [11 - 11]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246317)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('BlackSide')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="DarkZenit" alt="&nbsp;" src="/i/clan/51.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('BlackSide')">BlackSide</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_12415" href="/inf.php?12415" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о BlackSide"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Бывалый1')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Бывалый1')">Бывалый1</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_13104" href="/inf.php?13104" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Бывалый1"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Vidur')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="KeepersOfDragons" alt="&nbsp;" src="/i/clan/76.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Vidur')">Vidur</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_13573" href="/inf.php?13573" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Vidur"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Розовый Кролик')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Розовый Кролик')">Розовый Кролик</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_14435" href="/inf.php?14435" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Розовый Кролик"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('МегапЫхарЬ')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('МегапЫхарЬ')">МегапЫхарЬ</span>&nbsp;<span class="level">[11]</span>&nbsp;<a target="persinfo_15010" href="/inf.php?15010" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о МегапЫхарЬ"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:20</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [9 - 9]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246318)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-Маргарет-')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-Маргарет-')">-Маргарет-</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_149" href="/inf.php?149" class="info"><img src="/i/inf_0.gif" alt="i" title="инф. о -Маргарет-"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('TeppopucT')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('TeppopucT')">TeppopucT</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_7959" href="/inf.php?7959" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о TeppopucT"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Ezhishe')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Ezhishe')">Ezhishe</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_10381" href="/inf.php?10381" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Ezhishe"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Доктор Игнат')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Доктор Игнат')">Доктор Игнат</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_10403" href="/inf.php?10403" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Доктор Игнат"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('AmoimoN')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('AmoimoN')">AmoimoN</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_10503" href="/inf.php?10503" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о AmoimoN"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:20</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [8 - 8]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>2</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246320)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('грандрояль')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('грандрояль')">грандрояль</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_143977" href="/inf.php?143977" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о грандрояль"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('калиниченко')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('калиниченко')">калиниченко</span>&nbsp;<span class="level">[8]</span>&nbsp;<a target="persinfo_143978" href="/inf.php?143978" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о калиниченко"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">17:20</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [9 - 9]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>3</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246321)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('КОМАНДИР')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('КОМАНДИР')">КОМАНДИР</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_9176" href="/inf.php?9176" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о КОМАНДИР"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Disaster')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Disaster')">Disaster</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_9807" href="/inf.php?9807" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Disaster"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Batir')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Batir')">Batir</span>&nbsp;<span class="level">[9]</span>&nbsp;<a target="persinfo_10046" href="/inf.php?10046" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Batir"></a></span> </div></div><div class="proposalItem" forme="1"><div>
+&nbsp;
+<span class="date">20:37</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [10 - 10]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246387)">В мусорку</a></span>
+<a href="javascript:proposal.append(15246387)">принять</a> <div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('piki')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('piki')">piki</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_10909" href="/inf.php?10909" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о piki"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Ситар')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Ситар')">Ситар</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_11202" href="/inf.php?11202" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Ситар"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('den war')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="kamikadze" alt="&nbsp;" src="/i/clan/46.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('den war')">den war</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_11405" href="/inf.php?11405" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о den war"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('MONARCH')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('MONARCH')">MONARCH</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_11972" href="/inf.php?11972" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о MONARCH"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Chafur')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Chafur')">Chafur</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_12097" href="/inf.php?12097" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Chafur"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">20:59</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [12 - 12]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246398)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Bomg')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Bomg')">Bomg</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_15020" href="/inf.php?15020" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Bomg"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Сытый Лось')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Сытый Лось')">Сытый Лось</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_21131" href="/inf.php?21131" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Сытый Лось"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Jmyrik')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="KeepersOfDragons" alt="&nbsp;" src="/i/clan/76.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Jmyrik')">Jmyrik</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_21674" href="/inf.php?21674" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Jmyrik"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('козак')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('козак')">козак</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_22254" href="/inf.php?22254" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о козак"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Censored')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Censored')">Censored</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_22411" href="/inf.php?22411" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Censored"></a></span> </div></div><div class="proposalItem" forme="0" style="display: block;"><div>
+&nbsp;
+<span class="date">21:24</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [12 - 12]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>2</b>)</span>
+<span class="delay">
+устаревшая заявка. <a class="destroy" href="javascript:proposal.destroy(15246409)">В мусорку</a></span>
+<div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('gopper')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('gopper')">gopper</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_15034" href="/inf.php?15034" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о gopper"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Одинокий Мерлин')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Одинокий Мерлин')">Одинокий Мерлин</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_15054" href="/inf.php?15054" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Одинокий Мерлин"></a></span> </div></div><div class="proposalItem" forme="1"><div>
+&nbsp;
+<span class="date">21:30</span>
+  <img src="/i/battle/type_3.gif" title="хаотический поединок" alt="">
+    <!--b>хаотический поединок</b-->
+  [10 - 10]  <span class="timeout">(таймаут: <span class="timeoutValue">1 мин.</span>;</span>
+  <span class="count"> участников: <b>5</b>)</span>
+<span class="delay">
+Ожидаем появления участников</span>
+<a href="javascript:proposal.append(15246414)">принять</a> <div class="caption">
+      </div>
+<span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('bestia ')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('bestia ')">bestia </span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_10630" href="/inf.php?10630" class="info"><img src="/i/inf_0.gif" alt="i" title="инф. о bestia "></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('I Alex I')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('I Alex I')">I Alex I</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_10670" href="/inf.php?10670" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о I Alex I"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Poul Fox')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Poul Fox')">Poul Fox</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_11635" href="/inf.php?11635" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Poul Fox"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('valerchik09')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('valerchik09')">valerchik09</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_12035" href="/inf.php?12035" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о valerchik09"></a></span> <span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('ChuckRulezz')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('ChuckRulezz')">ChuckRulezz</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_12179" href="/inf.php?12179" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о ChuckRulezz"></a></span> </div></div><div style="clear: both;"></div>
+<script type="text/javascript">
+  proposal.refreshStart();
+</script><script>
+  $(function(){proposal.setSubtype('3');});
+</script>
+</div></body></html>

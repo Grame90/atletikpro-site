@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="ru"><head>
+  <title>ОлдБК</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+  <link rel="icon" type="image/png" href="/i/favicon.png">
+  <!--meta name=viewport content="width=800, initial-scale=1.0"-->
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link href="/assets/dsk.css?2cbf9b66ab74c8db7eaf55e8bf24328bd315f838" rel="stylesheet" type="text/css"><script src="/assets/vendor.hash-8dec249c1ae46fc1d46bc642ddb56973bbfca6f8.js"></script>
+<script src="/assets/mbox-dsk.hash-29711d642a6ce17da96a4fbec7f5712892f7f33a.js"></script>      <meta name="viewport" content="width=800, initial-scale=1.0"><script>$(importHandlersFromOutFrame);</script>
+  </head><body class="scl-dsk" data-legacy="v-800"><div id="ajaxContainer" style="display:none"></div><div class="mbox street3 contentContainer street3--arrived" data-time-arrival="0"><h1>Большая парковая</h1><div class="buttonContainer mbox-dsk__btn-c"><button data-ctrl="core-load-mbox" data-mbox-url="__reload" class="mbox__btn mbox__btn--refresh">Обновить</button></div>  <div class="street3__arriving">Топаем   на Большую парковую улицу</div>
+  <div class="street3__arrived">
+    <svg class="street3__svg" viewBox="0 0 780 340" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <filter id="street3__dropshadow">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2"></feGaussianBlur>
+        </filter>
+      </defs>
+      <image class="street3__img" xlink:href="/street/img/n_19.png" x="0" y="0" height="340" width="780"></image>
+        <polygon class="ctrl street3__polygon" data-place="59" data-ctrl="core-move-to" points="18,286 18,217 63,216 63,288" filter="url(#street3__dropshadow)"><title>На Замковую</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="43" data-ctrl="core-move-to" points="516,186 516,159 513,161 512,161 512,156 537,134 537,112 548,112 550,113 550,126 583,135 606,157 616,167 617,193 592,194 589,195 567,195 567,192 569,191 516,191" filter="url(#street3__dropshadow)"><title>Хижина Знахаря</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="1708" data-ctrl="core-move-to" points="190,239 195,244 203,249 211,251 221,253 234,255 248,255 260,255 278,253 294,249 303,243 304,237 303,234 296,230 289,226 287,225 287,219 288,217 288,216 288,214 286,212 282,211 269,210 269,209 261,209 260,207 257,207 258,185 260,181 259,179 233,180 232,182 234,184 235,188 236,190 236,208 231,208 226,209 222,209 216,210 208,211 206,213 206,215 207,217 207,226 206,227 204,228 199,229 195,231 192,233 190,236" filter="url(#street3__dropshadow)"><title>К фонтану</title></polygon>
+<polygon class="ctrl street3__polygon" data-place="20" data-ctrl="core-move-to" points="719,287 719,214 766,214 764,284 719,290" filter="url(#street3__dropshadow)"><title>На Центральную площадь</title></polygon>    </svg>
+    <div class="street3__road-c"><button data-place="59" data-ctrl="core-move-to" class="street3__road">На Замковую</button> <button data-place="43" data-ctrl="core-move-to" class="street3__road">Хижина Знахаря</button> <button data-place="1708" data-ctrl="core-move-to" class="street3__road">К фонтану</button> <button data-place="20" data-ctrl="core-move-to" class="street3__road">На Центральную площадь</button></div>
+  </div>
+  <script>
+    $(function() {
+      let $street = $('.street3');
+      $street.oneTime($street.data('timeArrival') + 's', function() {
+        $street.addClass('street3--arrived');
+      }).on('mouseover mouseout', 'polygon, .street3__road', function(e) {
+        const place = $(this).data('place');
+//        $('.street3__polygon, .street3__road', e.delegateTarget).filter(function() { бага jQuery 1.8
+        $('polygon, .street3__road', e.delegateTarget).filter(function() {
+          if ($(this).data('place') === place) {
+            $(this).toggleClass('hover');
+          }
+        });
+      });
+    });
+  </script>
+</div>
+</body></html>

@@ -1,0 +1,8 @@
+{
+  "login": "Grame",
+  "password": "22231484q",
+  "headless": false,
+  "delay_between_battles": 3,
+  "max_battles": 0,
+  "hp_wait_timeout": 600
+}

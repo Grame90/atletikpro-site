@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="ru"><head>
+  <title>ОлдБК</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADIklEQVR4AZSSe0hTURzHv/dsc1M3p+ammStL80VmEFRWVGIU9PijhxQUQiHFoMIgioJi/1X0IqOgB0VFUlFIZlhqVuCjhyVqhs+atrupcy/ndr3b3V33XnR/Ch1+39/hdzjfz/lxziH4z/HgamH+h7fHwoe3JW0XreSaMb13ZRSWisVsMplABlqP3liUnNfZXf+pgwsGmlPikU4aOz3lRQWxlSWADLOMlpqEzcPNTUeG+7sw5R7jcgwJLfoEjZK8bnbVPu/x7Uxbl9B8oXRh+/Yl0VUCh1SaspKqLi4tPlEyr1CoYXcwvwbtzB9COGTmL1s+f/E8qnRn7jvpDn570Ze3Mq2ftngyNIlRNdU31rZu3Fpk18oUDesLNC1Vphx+b7Hu4rdu1/uxQRvAefmYMJs1NentkgDSCSPjJCldW33cuOZeqk69AiSA+bnJyM7Vg/WHqGStak+SkpR97mHKXbTFp5JR+NjpORcB/HQwZwrydKt8NI2cdUXo6xvFlbvf8eS1Gdn5iZgTxUGvlcPKcIED18xxV2+3aRtare0RwLAlmKviAhkLlmejprIaZeXv4EMMnByF0tPt0OjUsDhZFGbGnhY7rh3AhDhHAOuzYpeM0m54bTQeP+vA/n3LUHG9BKcOGaDRyHC/hoZeTYEKhw2icUYRgJellDY7g8kRB1iWx+6SAoyOUzBbgT27DHB4OXTTAdicQdFLiUlUBDDJ8j9USoLBAT8yU1Q4WPYUJ403cebsd9x9aEaKTgW7n4eTCQ0JxrAgKSKA+3X2WttEiK7v8UGnjkKyVgG3YODlFNLnqoRuWOmn9VvZm5JzOkUAYj3Bhr5kpMZwQ+4gohVyZM6NhkGvBDMVBhGejRDS3WthL4l7ZyQByjbErbp0cMGj+GCowjwWWqSOltUT8HAxPPwBID5OAZsjcCdOFu5P1SBnxizOEiBNG69WJ2rbzte7Pz2os/699WZsEx/iEyc5bPGG+OKXTU7Ftz7/4cdN7h2rszUnBaNckBQSwPRquMF4ubNCWplOlU0eV91nV23jV0+jsMQJkuJFm9eYnyZfIxUA/gEAAP//ByDLFQAAAAZJREFUAwDhF0XDTqvQjAAAAABJRU5ErkJggg==">
+  <!--meta name=viewport content="width=800, initial-scale=1.0"-->
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link href="/assets/dsk.css?2cbf9b66ab74c8db7eaf55e8bf24328bd315f838" rel="stylesheet" type="text/css"><script src="/assets/vendor.hash-8dec249c1ae46fc1d46bc642ddb56973bbfca6f8.js"></script>
+<script src="/assets/scl-dsk.hash-0a316f23a7ea93fd5df0cd52350b57b224ab0e36.js"></script>
+<link href="/chat/chat.css" rel="stylesheet" type="text/css">      <meta name="viewport" content="width=800, initial-scale=1.0">  </head><body class="scl-dsk skeleton scl" data-legacy="v-800"><div id="ajaxContainer" style="display:none"></div>
+<script type="text/javascript">
+  if (window.parent.h) {
+    window.parent.document.location = '/';
+  }
+
+  try{
+    const titleNotify = function(favicon) {
+
+      this.favicon = favicon;
+
+      this.chatUnreadMsgCount = 0;
+    };
+
+    titleNotify.prototype.reset = function(){
+      this.favicon.reset();
+      this.chatUnreadMsgCount = 0;
+    }
+
+    /* обработка события чата */
+    titleNotify.prototype.chatNotify = function(){
+
+      if( ! Visibility.hidden()){
+          this.chatUnreadMsgCount = 0;
+          return;
+      }
+      this.chatUnreadMsgCount++;
+
+      this.favicon.badge(this.chatUnreadMsgCount);
+    }
+
+    Visibility.change(function (e, state) {
+        if( ! Visibility.hidden()){
+          globalTitleNotify.reset();
+        }
+    });
+
+    const favicon = new Favico({
+      type: 'circle',
+      bgColor: '#1799B6',
+      textColor: '#fff',
+      animation: 'none',
+    });
+
+    const globalTitleNotify = new titleNotify(favicon);
+
+        $(document).on("chatLoad", function(e, params) {
+          if(params.msgType === "privat"){
+              globalTitleNotify.chatNotify();
+          }
+        });
+
+  }catch(e){}
+</script>
+<script>
+ // var chat = null;
+ // var h = null;
+  $(function() {
+    const $body = $('body');
+
+    h = new H(true);
+
+    window.chat = new Chat2({
+      messageLength: 200,
+          $containers:         $body,
+          textContainer:     $('#chatTextContainer'),
+          userListContainer: $('#chatUserListContainer'),
+          smileContainer:    $('#chatSmileContainer'),
+          smiles:            ["Knight1","agree","alch","alien","angel","angel2","bananadance","beer","beggar","boks","boks2","bow","brodyagi","bye","byebye","carousel","carreat","cat","chtoza","confused","crazy","creator","cry","dance1","dance2","dedmoroz","devil","doc","doc2","dont","drink","duel","dustman","eek","elix","facepalm","fie","fingal","flowers","friday","gent","gigi","girl","girls2","grace","grust","gun","hello","hello2","help","hi","horse","hug","idea","inv","invis","jeer","king","king2","kiss","kiss2","kiss3","kiss4","kruger","lady","laugh","lick","lightfly","lordhaos","love","love2","loveya","lub","mad","mag","maniac","mdr","mol","naem","naem2","naem3","nail","ninja","nnn","no","nono","nun","nunu","obm","ok","owl","pal","pif","pirate","plus1","podz","ponder","popcorn","privet","radio1","radio2","red","rev","rocket","rom","rose","rotate","row","rupor","sad","sharp","shuffle","silent","smash","smil","smile","smile100","smile118","smile149","smile166","smile237","smile245","smile28","smile289","smile314","smile36","smile39","smile434","smile44","smile70","smile87","smileny1","smoke","sneeze","sniper","snowfight","sorry","sorry2","sten","str","super","susel","sword","tease","tongue","tongue2","trololo","trup","ura","vamp","vcrazy","victory","wall","wfight","wink","yar","yes"]       });
+      chat.loadUserList();
+
+      $('#msgIdShowHideSwitch').click(function(){$('#chatTextContainer').toggleClass('showMsgId')});
+
+    const $ch = $('.scl__chat-c');
+    const $cv = $('.scl__userlist');
+    const $iframe = $('.scl__main > iframe');
+
+    $(window).resize(function(e){
+          $iframe.css('height', 0);
+          $iframe.css('height', $iframe.parent().height()+'px');
+        })
+
+      $ch.css('flex-basis', $(window).height() * 0.33+'px');
+      $cv.css('flex-basis', $(window).width() * 0.25+'px');
+      $(window).trigger('resize');
+
+      $('.scl__h-separator').draggable({
+          iframeFix: true,
+          axis: 'y',
+          containment: 'parent',
+          cursor: 's-resize',
+          helper: 'clone',
+          stop: function(e, ui){
+              $ch.css('flex-basis', $ch.offset().top - ui.offset.top + $ch.height() - ui.helper.height() +'px');
+              $(window).trigger('resize');
+            }
+        });
+
+      $('.scl__v-separator').draggable({
+          iframeFix: true,
+          axis: 'x',
+          containment: 'parent',
+          cursor: 'w-resize',
+          helper: 'clone',
+          stop: function(e, ui){
+              $cv.css('flex-basis', $cv.offset().left - ui.offset.left + $cv.width() + 'px');
+            }
+        });
+      $('#ledbar').draggable({
+        iframeFix: true,
+        containment: 'document',
+        cursor: 'move',
+        helper: 'clone',
+        stop: function(e, ui){
+          let p = $(e.target).position();
+            $cv.css('flex-basis', $cv.offset().left - ui.offset.left + $cv.width() + p.left + 'px');
+            $ch.css('flex-basis', $ch.offset().top - ui.offset.top + $ch.height() + p.top + 'px');
+            $(window).trigger('resize');
+          }
+      });
+
+    $body.on('click', '[data-ctrl|=scl]', function(e){
+
+      const $t = $(this);
+      const action = $t.data('ctrl');
+      if('scl-topm-close' === action){
+//        alert('close')
+        $t.closest('.scl__topm').removeClass('scl__topm--open');
+      }
+      if('scl-topm-open' === action){
+//        alert('open')
+        $t.closest('.scl__topm').addClass('scl__topm--open');
+        e.stopPropagation();
+      }
+
+    });
+  });
+</script>
+<nav class="scl__topm">
+  <div class="scl__topm__overlay" data-ctrl="scl-topm-close">
+    <div class="scl__topm__wrp">
+      <a class="scl__topm__item scl__topm__item--prim" target="_blank" style="color:#fff800" href="/payment/merchant/merchant.php">Покупка екр</a>
+      <a class="scl__topm__item scl__topm__item--secondary--DISBL" href="/">Обновить</a>
+              <span class="scl__topm__item scl__topm__item--strut"><a class="a-war-led scl__m-menu--right scl__m-menu-item2" data-ctrl="core-load-mbox" data-mbox-url="/rating/alignwar/alignwar.php" "=""><img src="/i/align_1.gif" alt="">&nbsp;0&nbsp;:&nbsp;10&nbsp;<img src="/i/align_3.gif" alt=""><img src="/i/flag.gif"><span class="scl__topm__item--no-phone"> Опыт <img src="/i/align_2.gif" alt=""> 100%</span></a></span>
+      <a class="scl__topm__item" href="//lib.oldbk.game/" target="_blank" style="color:mediumblue">Энциклопедия</a>
+      <a class="scl__topm__item scl__topm__item--ext" href="https://www.facebook.com/oldbk.su/" target="_blank">Новости</a>
+      <a class="scl__topm__item" style="color: darkmagenta;" href="/clan/rating.php" target="_blank">Кланы</a>
+      <a class="scl__topm__item scl__topm__item--ext" href="/forum.php" target="_blank" style="color:darkgreen">Форум</a>
+      <a class="scl__topm__item" href="/registrar/anketa.php" target="_blank" style="color:sienna">Анкета</a>
+      <span class="scl__topm__item scl__topm__item--ext" data-ctrl="core-load-mbox" data-mbox-url="/control/logout.php">Выйти из игры</span>
+      <span class="scl__topm__item scl__topm__item--menu" data-ctrl="scl-topm-open">MENU</span>
+    </div>
+  </div>
+</nav>
+<div class="skeleton-m-main scl__main" id="main">
+  <iframe id="mainbox" frameborder="0" name="main" src="/fightclub/proposal.php" width="100%" style="height: 422px;"></iframe>
+</div>
+<div class="scl__h-separator ui-draggable"></div>
+<div class="skeleton-m-chat scl__chat-c" id="chat" style="flex-basis: 237.6px;">
+<div id="chatTextContainer" class="scl__chat js-chat__text-c"><div class="chat__msg" id="chat-141957475" author=""><span class="chat-msgid chatAction  chatAction-addToMsgId">141957475</span><span class="date2">21:33</span> <font class="bb" color="red">Внимание!</font> <strong class="bb">Требуется ремонт:</strong> Шлем Ветерана (мф) [8](1 шт); Кольцо Ужаса (мф)(1 шт); Броня Выживания (мф) [8](1 шт).</div><div class="chat__msg" id="chat-141957475" author=""><span class="chat-msgid chatAction  chatAction-addToMsgId">141957475</span><span class="date2">21:33</span> <font class="bb" color="red">Внимание!</font> <strong class="bb">Требуется ремонт:</strong> Шлем Ветерана (мф) [8](1 шт); Кольцо Ужаса (мф)(1 шт); Броня Выживания (мф) [8](1 шт).</div></div>
+<div class="scl__v-separator ui-draggable"><div id="ledbar" class="ledbar ui-draggable"><span class="ledbar__quest" title="Активных заданий" data-ctrl="core-load-mbox" data-mbox-url="/userp/info.php?tab=quest">0</span></div></div>
+<div id="chatUserListContainer" class="scl__userlist" style="flex-basis: 320px;">
+<input type="button" class="button chat-refreshUserList" value="Обновить" onclick="chat.loadUserList()" style="">
+<div class="chat-userList js-chat__userlist"><h2 style="cursor: pointer" onclick="chat.loadUserList()">Комната для новичков (7)</h2><div><span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('-Самурай-')"><img src="/i/align_3.gif" class="align" alt="&nbsp;">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('-Самурай-')">-Самурай-</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_116364" href="/inf.php?116364" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о -Самурай-"></a></span></div><div><span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('apanas')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="Легион Карателей" alt="&nbsp;" src="/i/clan/224.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('apanas')">apanas</span>&nbsp;<span class="level">[13]</span>&nbsp;<a target="persinfo_13158" href="/inf.php?13158" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о apanas"></a></span></div><div><span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Grame')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="Grame" alt="&nbsp;" src="/i/clan/426.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Grame')">Grame</span>&nbsp;<span class="level">[10]</span>&nbsp;<a target="persinfo_601070" href="/inf.php?601070" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Grame"></a></span></div><div><span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Molotov')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="Мусорщик и Братва" alt="&nbsp;" src="/i/clan/39.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Molotov')">Molotov</span>&nbsp;<span class="level">[13]</span>&nbsp;<a target="persinfo_159260" href="/inf.php?159260" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Molotov"></a></span></div><div><span class="nick team1 "><img title="Приват" src="/i/fighttype1.gif" style="cursor:pointer" onclick="chat.addToPrivate('ДухЕльфа')"><img src="/i/align_3.gif" class="align" alt="&nbsp;"><img class="clan" title="Stalkers" alt="&nbsp;" src="/i/clan/16.gif">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('ДухЕльфа')">ДухЕльфа</span>&nbsp;<span class="level">[13]</span>&nbsp;<a target="persinfo_351843" href="/inf.php?351843" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о ДухЕльфа"></a></span></div><div><span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('мутатор')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('мутатор')">мутатор</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_589966" href="/inf.php?589966" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о мутатор"></a></span></div><div><span class="nick"><img title="Приват" src="/i/lock.gif" style="cursor:pointer" onclick="chat.addToPrivate('Сонтер')">&nbsp;<span class="login" style="cursor:pointer" onclick="chat.addTo('Сонтер')">Сонтер</span>&nbsp;<span class="level">[12]</span>&nbsp;<a target="persinfo_607612" href="/inf.php?607612" class="info"><img src="/i/inf_1.gif" alt="i" title="инф. о Сонтер"></a></span></div><hr class="delimiter"><h5>Межклановые каналы</h5><div class="icc__item" onclick="window.chat.addToPrivate('klan')"><span class="icc__title">Grame</span>
+  <img src="/i/clan/426.gif"></div></div>
+<hr class="delimiter">
+<label><input type="checkbox" class="checkbox chatControl chatControl-switchAutoRefreshUserList" checked="checked" style="">обновлять автоматически.</label>
+</div>
+</div>
+<div class="skeleton-m-chatmenu scl__b-menu" id="chatmenu">
+<div class="scl__b-menu-1">
+            <div class="button" id="msgIdShowHideSwitch" title="Показать номера сообщений" style="background-image: url('/i/skeleton/numbers.png');"></div>
+            <div class="scl__btn--delim"></div>
+            <input type="text" class="text chatControl-input js-chat__input-text" style="flex: 1 1 auto; padding: 0px; height: 18px;" maxlength="200">
+            <div class="button chatControl chatControl-send" data-chat-blur="1" title="Добавить текст в чат" style="background-image: url('/i/skeleton/enter.png');"></div>
+</div><div class="scl__b-menu-2"><div class="scl__b-menu-2-1">
+            <div class="scl__btn--delim"></div>
+            <div class="button chatControl chatControl-clear" title="Очистить строку ввода/чат" style="background-image: url('/i/skeleton/clean.png');"></div>
+            <div class="button chatControl chatControl-switchOnlyForMe" title="Показывать только сообщения адресованные мне" style="background-image: url('/i/skeleton/chat_onlyforme.png');"></div>
+            <!--td><div class="button chatControl chatControl-switchSysMsg" title="Показывать системные сообщения в чате" style="background-image: url('/i/skeleton/chat_sysmsg.png');"></div></td-->
+            <div class="button chatControl chatControl-switchAutoUpdate button-active" title="Автообновление чата" style="background-image: url('/i/skeleton/chat_autorefresh.png');"></div>
+            <div class="button chatControl chatControl-switchTranslit" title="Преобразовывать транслит в русский текст" style="background-image: url('/i/skeleton/chat_translit.png');"></div>
+            <div class="button" title="Смайлы" style="background-image: url('/i/skeleton/chat_smile.png');" onclick="chat.toggleSmiles(this);"></div>
+            <div class="button chatControl chatControl-switchSound" title="Звуки" style="background-image: url('/i/skeleton/chat_sound.png');"></div>
+            <div class="button chatControl chatControl-switchAFK" title="Отошёл. Скоро буду." style="background-image: url('/i/skeleton/chat_afk.png');"></div>
+</div><div class="scl__b-menu-2-2">
+            <div class="button" title="Настройки/Инвентарь" onclick="h.loadMainBox('/main.php?edit=1')" style="background-image: url('/i/skeleton/inventory.png');"></div>
+            <div class="button" title="Свод по персонажу" style="background-image: url('/i/skeleton/userp.png');" onclick="h.loadMainBox('/userp/info.php')"></div>
+            <div class="button" title="Передачи" onclick="h.loadMainBox('/transfer/transfer.php')" style="background-image: url('/i/skeleton/transmission.png');"></div><div class="button" title="Клан" style="background-image: url('/i/skeleton/clan.png');" onclick="h.loadMainBox('/clan/clanpanel.php')"></div><div class="button" title="Склонность" style="background-image: url('/i/skeleton/orden.png');" onclick="h.loadMainBox('/moderator/moderator.php')"></div>            <div class="button" title="Друзья" style="background-image: url('/i/skeleton/friend.png');" onclick="h.loadMainBox('friends.php')"></div>
+            <div class="button" title="Форум" style="background-image: url('/i/skeleton/forum.png');" onclick="window.open('/forum.php')"></div>
+            <div class="button" title="Выход" style="background-image: url('/i/skeleton/exit.png');" onclick="if(confirm('Выйти из игры')){document.location = '/control/logout.php'}"></div>
+            <div class="scl__clock"><span id="scl__clock-value">21:33:51</span></div>
+</div></div></div>
+<div id="chatSmileContainer" class="js-chat__smile-c dsk__chat__smile-c" style="display: none;"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/Knight1.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/agree.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/alch.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/alien.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/angel.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/angel2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/bananadance.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/beer.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/beggar.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/boks.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/boks2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/bow.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/brodyagi.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/bye.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/byebye.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/carousel.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/carreat.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/cat.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/chtoza.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/confused.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/crazy.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/creator.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/cry.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/dance1.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/dance2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/dedmoroz.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/devil.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/doc.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/doc2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/dont.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/drink.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/duel.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/dustman.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/eek.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/elix.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/facepalm.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/fie.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/fingal.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/flowers.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/friday.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/gent.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/gigi.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/girl.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/girls2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/grace.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/grust.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/gun.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/hello.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/hello2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/help.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/hi.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/horse.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/hug.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/idea.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/inv.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/invis.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/jeer.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/king.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/king2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/kiss.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/kiss2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/kiss3.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/kiss4.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/kruger.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/lady.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/laugh.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/lick.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/lightfly.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/lordhaos.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/love.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/love2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/loveya.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/lub.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/mad.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/mag.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/maniac.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/mdr.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/mol.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/naem.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/naem2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/naem3.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/nail.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/ninja.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/nnn.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/no.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/nono.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/nun.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/nunu.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/obm.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/ok.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/owl.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/pal.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/pif.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/pirate.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/plus1.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/podz.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/ponder.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/popcorn.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/privet.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/radio1.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/radio2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/red.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/rev.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/rocket.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/rom.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/rose.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/rotate.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/row.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/rupor.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sad.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sharp.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/shuffle.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/silent.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smash.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smil.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile100.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile118.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile149.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile166.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile237.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile245.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile28.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile289.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile314.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile36.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile39.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile434.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile44.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile70.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smile87.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smileny1.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/smoke.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sneeze.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sniper.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/snowfight.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sorry.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sorry2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sten.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/str.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/super.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/susel.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/sword.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/tease.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/tongue.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/tongue2.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/trololo.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/trup.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/ura.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/vamp.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/vcrazy.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/victory.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/wall.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/wfight.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/wink.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/yar.gif"><img class="chatControl chatControl-addSmile smileImg" alt="" src="/i/smiles/yes.gif"></div>
+<div style="position: absolute; top: -10px; left: -20px;">
+
+</div>
+<script>
+  $(function(){
+    let displayClock = function(){
+      let s = Math.floor(sclClock % 86400 / 3600);
+      if(s < 10) s = '0' + s;
+      let v = Math.floor(sclClock % 3600 / 60);
+      if(v < 10) v = '0' + v;
+      s = s + ':' + v;
+      if(localStorage.getItem('clock.sec') !== 'false') {
+        v = sclClock % 60;
+        if(v < 10) v = '0' + v;
+        s = s + ':' + v;
+      }
+      document.getElementById('scl__clock-value').innerText = s;
+    };
+    window.sclClock = 1777844023;
+    displayClock();
+    setInterval(function() {
+      window.sclClock += 1;
+      displayClock();
+    }, 1000);
+    $('.scl__clock').click(function(){
+      localStorage.setItem('clock.sec', localStorage.getItem('clock.sec') === 'false');
+      displayClock();
+    })
+  });
+</script><div id="jGrowl" class="top-right jGrowl"><div class="jGrowl-notification"></div></div></body></html>

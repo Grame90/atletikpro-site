@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(echo \"Started PID $!\")",
+      "Bash(vercel --prod)"
+    ]
+  }
+}

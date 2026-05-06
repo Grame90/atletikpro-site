@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.html",   "use": "@vercel/static" },
+    { "src": "tr.html",      "use": "@vercel/static" },
+    { "src": "logo.png",     "use": "@vercel/static" },
+    { "src": "api/data.js",  "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/data", "dest": "/api/data.js" },
+    {
+      "src": "/(.*\\.html)",
+      "dest": "/$1",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      }
+    },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

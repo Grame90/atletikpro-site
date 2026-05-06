@@ -1,4 +1,4 @@
-name: Deploy to Netlify
+name: Deploy to Vercel
 
 on:
   push:
@@ -14,11 +14,12 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install Netlify CLI
-        run: npm install -g netlify-cli
+      - name: Install Vercel CLI
+        run: npm install -g vercel
 
-      - name: Deploy to Netlify
-        run: netlify deploy --dir=. --functions=netlify/functions --prod
+      - name: Deploy to Vercel
+        run: vercel --prod --scope grame90s-projects --yes
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

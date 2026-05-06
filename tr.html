@@ -3607,7 +3607,7 @@ function printDocument(){
   <h2>👨‍🏫 Antrenör Kadrosu (${coaches.length})</h2>
   <table><thead><tr><th>#</th><th>Ad Soyad</th><th>Telefon</th><th>E-posta</th><th>Uzmanlık</th><th>İşe Başlama</th></tr></thead>
   <tbody>${coachRows||'<tr><td colspan="6" style="text-align:center;color:#999">Antrenör yok</td></tr>'}</tbody></table>
-  <div class="footer">Fenerbahçe Spor Kulübü Atletizm Şubesi · fb-atletik.netlify.app · ${today}</div>
+  <div class="footer">Fenerbahçe Spor Kulübü Atletizm Şubesi · atletikpro.vercel.app · ${today}</div>
   <script>window.onload=()=>{ window.print(); }<\/script></body></html>`);
   win.document.close();
 }
@@ -4518,7 +4518,7 @@ closeModal=function(){
 function getApiUrl() {
   const h = window.location.hostname;
   return (h === 'localhost' || h === '127.0.0.1' || window.location.protocol === 'file:')
-    ? 'https://fb-atletik.netlify.app/api/data'
+    ? 'https://atletikpro.vercel.app/api/data'
     : '/api/data';
 }
 async function hashPassword(pass) {

@@ -52,8 +52,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .content{padding:24px;flex:1}
 .section{display:none}.section.active{display:block}
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;align-items:center;gap:14px;transition:transform .2s}
-.stat-card:hover{transform:translateY(-2px)}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s,border-color .2s;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.stat-card:hover{transform:translateY(-3px) scale(1.015);box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 16px rgba(255,215,0,.08);border-color:rgba(255,215,0,.25)}
 .stat-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .si-t{background:var(--accent-d)}.si-o{background:var(--orange-d)}.si-p{background:var(--purple-d)}.si-b{background:var(--blue-d)}
 .stat-info h3{font-size:23px;font-weight:700}
@@ -61,7 +61,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px}
 .card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .card-header h3{font-size:14.5px;font-weight:600}
-.table-wrap{overflow-x:auto}
+.table-wrap{overflow-x:auto;overflow-y:auto;max-height:72vh}
+.table-wrap thead th{position:sticky;top:0;z-index:2;background:var(--card);box-shadow:0 1px 0 var(--border)}
+tr.row-male td{background:rgba(59,130,246,0.07)!important}
+tr.row-female td{background:rgba(236,72,153,0.07)!important}
 table{width:100%;border-collapse:collapse}
 th{background:rgba(255,215,0,0.04);padding:11px 15px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border)}
 td{padding:12px 15px;font-size:13px;border-bottom:1px solid rgba(255,215,0,0.06)}
@@ -143,8 +146,7 @@ tr.dup-g6 td{background:rgba(239,68,68,0.08)!important;border-left:3px solid #ef
 .bulk-count{font-size:13px;color:var(--accent);font-weight:600}
 input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--accent);vertical-align:middle}
 th input[type=checkbox]{display:block;margin:0 auto}
-/* Athlete Profile */
-.ath-modal{max-width:720px}
+/* Athlete Profile (legacy — used by season view) */
 .ath-profile-header{background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(59,130,246,0.1));border-radius:12px;padding:22px;margin-bottom:20px;display:flex;align-items:center;gap:18px}
 .ath-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#cc8800);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#000;flex-shrink:0}
 .ath-profile-header h2{font-size:20px;font-weight:700;margin-bottom:4px}
@@ -207,16 +209,47 @@ th input[type=checkbox]{display:block;margin:0 auto}
   td,th{padding:9px 10px;font-size:12px}
 }
 /* ── Auth / Login ── */
-#login-screen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+#login-screen{position:fixed;inset:0;z-index:9999;background:#010810;display:flex;align-items:center;justify-content:center}
 #login-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
-.login-box{position:relative;z-index:1;background:#040f1e;border:1px solid var(--border);border-radius:20px;padding:40px 36px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.6)}
-.login-logo{width:58px;height:58px;background:linear-gradient(135deg,#FFD700,#cc8800);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
-.login-box h2{font-size:22px;font-weight:700;margin-bottom:4px}
-.login-box .login-sub{font-size:12px;color:var(--muted);margin-bottom:28px}
+.login-box{
+  position:relative;z-index:1;
+  background:linear-gradient(160deg,rgba(5,16,34,.96) 0%,rgba(8,22,46,.98) 100%);
+  backdrop-filter:blur(24px);
+  border:1px solid rgba(255,215,0,.18);
+  border-radius:28px;
+  padding:44px 40px 38px;
+  width:100%;max-width:400px;
+  text-align:center;
+  box-shadow:0 0 0 1px rgba(255,215,0,.06),0 0 60px rgba(255,215,0,.07),0 40px 100px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);
+  animation:loginIn .7s cubic-bezier(.34,1.4,.64,1) both;
+}
+@keyframes loginIn{from{opacity:0;transform:translateY(32px) scale(.95)}to{opacity:1;transform:none}}
+.login-top-glow{position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:240px;height:90px;background:radial-gradient(ellipse,rgba(255,215,0,.16) 0%,transparent 70%);pointer-events:none;animation:lglow 3s ease-in-out infinite}
+@keyframes lglow{0%,100%{opacity:.5}50%{opacity:1}}
+.login-logo-img{width:92px;height:92px;object-fit:contain;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(255,215,0,.3));animation:lpulse 4s ease-in-out infinite}
+@keyframes lpulse{0%,100%{filter:drop-shadow(0 0 14px rgba(255,215,0,.25))}50%{filter:drop-shadow(0 0 28px rgba(255,215,0,.5))}}
+.login-club-name{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;line-height:1.4;margin-bottom:2px}
+.login-club-sub{font-size:20px;font-weight:800;letter-spacing:.2px;background:linear-gradient(90deg,#cc8800,#FFD700,#FFF5B0,#FFD700,#cc8800);background-size:250%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite;margin-bottom:18px}
+@keyframes shimmer{from{background-position:250% center}to{background-position:-250% center}}
+.login-divider{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.25),transparent)}
+.login-divider span{font-size:9.5px;color:rgba(255,215,0,.55);letter-spacing:2px;font-weight:700;white-space:nowrap}
+.login-stats{display:flex;margin-bottom:22px;border:1px solid rgba(255,215,0,.1);border-radius:12px;overflow:hidden}
+.login-stat{flex:1;padding:10px 4px;border-right:1px solid rgba(255,215,0,.1)}
+.login-stat:last-child{border-right:none}
+.login-stat-num{font-size:22px;font-weight:800;color:#FFD700;line-height:1;margin-bottom:2px}
+.login-stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 .login-field{text-align:left;margin-bottom:14px}
-.login-field label{font-size:11.5px;font-weight:500;color:var(--muted);display:block;margin-bottom:5px}
-.login-field input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s;font-family:inherit}
-.login-field input:focus{border-color:var(--accent)}
+.login-field label{font-size:11px;font-weight:700;color:rgba(255,215,0,.65);letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:6px}
+.login-field input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s,background .2s;font-family:inherit;box-sizing:border-box}
+.login-field input:focus{border-color:rgba(255,215,0,.5);background:rgba(255,215,0,.03);box-shadow:0 0 0 3px rgba(255,215,0,.08)}
+.login-field input::placeholder{color:rgba(255,255,255,.25)}
+#login-btn{width:100%;padding:14px;font-size:14.5px;font-weight:800;letter-spacing:.6px;border:none;border-radius:12px;background:linear-gradient(135deg,#FFD700 0%,#E5A800 50%,#FFD700 100%);background-size:200%;color:#000;cursor:pointer;margin-top:6px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;animation:btnbg 4s linear infinite}
+@keyframes btnbg{from{background-position:0% center}to{background-position:200% center}}
+#login-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 25%,rgba(255,255,255,.4) 50%,transparent 75%);transform:translateX(-100%);animation:btnshine 3.5s ease-in-out infinite}
+@keyframes btnshine{0%,100%{transform:translateX(-100%)}55%{transform:translateX(100%)}}
+#login-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,215,0,.35)}
+#login-btn:active{transform:none;box-shadow:none}
 #login-error{color:var(--red);font-size:12px;margin-bottom:12px;display:none;text-align:left;padding:8px 12px;background:rgba(239,68,68,0.08);border-radius:6px;border:1px solid rgba(239,68,68,0.2)}
 body.role-user .admin-only{display:none!important}
 body.role-coordinator .admin-only{display:none!important}
@@ -261,6 +294,83 @@ body.role-manager .finance-only{display:none!important}
 .pc-actions{display:flex;gap:5px;justify-content:center;margin-top:9px}
 .view-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:7px;padding:4px 10px;color:var(--muted);cursor:pointer;font-size:13px;line-height:1;transition:all .15s}
 .view-btn.active,.view-btn:hover{background:var(--accent-d);border-color:rgba(255,215,0,.4);color:var(--accent)}
+/* ── Athlete 3D slide cards ── */
+/* ── ATHLETE CARD VIEWS ── */
+.ath-grid-outer{padding:16px 18px 20px}
+.ath-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.ath-slide{perspective:900px;animation:scardIn .32s ease both}
+@keyframes scardIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+/* Card base */
+.ath-scard{width:100%;height:320px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;
+  transform-style:preserve-3d;transition:transform .28s cubic-bezier(.34,1.2,.64,1),box-shadow .28s;
+  box-shadow:0 8px 28px rgba(0,0,0,.55)}
+.ath-scard:hover{transform:perspective(900px) rotateY(-5deg) rotateX(2deg) scale(1.03);box-shadow:16px 20px 44px rgba(0,0,0,.75),-2px -2px 16px rgba(255,215,0,.05)}
+/* Photo full-bleed */
+.ath-scard-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .4s ease}
+.ath-scard:hover .ath-scard-photo{transform:scale(1.06)}
+.ath-scard-avatar{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px;font-weight:900;color:rgba(255,255,255,.18);z-index:0;letter-spacing:-3px;user-select:none}
+.ath-scard-bg{position:absolute;inset:0;z-index:1}
+.ath-scard-shine{position:absolute;inset:0;z-index:2;background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,transparent 45%,rgba(0,0,0,.18) 100%);pointer-events:none}
+.ath-scard-num{position:absolute;top:10px;right:12px;z-index:3;font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.ath-scard-badge{position:absolute;top:10px;left:12px;z-index:3;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.4px;backdrop-filter:blur(4px)}
+.ath-scard-upload-btn{position:absolute;right:10px;bottom:88px;width:28px;height:28px;border-radius:50%;background:#FFD700;border:2px solid rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;z-index:4;opacity:0;transform:scale(.8);transition:opacity .2s,transform .2s}
+.ath-scard:hover .ath-scard-upload-btn{opacity:1;transform:scale(1)}
+.ath-scard-upload-btn:hover{transform:scale(1.18)!important}
+.ath-scard-body{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:70px 14px 12px;background:linear-gradient(to top,rgba(0,0,0,.98) 0%,rgba(0,0,0,.85) 50%,rgba(0,0,0,.3) 80%,transparent 100%)}
+.ath-scard-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ath-scard-info{font-size:10.5px;color:rgba(255,255,255,.58);margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ath-scard-actions{display:flex;gap:5px;opacity:0;transform:translateY(10px);transition:opacity .22s,transform .22s}
+.ath-scard:hover .ath-scard-actions{opacity:1;transform:translateY(0)}
+.ath-scard-actions button{flex:1;padding:6px 0;font-size:10.5px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;cursor:pointer;transition:all .15s;backdrop-filter:blur(4px)}
+.ath-scard-actions button:hover{background:rgba(255,215,0,.22);border-color:rgba(255,215,0,.4);color:#FFD700}
+/* Fan / overlap mode */
+.ath-fan-outer{padding:16px 18px 20px;overflow:hidden}
+.ath-fan{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.ath-fan .ath-slide{position:relative;transition:transform .25s ease,z-index .01s;z-index:1}
+.ath-fan .ath-slide:hover{z-index:10;transform:translateY(-10px) scale(1.04);filter:drop-shadow(0 16px 28px rgba(0,0,0,.8))}
+/* List mode */
+.ath-list-outer{padding:4px 0 12px}
+.ath-list-item{display:flex;align-items:center;gap:13px;padding:10px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;animation:scardIn .25s ease both}
+.ath-list-item:hover{background:rgba(255,255,255,.04)}
+.ath-list-photo{width:46px;height:46px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
+.ath-list-letter{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,.08)}
+.ath-list-info{flex:1;min-width:0}
+.ath-list-name{font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ath-list-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.ath-list-tag{font-size:9.5px;padding:2px 7px;border-radius:10px;font-weight:700;letter-spacing:.3px}
+.ath-list-idx{font-size:11px;color:rgba(255,255,255,.2);width:26px;text-align:right;flex-shrink:0}
+/* Beautiful athlete profile modal */
+.ath-modal{max-width:700px}
+.apf-hero{position:relative;height:200px;border-radius:14px 14px 0 0;overflow:hidden;margin:-20px -20px 0;flex-shrink:0}
+.apf-hero-img{width:100%;height:100%;object-fit:cover}
+.apf-hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.75) 100%)}
+.apf-hero-info{position:absolute;bottom:16px;left:20px;right:80px}
+.apf-hero-name{font-size:22px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6);line-height:1.2}
+.apf-hero-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
+.apf-hero-edit{position:absolute;bottom:12px;right:16px;background:rgba(255,215,0,.18);border:1px solid rgba(255,215,0,.4);color:#FFD700;border-radius:10px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:all .15s}
+.apf-hero-edit:hover{background:rgba(255,215,0,.32);border-color:#FFD700}
+.apf-chips{display:flex;flex-wrap:wrap;gap:6px;padding:14px 0 4px}
+.apf-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text)}
+.apf-chip.gold{background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.3);color:#FFD700}
+.apf-chip.blue{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#60a5fa}
+.apf-chip.pink{background:rgba(236,72,153,.12);border-color:rgba(236,72,153,.3);color:#f472b6}
+.apf-section{margin-top:16px}
+.apf-section-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,215,0,.15)}
+.apf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.apf-field{background:rgba(255,255,255,.03);border-radius:8px;padding:9px 13px;border:1px solid rgba(255,255,255,.05)}
+.apf-field.full{grid-column:1/-1}
+.apf-field .lbl{font-size:10px;color:var(--muted);margin-bottom:2px;letter-spacing:.3px}
+.apf-field .val{font-size:13px;font-weight:500;color:var(--text)}
+.apf-field .val.empty{color:var(--muted);font-style:italic;font-weight:400;font-size:12px}
+.apf-rec{display:flex;align-items:center;justify-content:space-between;padding:8px 13px;background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.12);border-radius:9px;margin-bottom:5px}
+.apf-rec-disc{font-size:12px;color:var(--muted)}
+.apf-rec-val{font-size:15px;font-weight:700;color:#FFD700}
+.apf-rec-meta{font-size:10px;color:var(--muted);text-align:right}
+/* Photo upload in form */
+.photo-upload-area{width:100px;height:100px;border-radius:50%;margin:0 auto 14px;position:relative;cursor:pointer;border:2px dashed rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(255,255,255,.03);transition:border-color .2s}
+.photo-upload-area:hover{border-color:rgba(255,215,0,.7);background:rgba(255,215,0,.05)}
+.photo-upload-area img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.photo-upload-hint{text-align:center;color:var(--muted);font-size:10.5px;line-height:1.4;padding:4px}
 /* Coach train discipline groups */
 .coach-train-groups{display:flex;flex-direction:column;gap:7px;margin-top:4px}
 .ctg-group{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:9px;overflow:hidden}
@@ -278,19 +388,27 @@ body.role-manager .finance-only{display:none!important}
 <div id="login-screen">
   <canvas id="login-canvas"></canvas>
   <div class="login-box">
-    <img src="/logo.png" style="width:90px;height:90px;object-fit:contain;margin-bottom:10px">
-    <h2 style="font-size:14px;font-weight:700;text-align:center;line-height:1.4">Fenerbahçe Spor Kulübü<br><span style="color:var(--accent)">Atletizm Şubesi</span></h2>
-    <p class="login-sub">Devam etmek için giriş yapın</p>
+    <div class="login-top-glow"></div>
+    <img class="login-logo-img" src="/logo.png" alt="Fenerbahçe">
+    <div class="login-club-name">Fenerbahçe Spor Kulübü</div>
+    <div class="login-club-sub">Atletizm Şubesi</div>
+    <div class="login-divider"><span>KADROMUZ</span></div>
+    <div class="login-stats">
+      <div class="login-stat"><div class="login-stat-num" id="ls-ath">—</div><div class="login-stat-lbl">Sporcu</div></div>
+      <div class="login-stat"><div class="login-stat-num" id="ls-coa">—</div><div class="login-stat-lbl">Antrenör</div></div>
+      <div class="login-stat"><div class="login-stat-num" id="ls-com">—</div><div class="login-stat-lbl">Yarışma</div></div>
+    </div>
+    <div class="login-divider"><span>GİRİŞ YAP</span></div>
     <div class="login-field">
-      <label>Kullanıcı adı</label>
-      <input id="login-username" type="text" placeholder="Kullanıcı adını girin" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('login-password').focus()">
+      <label>Kullanıcı Adı</label>
+      <input id="login-username" type="text" placeholder="Kullanıcı adınızı girin" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('login-password').focus()">
     </div>
     <div class="login-field">
       <label>Şifre</label>
-      <input id="login-password" type="password" placeholder="Şifrenizi girin" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <div id="login-error"></div>
-    <button id="login-btn" class="btn btn-primary" style="width:100%;padding:11px;font-size:14px;margin-top:2px" onclick="doLogin()">Giriş Yap</button>
+    <button id="login-btn" onclick="doLogin()">🔑 Giriş Yap</button>
   </div>
 </div>
 
@@ -317,6 +435,8 @@ body.role-manager .finance-only{display:none!important}
     <div class="nav-item" data-s="schedule"><span class="ico">📅</span><span>Yarışma Takvimi</span></div>
     <div class="nav-item" data-s="raceplan"><span class="ico">🗓️</span><span>Planlanan Yarış Takibi</span></div>
     <div class="nav-item" data-s="season2026"><span class="ico">🏅</span><span>Yarışmacı Sporcular</span></div>
+    <div class="nav-item" data-s="participants"><span class="ico">📊</span><span>Yarışmaya Katılanlar</span></div>
+    <div class="nav-item" data-s="tracking"><span class="ico">🔭</span><span>Sporcu Gözlemi</span></div>
     <div class="nav-item" data-s="competitions"><span class="ico">🎽</span><span>Yarışmalar</span></div>
     <div class="nav-item" data-s="statistics"><span class="ico">📈</span><span>İstatistikler</span></div>
 
@@ -326,9 +446,8 @@ body.role-manager .finance-only{display:none!important}
     <div class="nav-item finance-only" data-s="inventory"><span class="ico">📦</span><span>Envanter</span></div>
 
     <div class="nav-label">Bilgi</div>
-    <div class="nav-item" data-s="tracking"><span class="ico">🔭</span><span>Takip</span></div>
     <div class="nav-item" data-s="documents"><span class="ico">📁</span><span>Belgeler</span></div>
-    <div class="nav-item" data-s="contacts"><span class="ico">📋</span><span>Kişiler</span></div>
+    <div class="nav-item" data-s="contacts" style="display:none"><span class="ico">📋</span><span>Kişiler</span></div>
 
     <div class="nav-label admin-only">Yönetim</div>
     <div class="nav-item admin-only" data-s="users"><span class="ico">👤</span><span>Kullanıcılar</span></div>
@@ -350,10 +469,10 @@ body.role-manager .finance-only{display:none!important}
     <div class="topbar-right">
       <input type="text" id="topbar-search" class="search-box" placeholder="🔍 Ada göre ara..." oninput="globalSearch(this.value)" autocomplete="off">
       <div id="sync-indicator" style="min-width:90px;text-align:right"><span style="font-size:11px;color:var(--muted)">🔄</span></div>
-      <a href="index.html" class="lang-btn">🇷🇺 RU</a>
+      <a id="lang-link" href="index.html" class="lang-btn">🇷🇺 RU</a>
       <button class="btn btn-secondary admin-only" onclick="exportCSV()">📤 Dışa Aktar</button>
       <button class="btn btn-secondary admin-only" onclick="openImport()">📥 Dosya Yükle</button>
-      <button class="btn btn-primary admin-only" onclick="openAdd()">＋ Ekle</button>
+      <button class="btn btn-primary admin-only" onclick="cur==='dashboard'?openAddFromDash():openAdd()">＋ Ekle</button>
       <button class="btn btn-secondary" onclick="printDocument()" title="Yazdır / PDF" style="padding:7px 12px">🖨️</button>
       <div style="display:flex;align-items:center;gap:8px;padding:0 4px;border-left:1px solid var(--border);margin-left:4px">
         <span id="current-user" style="font-size:11.5px;color:var(--muted)"></span>
@@ -379,9 +498,7 @@ body.role-manager .finance-only{display:none!important}
     <!-- ─ DASHBOARD ─ -->
     <div class="section active" id="s-dashboard">
       <div id="dash-kpi" class="stats-row"></div>
-      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
-        <div class="view-toggle"><button id="vd-cards" class="active" onclick="setDashView('cards')">⊞ Kartlar</button><button id="vd-list" onclick="setDashView('list')">☰ Liste</button></div>
-      </div>
+      <div id="dash-controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px"></div>
       <div id="dash-age-groups"></div>
       <div id="dash-athletes-list" style="display:none"></div>
       <div id="dash-bottom" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px"></div>
@@ -418,7 +535,7 @@ body.role-manager .finance-only{display:none!important}
     <!-- ─ ATHLETES ─ -->
     <div class="section" id="s-athletes">
       <div class="card">
-        <div class="card-header"><h3>🏃 Sporcu Listesi</h3><div style="display:flex;gap:7px;align-items:center"><div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden"><button id="ath-view-tbl" class="view-btn active" onclick="setAthView('table')" title="Tablo">☰</button><button id="ath-view-grid" class="view-btn" onclick="setAthView('cards')" title="Kartlar">⊞</button></div><button class="btn btn-secondary btn-sm admin-only" id="sel-mode-athletes-btn" onclick="toggleSelMode('athletes')" title="Seçim modu">☐ Seç</button><button class="btn btn-secondary btn-sm admin-only" onclick="findDuplicates('athletes')">🔍 Tekrarlar</button><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div></div>
+        <div class="card-header"><h3>🏃 Sporcu Listesi</h3><div style="display:flex;gap:7px;align-items:center"><div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden"><button id="ath-view-tbl" class="view-btn" onclick="setAthView('table')" title="Tablo">☰</button><button id="ath-view-list" class="view-btn" onclick="setAthView('list')" title="Liste">≡</button><button id="ath-view-grid" class="view-btn active" onclick="setAthView('cards')" title="Kartlar">⊞</button><button id="ath-view-fan" class="view-btn" onclick="setAthView('fan')" title="Fan">❏</button></div><button class="btn btn-secondary btn-sm admin-only" id="sel-mode-athletes-btn" onclick="toggleSelMode('athletes')" title="Seçim modu">☐ Seç</button><button class="btn btn-secondary btn-sm admin-only" onclick="findDuplicates('athletes')">🔍 Tekrarlar</button><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div></div>
         <div class="dup-banner admin-only" id="dup-athletes">
           <span class="dup-info">⚠️ <strong id="dup-count-athletes">0</strong> grup tekrar bulundu — <span id="dup-rec-athletes">0</span> kayıt renklendirилdi</span>
           <button class="btn btn-secondary btn-sm" onclick="clearDupMode('athletes')">✕ Temizle</button>
@@ -531,7 +648,7 @@ body.role-manager .finance-only{display:none!important}
       <div id="lic-expiry-banner" style="display:none;background:rgba(255,149,0,0.12);border:1px solid rgba(255,149,0,0.3);border-radius:10px;padding:12px 18px;margin-bottom:16px;font-size:13px;color:var(--orange)"></div>
       <div class="card">
         <div class="card-header">
-          <h3>🪪 Sporcu Lisansları</h3>
+          <h3>🪪 Lisanslar</h3>
           <div style="display:flex;gap:7px;align-items:center">
             <select id="lic-filter-status" onchange="renderLicenses()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:13px">
               <option value="">Tüm durumlar</option>
@@ -539,14 +656,14 @@ body.role-manager .finance-only{display:none!important}
               <option value="expiring">⚠️ Süresi doluyor (30 gün)</option>
               <option value="expired">❌ Süresi doldu</option>
             </select>
-            <select id="lic-filter-ath" onchange="renderLicenses()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:13px"><option value="">Tüm sporcular</option></select>
+            <select id="lic-filter-ath" onchange="renderLicenses()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:13px"><option value="">Tüm kişiler</option></select>
             <button class="btn btn-secondary btn-sm" onclick="printLicenses()" title="Lisans listesini yazdır">🖨 Yazdır</button>
             <button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button>
           </div>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>Sporcu</th><th>Lisans No</th><th>Verilme tarihi</th><th>Geçerlilik tarihi</th><th>Durum</th><th>Notlar</th><th class="admin-only">İşlemler</th></tr></thead>
+            <thead><tr><th>#</th><th>Kişi</th><th>Lisans No</th><th>Verilme tarihi</th><th>Geçerlilik tarihi</th><th>Durum</th><th>Notlar</th><th class="admin-only">İşlemler</th></tr></thead>
             <tbody id="licenses-tb"></tbody>
           </table>
         </div>
@@ -706,6 +823,14 @@ body.role-manager .finance-only{display:none!important}
           </div>
         </div>
       </div>
+      <div class="card admin-only" style="margin-top:0">
+        <div class="card-header"><h3>🖼️ Fotoğraf Depolaması</h3></div>
+        <div style="padding:16px 18px">
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Sporcu fotoğrafları base64 formatında saklanıyorsa Supabase Storage'a taşıyın. Bu işlem boyutu önemli ölçüde azaltır.</p>
+          <button class="btn btn-primary" onclick="migratePhotosToStorage()">☁️ Fotoğrafları Aktar</button>
+          <span id="migrate-msg" style="font-size:12px;margin-left:10px;color:var(--muted)"></span>
+        </div>
+      </div>
     </div>
 
     <!-- ─ SALARIES ─ -->
@@ -716,7 +841,7 @@ body.role-manager .finance-only{display:none!important}
         <div class="card-header"><h3>👨‍🏫 Antrenör Maaşları</h3></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>Ad Soyad</th><th>Uzmanlık</th><th>T.C.</th><th>IBAN</th><th>Maaş/Ay</th><th>Sporcu Sayısı</th><th>% Pay</th></tr></thead>
+            <thead><tr><th>#</th><th>Ad Soyad</th><th>Uzmanlık</th><th>Maaş/Ay</th><th>Dönemsel/Ay</th><th>Bonus/Ay</th><th>İmzalama</th><th>Toplam/Ay</th><th>Sporcu</th><th>% Pay</th></tr></thead>
             <tbody id="sal-coaches-tb"></tbody>
           </table>
         </div>
@@ -726,7 +851,7 @@ body.role-manager .finance-only{display:none!important}
         <div class="card-header"><h3>🏃 Sporcu Bursu / Maaşı</h3><span style="font-size:11.5px;color:var(--muted)">Antrenör maaşı sporcular üzerinden dağıtılır</span></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>Sporcu</th><th>Antrenör</th><th>T.C.</th><th>IBAN</th><th>Burs/Ay</th><th>Ant. Payı</th><th>Toplam/Ay</th><th>Toplam/Yıl</th><th>% Bütçe</th></tr></thead>
+            <thead><tr><th>#</th><th>Sporcu</th><th>Antrenör</th><th>Burs/Ay</th><th>Dönemsel/Ay</th><th>Bonus/Ay</th><th>İmzalama</th><th>Ant. Payı</th><th>Toplam/Ay</th><th>Toplam/Yıl</th><th>% Bütçe</th></tr></thead>
             <tbody id="sal-athletes-tb"></tbody>
           </table>
         </div>
@@ -736,6 +861,7 @@ body.role-manager .finance-only{display:none!important}
 
     <!-- ─ INVENTORY ─ -->
     <div class="section" id="s-inventory">
+      <div id="inv-fin-summary" style="margin-bottom:14px"></div>
       <div class="card">
         <div class="card-header"><h3>📦 Envanter</h3><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div>
         <div class="filter-row">
@@ -778,6 +904,7 @@ body.role-manager .finance-only{display:none!important}
 
     <!-- ─ EXPENSES ─ -->
     <div class="section" id="s-expenses">
+      <div id="exp-fin-summary" style="margin-bottom:14px"></div>
       <div class="card">
         <div class="card-header"><h3>🧾 Sporcu Harcamaları</h3><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div>
         <div class="filter-row">
@@ -805,8 +932,41 @@ body.role-manager .finance-only{display:none!important}
     <!-- ─ DOCUMENTS ─ -->
     <div class="section" id="s-documents">
       <div class="card">
-        <div class="card-header"><h3>📁 Belgeler ve Eğitim Materyalleri</h3><button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button></div>
-        <div class="doc-grid" id="docs-grid"></div>
+        <div class="card-header">
+          <h3>📁 Belgeler</h3>
+          <button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Yükle</button>
+        </div>
+        <div class="filter-row">
+          <input type="text" id="fdoc-q" placeholder="🔍 Belge ara..." oninput="renderDocuments()" style="flex:1;max-width:280px">
+          <select id="fdoc-cat" onchange="renderDocuments()">
+            <option value="">Tüm kategoriler</option>
+            <option>Antrenman Planı</option>
+            <option>Tıbbi Belgeler</option>
+            <option>Resmi Belgeler</option>
+            <option>Yarışma</option>
+            <option>Sözleşme</option>
+            <option>Bağlantı</option>
+            <option>Diğer</option>
+          </select>
+          <select id="fdoc-type" onchange="renderDocuments()">
+            <option value="">Tüm türler</option>
+            <option>PDF</option>
+            <option>DOC / DOCX</option>
+            <option>XLS / XLSX</option>
+            <option>Görsel</option>
+            <option>Bağlantı</option>
+            <option>Diğer</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Belge</th><th>Kategori</th><th>Tür</th>
+              <th>Yükleyen</th><th>Tarih</th><th class="admin-only">İşlem</th>
+            </tr></thead>
+            <tbody id="docs-tb"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -815,7 +975,7 @@ body.role-manager .finance-only{display:none!important}
     <div class="section" id="s-tracking">
       <div class="card">
         <div class="card-header">
-          <h3>🔭 Sporcu Gelişim Takibi</h3>
+          <h3>🔭 Sporcu Gözlemi</h3>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="text" id="track-search" class="search-box" style="width:200px" placeholder="🔍 Ara..." oninput="renderTracking()">
             <button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button>
@@ -838,6 +998,34 @@ body.role-manager .finance-only{display:none!important}
               <th class="admin-only">İşlem</th>
             </tr></thead>
             <tbody id="tracking-tb"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─ PARTICIPANTS ─ -->
+    <div class="section" id="s-participants">
+      <div class="card">
+        <div class="card-header">
+          <h3>📊 Yarışmaya Katılanlar</h3>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="part-search" class="search-box" style="width:200px" placeholder="🔍 Sporcu veya yarışma ara..." oninput="renderParticipants()">
+            <button class="btn btn-primary btn-sm admin-only" onclick="openAdd()">＋ Ekle</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th>
+              <th>Sporcu</th>
+              <th>Yarışma</th>
+              <th>Tarih</th>
+              <th>Branş</th>
+              <th>Derece</th>
+              <th>Sonuç</th>
+              <th class="admin-only"></th>
+            </tr></thead>
+            <tbody id="part-body"></tbody>
           </table>
         </div>
       </div>
@@ -983,15 +1171,9 @@ body.role-manager .finance-only{display:none!important}
 </div>
 
 <div class="modal-overlay" id="ath-ov">
-  <div class="modal ath-modal">
-    <div class="modal-header">
-      <h3>📋 Sporcu Kartı</h3>
-      <button class="modal-close" onclick="closeAthProfile()">✕</button>
-    </div>
-    <div class="modal-body" id="ath-body"></div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeAthProfile()">Kapat</button>
-    </div>
+  <div class="modal ath-modal" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+    <button class="modal-close" onclick="closeAthProfile()" style="position:absolute;top:10px;right:12px;z-index:20;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);color:#fff;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)">✕</button>
+    <div class="modal-body" id="ath-body" style="padding:0 20px 20px;overflow-y:auto;max-height:85vh"></div>
   </div>
 </div>
 
@@ -1122,7 +1304,8 @@ const TITLES = {
   management:   ['Yönetim','Kulüp yönetim kadrosu'],
   records:      ['Kişisel Rekorlar','Sporcuların kişisel rekorları'],
   licenses:     ['Lisanslar','Sporcu lisansları'],
-  tracking:     ['Takip','Kulüp dışı sporcu takibi'],
+  tracking:     ['Sporcu Gözlemi','Sporcu gelişim takibi'],
+  participants: ['Yarışmaya Katılanlar','Sezon yarışma katılımları'],
 };
 
 function load(key){ try{ const a=JSON.parse(localStorage.getItem('ak_'+key)||'[]'); const seen=new Set(); return a.filter(i=>{if(!i.id||seen.has(i.id))return false;seen.add(i.id);return true;}); }catch{ return []; } }
@@ -1138,6 +1321,9 @@ document.querySelectorAll('.nav-item').forEach(el=>{
 
 function go(s){
   cur=s;
+  location.hash=s;
+  const ll=document.getElementById('lang-link');
+  if(ll) ll.href='index.html#'+s;
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.s===s));
   document.querySelectorAll('.section').forEach(sec=>sec.classList.toggle('active',sec.id==='s-'+s));
   const titles=TITLES[s]||[s,''];
@@ -1155,7 +1341,7 @@ function render(s){
   else if(s==='season2026') renderSeason2026();
   else if(s==='expenses'){ const _ses=getSession(); if(_ses&&_ses.role==='coordinator') return; renderExpenses(); }
   else if(s==='salaries'){ const _ses=getSession(); if(_ses&&_ses.role==='coordinator') return; renderSalaries(); }
-  else if(s==='documents') renderDocs();
+  else if(s==='documents') renderDocuments();
   else if(s==='contacts') renderContacts();
   else if(s==='settings') renderSettings();
   else if(s==='schedule') renderSchedule();
@@ -1169,6 +1355,7 @@ function render(s){
   else if(s==='licenses') renderLicenses();
   else if(s==='users') { renderUsers(); renderBackups(); }
   else if(s==='tracking') renderTracking();
+  else if(s==='participants') renderParticipants();
 }
 
 function toggleSidebar(){
@@ -1208,7 +1395,7 @@ function globalSearch(q){
       html+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:28px">`;
       html+=coaches.map(c=>{
         const nAth=load('athletes').filter(a=>!a.leftDate&&a.coachId===c.id).length;
-        return `<div class="card" style="margin:0;cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="closeSearch();go('coaches');document.getElementById('fc-name').value=${JSON.stringify(c.name)};renderCoaches()">
+        return `<div class="card" style="margin:0;cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="closeSearch();viewCoach('${c.id}')">
           <div style="padding:16px">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
               <div style="width:46px;height:46px;border-radius:50%;background:var(--accent-d);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:var(--accent);flex-shrink:0">${esc((c.name||'?')[0])}</div>
@@ -1230,7 +1417,7 @@ function globalSearch(q){
       html+=athletes.map(a=>{
         const co=allCoaches.find(c=>c.id===a.coachId);
         const ag=ageGroup(a.bdate);
-        return `<div class="card" style="margin:0;cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="closeSearch();go('athletes');document.getElementById('fa-name').value=${JSON.stringify(a.name)};renderAthletes()">
+        return `<div class="card" style="margin:0;cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="closeSearch();viewAthlete('${a.id}')">
           <div style="padding:16px">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
               <div style="width:46px;height:46px;border-radius:50%;background:var(--orange-d);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:var(--orange);flex-shrink:0">${esc((a.name||'?')[0])}</div>
@@ -1260,29 +1447,35 @@ document.addEventListener('keydown',e=>{
 });
 
 let dashViewMode = localStorage.getItem('ak_dash_view') || 'cards';
-function setDashView(mode) {
-  dashViewMode = mode;
-  localStorage.setItem('ak_dash_view', mode);
-  document.getElementById('vd-cards').classList.toggle('active', mode === 'cards');
-  document.getElementById('vd-list').classList.toggle('active', mode === 'list');
-  document.getElementById('dash-age-groups').style.display = mode === 'cards' ? '' : 'none';
-  document.getElementById('dash-athletes-list').style.display = mode === 'list' ? '' : 'none';
-  if(mode === 'list') renderDashList();
-  else renderDash();
-}
+let _dashSort = 'name';
+let _dashGender = 'all';
+function setDashView(mode){dashViewMode=mode;localStorage.setItem('ak_dash_view',mode);renderDash();}
+function setDashSort(s){_dashSort=s;renderDash();}
+function setDashGender(g){_dashGender=g;renderDash();}
 function renderDashList() {
   const coaches = load('coaches');
-  const athletes = load('athletes').filter(a=>!a.leftDate);
+  let athletes = load('athletes').filter(a=>!a.leftDate);
+  if(_dashGender==='men') athletes=athletes.filter(a=>a.gender==='E'||a.gender==='М');
+  else if(_dashGender==='women') athletes=athletes.filter(a=>a.gender==='K'||a.gender==='Ж');
+  const sortFn=_dashSort==='age'?(a,b)=>(a.bdate||'').localeCompare(b.bdate||''):_dashSort==='spec'?(a,b)=>(a.spec||'').localeCompare(b.spec||'','tr'):(a,b)=>(a.name||'').localeCompare(b.name||'','tr');
+  athletes.sort(sortFn);
   const wrap = document.getElementById('dash-athletes-list');
   if(!athletes.length){ wrap.innerHTML = `<div class="card"><div style="padding:40px;text-align:center;color:var(--muted)">🏃 Sporcu yok</div></div>`; return; }
   wrap.innerHTML = `<div class="card"><div class="table-wrap"><table>
-    <thead><tr><th>#</th><th>Ad Soyad</th><th>Yaş Gr.</th><th>Uzmanlık</th><th>Antrenör</th><th>Telefon</th></tr></thead>
+    <thead><tr><th>#</th><th>Ad Soyad</th><th>D.Yılı</th><th>Yaş Gr.</th><th>Uzmanlık</th><th>Antrenör</th><th>Telefon</th></tr></thead>
     <tbody>${athletes.map((a,i)=>{
       const co = coaches.find(c=>c.id===a.coachId);
       const ag = ageGroup(a.bdate);
-      return `<tr>
+      const byear = a.bdate ? a.bdate.slice(0,4) : '—';
+      const isMale=a.gender==='E'||a.gender==='М', isFemale=a.gender==='K'||a.gender==='Ж';
+      const rowCls=isMale?'row-male':isFemale?'row-female':'';
+      const nameColor=isMale?'#60a5fa':isFemale?'#f472b6':'var(--text)';
+      return `<tr class="${rowCls}">
         <td style="color:var(--muted)">${i+1}</td>
-        <td><strong>${esc(a.name)}</strong></td>
+        <td style="cursor:pointer" onclick="viewAthlete('${a.id}')">
+          <strong style="color:${nameColor}">${a.waUrl?`<span style="font-size:10px;opacity:.7">🌐 </span>`:''}${esc(a.name)}${a.ig?` <span style="font-size:10px;opacity:.7">📷</span>`:''}</strong>
+        </td>
+        <td style="color:var(--muted)">${byear}</td>
         <td>${ag?`<span class="badge bb">${ag}</span>`:'—'}</td>
         <td><span class="badge bo">${specDisplay(a.spec,'bo')}</span></td>
         <td>${co?`<span class="badge bt">${esc(co.name.split(' ').slice(0,2).join(' '))}</span>`:'—'}</td>
@@ -1293,50 +1486,54 @@ function renderDashList() {
 }
 
 function renderDash(){
+  const isAdmin=document.body.classList.contains('role-admin');
   const coaches   = load('coaches');
   const allAths   = load('athletes');
   const active    = allAths.filter(a=>!a.leftDate);
-  const expenses  = load('expenses');
+  const licenses  = load('licenses');
   const comps     = load('competitions');
   const menKpi   = active.filter(a=>a.gender==='E'||a.gender==='М');
   const womenKpi = active.filter(a=>a.gender==='K'||a.gender==='Ж');
-  const totalExp = expenses.reduce((s,e)=>s+Number(e.amount||0),0);
-  const alumni   = allAths.filter(a=>a.leftDate).length;
+  const findLic=id=>licenses.find(l=>l.athId===id&&l.type!=='coach')||licenses.find(l=>l.athId===id);
+  const findCoachLic=id=>licenses.find(l=>l.coachId===id);
+  const athLic  =active.map(a=>({lic:findLic(a.id)}));
+  const coaLic  =coaches.map(c=>({lic:findCoachLic(c.id)}));
+  const allLic  =[...athLic,...coaLic];
+  const licActive  =allLic.filter(x=>x.lic&&licStatus(x.lic.expiryDate).key==='active').length;
+  const licExpiring=allLic.filter(x=>x.lic&&licStatus(x.lic.expiryDate).key==='expiring').length;
+  const licExpired =allLic.filter(x=>x.lic&&licStatus(x.lic.expiryDate).key==='expired').length;
+  const licMissing =allLic.filter(x=>!x.lic).length;
 
   document.getElementById('dash-kpi').innerHTML=`
     <div class="stat-card"><div class="stat-icon si-o">🏃</div><div class="stat-info"><h3>${active.length}</h3><p>Aktif Sporcu</p></div></div>
     <div class="stat-card"><div class="stat-icon si-b" style="background:rgba(96,165,250,0.15)">♂</div><div class="stat-info"><h3>${menKpi.length}</h3><p>Erkekler</p></div></div>
     <div class="stat-card"><div class="stat-icon si-p" style="background:rgba(244,114,182,0.15)">♀</div><div class="stat-info"><h3>${womenKpi.length}</h3><p>Kadınlar</p></div></div>
     <div class="stat-card"><div class="stat-icon si-t">👨‍🏫</div><div class="stat-info"><h3>${coaches.length}</h3><p>Antrenör</p></div></div>
-    ${canSeeFinance()?`<div class="stat-card"><div class="stat-icon si-p">💸</div><div class="stat-info"><h3 style="font-size:17px">${money(totalExp)}</h3><p>Toplam Harcama</p></div></div>`:''}
-    <div class="stat-card"><div class="stat-icon si-o">🚪</div><div class="stat-info"><h3>${alumni}</h3><p>Ayrılanlar</p></div></div>`;
+    <div class="stat-card" style="cursor:pointer" onclick="go('licenses')"><div class="stat-icon" style="background:rgba(34,197,94,.15);font-size:18px">🪪</div><div class="stat-info"><h3>${licActive}${licExpiring?`<span style="font-size:13px;color:var(--orange);margin-left:6px">+${licExpiring}⚠</span>`:''}</h3><p>Aktif Lisans</p></div></div>
+    <div class="stat-card" style="cursor:pointer" onclick="go('licenses')" title="Yok: ${licMissing} · Süresi dolmuş: ${licExpired}"><div class="stat-icon" style="background:rgba(239,68,68,.15);font-size:18px">⚠️</div><div class="stat-info"><h3 style="${(licMissing+licExpired)>0?'color:var(--red)':''}">${licMissing+licExpired}</h3><p>Lisans Gerekiyor</p></div></div>`;
 
-  // ── Individual athlete cards ──
-  const dashAthCard = a => {
-    const co = coaches.find(c=>c.id===a.coachId);
-    const ag = ageGroup(a.bdate);
-    const initials = (a.name||'?').split(' ').map(w=>w[0]).slice(0,2).join('');
-    const spec = a.spec ? a.spec.split(',')[0].trim() : '';
-    const gColor = a.gender==='K'||a.gender==='Ж' ? '#f472b6' : '#60a5fa';
-    const gLabel = a.gender==='E'||a.gender==='М' ? '♂' : a.gender==='K'||a.gender==='Ж' ? '♀' : '';
-    return `<div class="card" style="margin:0;cursor:pointer;transition:border-color .18s,transform .15s" onmouseover="this.style.borderColor='rgba(255,215,0,0.35)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''" onclick="viewAthlete('${a.id}')">
-      <div style="padding:14px 16px;display:flex;align-items:center;gap:12px">
-        ${a.photo
-          ? `<img src="${a.photo}" class="photo-circle" style="width:48px;height:48px;flex-shrink:0">`
-          : `<div style="width:48px;height:48px;border-radius:50%;background:var(--accent-d);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--accent);flex-shrink:0">${esc(initials)}</div>`}
-        <div style="flex:1;min-width:0">
-          <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-            ${esc(a.name)}${gLabel?` <span style="font-size:11px;color:${gColor}">${gLabel}</span>`:''}
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;display:flex;flex-wrap:wrap;gap:4px;align-items:center">
-            ${ag?`<span class="badge bb" style="font-size:9.5px;padding:1px 6px">${ag}</span>`:''}
-            ${spec?`<span class="badge bo" style="font-size:9.5px;padding:1px 6px">${esc(spec)}</span>`:''}
-          </div>
-          ${co?`<div style="font-size:11px;color:var(--muted);margin-top:3px">👤 ${esc(co.name.split(' ').slice(0,2).join(' '))}</div>`:''}
-        </div>
+  document.getElementById('dash-controls').innerHTML=`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <div class="view-toggle">
+        <button ${_dashSort==='name'?'class="active"':''} onclick="setDashSort('name')">А-Я</button>
+        <button ${_dashSort==='age'?'class="active"':''} onclick="setDashSort('age')">Yaş</button>
+        <button ${_dashSort==='spec'?'class="active"':''} onclick="setDashSort('spec')">Branş</button>
       </div>
+      <div class="view-toggle">
+        <button ${_dashGender==='all'?'class="active"':''} onclick="setDashGender('all')">Tümü</button>
+        <button ${_dashGender==='men'?'class="active"':''} onclick="setDashGender('men')">♂ Erkek</button>
+        <button ${_dashGender==='women'?'class="active"':''} onclick="setDashGender('women')">♀ Kadın</button>
+      </div>
+    </div>
+    <div class="view-toggle">
+      <button ${dashViewMode==='cards'?'class="active"':''} onclick="setDashView('cards')">⊞ Kartlar</button>
+      <button ${dashViewMode==='list'?'class="active"':''} onclick="setDashView('list')">☰ Liste</button>
     </div>`;
-  };
+
+  const sortFn=_dashSort==='age'?(a,b)=>(a.bdate||'').localeCompare(b.bdate||''):_dashSort==='spec'?(a,b)=>(a.spec||'').localeCompare(b.spec||'','tr'):(a,b)=>(a.name||'').localeCompare(b.name||'','tr');
+  let dashActive=active;
+  if(_dashGender==='men') dashActive=active.filter(a=>a.gender==='E'||a.gender==='М');
+  else if(_dashGender==='women') dashActive=active.filter(a=>a.gender==='K'||a.gender==='Ж');
 
   const AG_ORDER = ['U14','U16','U18','U20','Senior'];
   const AG_COLOR_MAP = {U14:'var(--blue)',U16:'var(--purple)',U18:'var(--accent)',U20:'var(--orange)',Senior:'var(--red)'};
@@ -1345,6 +1542,7 @@ function renderDash(){
     if(!list.length) return '';
     const byAg = {};
     for(const a of list){ const ag = ageGroup(a.bdate)||'_none'; (byAg[ag]=byAg[ag]||[]).push(a); }
+    for(const ag in byAg) byAg[ag].sort(sortFn);
     const agBlocks = [...AG_ORDER,'_none'].map(ag=>{
       const grp=byAg[ag]; if(!grp) return '';
       const agLabel=ag==='_none'?'Grup yok':ag;
@@ -1353,7 +1551,7 @@ function renderDash(){
         <div style="font-size:11px;font-weight:600;color:${agColor};margin-bottom:8px;display:flex;align-items:center;gap:6px">
           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${agColor}"></span>${agLabel} <span style="color:var(--muted);font-weight:400">(${grp.length})</span>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px">${grp.map(dashAthCard).join('')}</div>
+        <div class="ath-grid">${grp.map((a,i)=>_buildAthCard(a,i,coaches,isAdmin)).join('')}</div>
       </div>`;
     }).join('');
     return `<div style="margin-bottom:24px">
@@ -1362,9 +1560,9 @@ function renderDash(){
     </div>`;
   };
 
-  const men   = active.filter(a=>a.gender==='E'||a.gender==='М');
-  const women = active.filter(a=>a.gender==='K'||a.gender==='Ж');
-  const noGnd = active.filter(a=>a.gender!=='E'&&a.gender!=='К'&&a.gender!=='М'&&a.gender!=='Ж'&&a.gender!=='K');
+  const men   = dashActive.filter(a=>a.gender==='E'||a.gender==='М');
+  const women = dashActive.filter(a=>a.gender==='K'||a.gender==='Ж');
+  const noGnd = dashActive.filter(a=>!['E','K','М','Ж'].includes(a.gender));
 
   const emptyDash=`<div class="card"><div style="padding:48px;text-align:center;color:var(--muted)">
     <div style="font-size:48px;margin-bottom:12px">🏃</div>
@@ -1372,31 +1570,27 @@ function renderDash(){
     <div style="font-size:13px">İlk sporcuyu «Sporcular» bölümünden ekleyin</div>
   </div></div>`;
 
-  document.getElementById('vd-cards').classList.toggle('active', dashViewMode === 'cards');
-  document.getElementById('vd-list').classList.toggle('active', dashViewMode === 'list');
   document.getElementById('dash-age-groups').style.display = dashViewMode === 'cards' ? '' : 'none';
   document.getElementById('dash-athletes-list').style.display = dashViewMode === 'list' ? '' : 'none';
   if(dashViewMode === 'list') { renderDashList(); }
-
-  document.getElementById('dash-age-groups').innerHTML = active.length
-    ? (genderSection('♂ Erkekler — '+men.length,'#60a5fa',men) +
-       genderSection('♀ Kadınlar — '+women.length,'#f472b6',women) +
-       genderSection('Cinsiyet belirtilmemiş — '+noGnd.length,'var(--muted)',noGnd))
-    : emptyDash;
+  else {
+    document.getElementById('dash-age-groups').innerHTML = dashActive.length
+      ? ((_dashGender==='all'||_dashGender==='men'?genderSection('♂ Erkekler — '+men.length,'#60a5fa',men):'') +
+         (_dashGender==='all'||_dashGender==='women'?genderSection('♀ Kadınlar — '+women.length,'#f472b6',women):'') +
+         (_dashGender==='all'?genderSection('Cinsiyet belirtilmemiş — '+noGnd.length,'var(--muted)',noGnd):''))
+      : emptyDash;
+  }
 
   const coachCard=`<div class="card">
     <div class="card-header"><h3>👨‍🏫 Antrenörler <span class="badge bt" style="margin-left:8px">${coaches.length}</span></h3></div>
     <div style="padding:14px 16px">${coaches.length?coaches.map(c=>{
       const nAth=active.filter(a=>a.coachId===c.id).length;
-      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,215,0,0.05)">
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,215,0,0.05);cursor:pointer" onclick="viewCoach('${c.id}')">
         <div>
           <div style="font-size:13px;font-weight:600">${esc(c.name.split(' ').slice(0,2).join(' '))}</div>
           <div style="font-size:11px;color:var(--muted)">${c.spec?esc(c.spec.split(',')[0].trim()):''}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="badge bb" style="font-size:10.5px">${nAth} sporcu</span>
-          ${canSeeFinance()?`<span style="font-size:12.5px;color:var(--accent);font-weight:600">${c.salary?money(c.salary):'—'}</span>`:''}
-        </div>
+        <span class="badge bb" style="font-size:10.5px">${nAth} sporcu</span>
       </div>`;
     }).join(''):`<div style="text-align:center;padding:24px;color:var(--muted)">Antrenör yok</div>`}
     </div>
@@ -1439,22 +1633,36 @@ function renderCoachCards(list){
   tblWrap.style.display='none';
   gridWrap.style.display='';
   if(!list.length){gridWrap.innerHTML=`<div style="padding:32px;text-align:center;color:var(--muted)">Antrenör bulunamadı</div>`;return;}
-  const palettes=[['#FFD700','#cc8800','#000'],['#3b82f6','#1d4ed8','#fff'],['#10b981','#065f46','#fff'],['#f59e0b','#92400e','#fff'],['#8b5cf6','#4c1d95','#fff'],['#ef4444','#991b1b','#fff']];
-  gridWrap.innerHTML=`<div class="person-grid">${list.map((c,i)=>{
+  const palettes=[['#FFD700','#cc8800'],['#3b82f6','#1d4ed8'],['#10b981','#065f46'],['#f59e0b','#b45309'],['#8b5cf6','#4c1d95'],['#ef4444','#991b1b']];
+  const isAdmin=document.body.classList.contains('role-admin');
+  const cards=list.map((c,i)=>{
     const ini=(c.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
-    const [c1,c2,ct]=palettes[i%palettes.length];
-    const isAdmin=document.body.classList.contains('role-admin');
-    return `<div class="person-card" style="animation-delay:${Math.min(i*0.04,0.4)}s" onclick="viewCoach('${c.id}')">
-      <div class="pc-avatar" style="background:linear-gradient(135deg,${c1},${c2});color:${ct}">${ini}</div>
-      <div class="pc-name" title="${esc(c.name)}">${esc(c.name)}</div>
-      <div class="pc-sub">${c.coachCategory||'Antrenör'}</div>
-      ${c.spec?`<div style="margin:4px 0">${specDisplay(c.spec,'bt')}</div>`:''}
-      <div class="pc-actions">
-        ${isAdmin?`<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();edit('coaches','${c.id}')">✏</button>`:``}
-        ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();del('coaches','${c.id}')">✕</button>`:''}
+    const [c1,c2]=palettes[i%palettes.length];
+    const infoStr=[c.spec?`<span class="badge bt">${esc(c.spec.split(',')[0].trim())}</span>`:null,c.city?esc(c.city):null].filter(Boolean).join(' · ')||'Antrenör';
+    return `<div class="ath-slide" style="animation-delay:${Math.min(i*0.04,0.5)}s">
+      <div class="ath-scard" onclick="viewCoach('${c.id}')">
+        ${c.photo
+          ?`<img class="ath-scard-photo" src="${c.photo}" alt="">`
+          :`<div class="ath-scard-bg" style="background:linear-gradient(160deg,${c1} 0%,${c2} 55%,#020810 100%)"></div><div class="ath-scard-avatar">${esc(ini)}</div>`}
+        <div class="ath-scard-shine"></div>
+        <div class="ath-scard-num">#${String(i+1).padStart(3,'0')}</div>
+        ${c.coachCategory?`<div class="ath-scard-badge" style="background:rgba(255,215,0,.35);font-size:9px">${esc(c.coachCategory)}</div>`:''}
+        ${isAdmin?`<div class="ath-scard-upload-btn" onclick="event.stopPropagation();uploadPhotoForCoach('${c.id}')" title="Fotoğraf yükle">📷</div>`:''}
+        <div class="ath-scard-body">
+          <div class="ath-scard-name">${esc(c.name)}${c.ig?` <span style="font-size:10px;opacity:.75" title="Instagram">📷</span>`:''}${c.waUrl?` <span style="font-size:10px;opacity:.75" title="World Athletics">🌐</span>`:''}</div>
+          <div class="ath-scard-info">${infoStr}</div>
+          <div class="ath-scard-actions">
+            <button onclick="event.stopPropagation();viewCoach('${c.id}')">👁 Kart</button>
+            ${isAdmin?`<button onclick="event.stopPropagation();edit('coaches','${c.id}')">✏ Düzenle</button>`:''}
+          </div>
+        </div>
       </div>
     </div>`;
-  }).join('')}</div>`;
+  }).join('');
+  gridWrap.innerHTML=`<div class="ath-grid-outer">
+    <div style="padding:0 0 10px;font-size:11px;color:var(--muted)">${list.length} antrenör</div>
+    <div class="ath-grid">${cards}</div>
+  </div>`;
 }
 
 function renderCoaches(){
@@ -1499,12 +1707,177 @@ function fillCoachFilter(){
   sel.innerHTML='<option value="">Tüm Antrenörler</option>'+coaches.map(c=>`<option value="${c.id}"${c.id===v?' selected':''}>${esc(c.name)}</option>`).join('');
 }
 
-let _athViewMode='table';
+let _athViewMode='cards';
 function setAthView(mode){
   _athViewMode=mode;
-  document.getElementById('ath-view-tbl')?.classList.toggle('active',mode==='table');
-  document.getElementById('ath-view-grid')?.classList.toggle('active',mode==='cards');
+  _initAthViewButtons();
   renderAthletes();
+}
+function _initAthViewButtons(){
+  ['table','list','cards','fan'].forEach(m=>{
+    const id={table:'ath-view-tbl',list:'ath-view-list',cards:'ath-view-grid',fan:'ath-view-fan'}[m];
+    document.getElementById(id)?.classList.toggle('active',_athViewMode===m);
+  });
+}
+
+async function uploadPhotoToStorage(b64, filename){
+  try{
+    const r=await fetch(getApiUrl()+'?action=upload_photo',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({base64:b64,filename:filename||'photo.jpg'})
+    });
+    const d=await r.json();
+    return d.ok?d.url:null;
+  }catch{return null;}
+}
+
+function resizePhoto(file, maxPx=600, quality=1.0){
+  return new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const side=Math.min(img.width,img.height);
+        const sx=Math.round((img.width-side)/2);
+        const sy=Math.round(Math.max(0,(img.height-side)/2 - side*0.05));
+        const out=Math.min(maxPx,side);
+        const c=document.createElement('canvas');
+        c.width=out; c.height=out;
+        c.getContext('2d').drawImage(img,sx,sy,side,side,0,0,out,out);
+        const mime={'image/png':'image/png','image/webp':'image/webp','image/gif':'image/png'}[file.type]||'image/jpeg';
+        resolve(c.toDataURL(mime, mime==='image/png'?undefined:quality));
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+const _IBAN_BANKS={
+  '00010':'Ziraat Bankası','00012':'Halkbank','00015':'Vakıfbank','00046':'Akbank',
+  '00062':'Garanti BBVA','00064':'Türkiye İş Bankası','00067':'Yapı Kredi Bankası',
+  '00091':'Fibabanka','00099':'ING Bank Türkiye','00111':'QNB Finansbank',
+  '00123':'HSBC Bank','00134':'DenizBank','00148':'Kuveyt Türk',
+  '00161':'TEB (Türk Ekonomi Bankası)','00165':'Odeabank','00203':'Albaraka Türk',
+  '00210':'Türkiye Finans Katılım','00239':'Albaraka Türk','00250':'Burgan Bank',
+  '00252':'Ziraat Katılım Bankası','00253':'Vakıf Katılım Bankası',
+  '00309':'Papara','00400':'Şekerbank','00492':'CitiBank',
+};
+function detectIbanBank(input){
+  const raw=(input.value||'').replace(/[\s\-]/g,'').toUpperCase();
+  const displayId=input.dataset.bankDisplay||'iban-bank-display';
+  const el=document.getElementById(displayId);
+  if(!el) return;
+  if(!raw.startsWith('TR')||raw.length<9){el.textContent='';return;}
+  const code=raw.substring(4,9);
+  const name=_IBAN_BANKS[code]||'';
+  el.textContent=name?'🏦 '+name:'';
+  el.style.color=name?'#22c55e':'var(--muted)';
+}
+
+async function handlePhotoUpload(input){
+  if(!input.files||!input.files[0]) return;
+  const file=input.files[0];
+  const b64=await resizePhoto(file);
+  const prev=document.getElementById('fphoto-preview');
+  const hint=document.getElementById('fphoto-hint');
+  // Show base64 immediately for instant feedback
+  if(prev){prev.src=b64;prev.style.display='block';delete prev.dataset.storageUrl;}
+  if(hint) hint.style.display='none';
+  // Upload to Supabase Storage in background
+  const url=await uploadPhotoToStorage(b64, file.name);
+  if(url&&prev) prev.dataset.storageUrl=url;
+}
+
+async function uploadPhotoForAthlete(id){
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';
+  input.onchange=async()=>{
+    if(!input.files||!input.files[0]) return;
+    const file=input.files[0];
+    const b64=await resizePhoto(file);
+    // Try Storage upload; fallback to base64 if it fails
+    const url=await uploadPhotoToStorage(b64, file.name);
+    const photo=url||b64;
+    const athletes=load('athletes');
+    const idx=athletes.findIndex(a=>a.id===id);
+    if(idx===-1) return;
+    athletes[idx].photo=photo;
+    save('athletes',athletes);
+    renderAthletes();
+  };
+  input.click();
+}
+
+async function uploadPhotoForCoach(id){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='image/*';
+  inp.onchange=async()=>{
+    if(!inp.files||!inp.files[0]) return;
+    const b64=await resizePhoto(inp.files[0]);
+    const url=await uploadPhotoToStorage(b64,inp.files[0].name)||b64;
+    const coaches=load('coaches');
+    const idx=coaches.findIndex(c=>c.id===id);
+    if(idx===-1) return;
+    coaches[idx].photo=url;
+    save('coaches',coaches);
+    renderCoaches();
+  };
+  inp.click();
+}
+
+async function migratePhotosToStorage(){
+  const msg=document.getElementById('migrate-msg');
+  if(msg) msg.textContent='Başlıyor...';
+  const athletes=load('athletes');
+  let done=0,skipped=0,failed=0;
+  for(const a of athletes){
+    if(!a.photo||!a.photo.startsWith('data:')) {skipped++;continue;}
+    const url=await uploadPhotoToStorage(a.photo, (a.name||'ath').replace(/\s+/g,'_')+'.jpg');
+    if(url){a.photo=url;done++;}else{failed++;}
+    if(msg) msg.textContent=`${done} aktarıldı, ${skipped} atlandı, ${failed} hata...`;
+  }
+  if(done>0){
+    save('athletes',athletes);
+    await pushToServer();
+  }
+  if(msg) msg.textContent=`Tamamlandı: ${done} aktarıldı, ${skipped} zaten URL, ${failed} hata.`;
+}
+
+const _gPalette={
+  'E':[['#0c1f5e','#1d4ed8'],['#0e2a6e','#2563eb'],['#102461','#3b82f6']],
+  'K':[['#5c0e2e','#be185d'],['#6b0f35','#db2777'],['#7c0a3c','#ec4899']],
+  '': [['#0f172a','#1e293b'],['#111827','#374151'],['#0a0f1e','#1f2937']],
+};
+function _buildAthCard(a,i,coaches,isAdmin){
+  const ini=(a.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+  const pal=_gPalette[a.gender||'']||_gPalette[''];
+  const [c1,c2]=pal[i%pal.length];
+  const co=coaches.find(c=>c.id===a.coachId);
+  const ag=ageGroup(a.bdate);
+  const gLabel=a.gender==='E'?'Erkek':a.gender==='K'?'Kadın':'';
+  const badgeBg=a.gender==='E'?'rgba(59,130,246,.4)':a.gender==='K'?'rgba(236,72,153,.4)':'rgba(255,255,255,.12)';
+  const infoStr=[a.spec?esc(a.spec.split(',')[0].trim()):null,ag,co?esc(co.name.split(' ')[0]):null,a.phone?esc(a.phone):null].filter(Boolean).join(' · ')||'—';
+  return `<div class="ath-slide" style="animation-delay:${Math.min(i*0.025,0.55)}s">
+    <div class="ath-scard" onclick="viewAthlete('${a.id}')">
+      ${a.photo
+        ?`<img class="ath-scard-photo" src="${a.photo}" alt="">`
+        :`<div class="ath-scard-bg" style="background:linear-gradient(160deg,${c1} 0%,${c2} 55%,#020810 100%)"></div><div class="ath-scard-avatar">${esc(ini)}</div>`}
+      <div class="ath-scard-shine"></div>
+      <div class="ath-scard-num">#${String(i+1).padStart(3,'0')}</div>
+      ${gLabel?`<div class="ath-scard-badge" style="background:${badgeBg}">${gLabel}</div>`:''}
+      <div class="ath-scard-upload-btn" onclick="event.stopPropagation();uploadPhotoForAthlete('${a.id}')" title="Fotoğraf yükle">📷</div>
+      <div class="ath-scard-body">
+        <div class="ath-scard-name">${a.ig?`<span style="font-size:10px;opacity:.75" title="Instagram">📷 </span>`:''}${esc(a.name)}${a.waUrl?` <a href="${esc(a.waUrl)}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;opacity:.75;color:inherit;text-decoration:none" title="World Athletics">🌐</a>`:''}</div>
+        <div class="ath-scard-info">${infoStr}</div>
+        <div class="ath-scard-actions">
+          <button onclick="event.stopPropagation();viewAthlete('${a.id}')">📋 Kart</button>
+          ${isAdmin?`<button onclick="event.stopPropagation();edit('athletes','${a.id}')">✏ Düzenle</button>`:''}
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function renderAthCards(list,coaches){
@@ -1512,25 +1885,70 @@ function renderAthCards(list,coaches){
   const gridWrap=document.getElementById('athletes-grid-wrap');
   tblWrap.style.display='none';
   gridWrap.style.display='';
-  if(!list.length){gridWrap.innerHTML=`<div style="padding:32px;text-align:center;color:var(--muted)">Sporcu bulunamadı</div>`;return;}
-  const gColors={'E':['#3b82f6','#1e40af','#fff'],'K':['#ec4899','#9d174d','#fff'],'':['#6b7280','#374151','#fff']};
+  if(!list.length){gridWrap.innerHTML='<div style="padding:32px;text-align:center;color:var(--muted)">Sporcu bulunamadı</div>';return;}
+
   const isAdmin=document.body.classList.contains('role-admin');
-  gridWrap.innerHTML=`<div class="person-grid">${list.map((a,i)=>{
-    const ini=(a.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
-    const [c1,c2,ct]=gColors[a.gender||''];
+  try{
+    const cards=list.map((a,i)=>_buildAthCard(a,i,coaches,isAdmin)).join('');
+    gridWrap.innerHTML=`<div class="ath-grid-outer">
+        <div style="padding:0 0 10px;font-size:11px;color:var(--muted)">${list.length} sporcu</div>
+        <div class="ath-grid">${cards}</div>
+      </div>`;
+  }catch(e){
+    gridWrap.innerHTML=`<div style="padding:32px;text-align:center;color:var(--red)">Hata: ${e.message}</div>`;
+    console.error('renderAthCards error:',e);
+  }
+}
+
+function renderAthFan(list,coaches){
+  const tblWrap=document.getElementById('athletes-table-wrap');
+  const gridWrap=document.getElementById('athletes-grid-wrap');
+  tblWrap.style.display='none';
+  gridWrap.style.display='';
+  if(!list.length){gridWrap.innerHTML='<div style="padding:32px;text-align:center;color:var(--muted)">Sporcu bulunamadı</div>';return;}
+  const isAdmin=document.body.classList.contains('role-admin');
+  const cards=list.map((a,i)=>_buildAthCard(a,i,coaches,isAdmin)).join('');
+  gridWrap.innerHTML=`<div class="ath-fan-outer">
+    <div style="padding:0 0 10px;font-size:11px;color:var(--muted)">${list.length} sporcu &nbsp;·&nbsp; üzerine gelin açılır</div>
+    <div class="ath-fan">${cards}</div>
+  </div>`;
+}
+
+function renderAthList(list,coaches){
+  const tblWrap=document.getElementById('athletes-table-wrap');
+  const gridWrap=document.getElementById('athletes-grid-wrap');
+  tblWrap.style.display='none';
+  gridWrap.style.display='';
+  if(!list.length){gridWrap.innerHTML='<div style="padding:32px;text-align:center;color:var(--muted)">Sporcu bulunamadı</div>';return;}
+  const isAdmin=document.body.classList.contains('role-admin');
+  const pal=_gPalette;
+  const rows=list.map((a,i)=>{
     const co=coaches.find(c=>c.id===a.coachId);
     const ag=ageGroup(a.bdate);
-    return `<div class="person-card" style="animation-delay:${Math.min(i*0.03,0.5)}s" onclick="viewAthlete('${a.id}')">
-      <div class="pc-avatar" style="background:linear-gradient(135deg,${c1},${c2});color:${ct}">${ini}</div>
-      <div class="pc-name" title="${esc(a.name)}">${esc(a.name)}</div>
-      <div class="pc-sub">${[ag,co?co.name.split(' ')[0]:null].filter(Boolean).join(' · ')||'—'}</div>
-      ${a.spec?`<div style="margin:4px 0">${specDisplay(a.spec,'bo')}</div>`:''}
-      <div class="pc-actions">
-        ${isAdmin?`<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();edit('athletes','${a.id}')">✏</button>`:''}
-        ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();del('athletes','${a.id}')">✕</button>`:''}
+    const gLabel=a.gender==='E'?'Erkek':a.gender==='K'?'Kadın':'';
+    const tagCls=['E','М'].includes(a.gender)?'blue':['K','Ж'].includes(a.gender)?'pink':'';
+    const tagBg=['E','М'].includes(a.gender)?'rgba(59,130,246,.15)':['K','Ж'].includes(a.gender)?'rgba(236,72,153,.15)':'rgba(255,255,255,.07)';
+    const tagColor=['E','М'].includes(a.gender)?'#60a5fa':['K','Ж'].includes(a.gender)?'#f472b6':'#aaa';
+    const rowBg=['E','М'].includes(a.gender)?'background:rgba(59,130,246,0.07);':['K','Ж'].includes(a.gender)?'background:rgba(236,72,153,0.07);':'';
+    const p=pal[a.gender||''];
+    const [c1,c2]=p[i%p.length];
+    const ini=(a.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+    const photoEl=a.photo
+      ?`<img class="ath-list-photo" src="${a.photo}" alt="">`
+      :`<div class="ath-list-letter" style="background:linear-gradient(135deg,${c1},${c2})">${esc(ini)}</div>`;
+    const subStr=[a.spec?esc(a.spec.split(',')[0].trim()):null,ag,co?esc(co.name.split(' ')[0]):null].filter(Boolean).join(' · ')||'—';
+    return `<div class="ath-list-item" onclick="viewAthlete('${a.id}')" style="${rowBg}animation-delay:${Math.min(i*0.018,0.45)}s">
+      <div class="ath-list-idx">${i+1}</div>
+      ${photoEl}
+      <div class="ath-list-info">
+        <div class="ath-list-name" style="color:${tagColor}">${a.ig?`<span style="font-size:10px;opacity:.7">📷 </span>`:''}${esc(a.name)}${a.waUrl?` <span style="font-size:10px;opacity:.7">🌐</span>`:''}</div>
+        <div class="ath-list-sub">${subStr}</div>
       </div>
+      ${gLabel?`<span class="ath-list-tag" style="background:${tagBg};color:${tagColor};border:1px solid ${tagColor}44">${gLabel}</span>`:''}
+      ${isAdmin?`<button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:4px" onclick="event.stopPropagation();edit('athletes','${a.id}')">✏</button>`:''}
     </div>`;
-  }).join('')}</div>`;
+  }).join('');
+  gridWrap.innerHTML=`<div class="ath-list-outer">${rows}</div>`;
 }
 
 let _athSort={col:null,dir:1};
@@ -1539,6 +1957,7 @@ function sortAthletes(col){
   renderAthletes();
 }
 function renderAthletes(){
+  _initAthViewButtons();
   fillCoachFilter();
   const coaches=load('coaches');
   const licMap={};
@@ -1568,6 +1987,8 @@ function renderAthletes(){
     });
   }
   if(_athViewMode==='cards'){renderAthCards(athletes,coaches);return;}
+  if(_athViewMode==='fan'){renderAthFan(athletes,coaches);return;}
+  if(_athViewMode==='list'){renderAthList(athletes,coaches);return;}
   document.getElementById('athletes-table-wrap').style.display='';
   document.getElementById('athletes-grid-wrap').style.display='none';
   const tb=document.getElementById('athletes-tb');
@@ -1578,10 +1999,12 @@ function renderAthletes(){
     const co=coaches.find(c=>c.id===a.coachId);
     const dg=dupState.athletes.on&&dupState.athletes.map[a.id]?'dup-g'+(((dupState.athletes.map[a.id]-1)%6)+1):'';
     const ag=ageGroup(a.bdate);
-    return `<tr class="${dg}">
+    const gCls=['E','М'].includes(a.gender)?'row-male':['K','Ж'].includes(a.gender)?'row-female':'';
+    const nameColor=['E','М'].includes(a.gender)?'#60a5fa':['K','Ж'].includes(a.gender)?'#f472b6':'var(--text)';
+    return `<tr class="${[dg,gCls].filter(Boolean).join(' ')}">
       <td style="display:${selA?'':'none'}"><input type="checkbox" data-id="${a.id}" ${selected.athletes.has(a.id)?'checked':''} onchange="toggleRow('athletes','${a.id}',this)"></td>
       <td style="color:var(--muted)">${i+1}</td>
-      <td><div><strong>${esc(a.name)}</strong>${a.waUrl?` <a href="${esc(a.waUrl)}" target="_blank" title="World Athletics" style="color:var(--accent);text-decoration:none;font-size:11px;vertical-align:middle;margin-left:4px">WA↗</a>`:''}</div><div style="margin-top:3px">${(()=>{const l=licMap[a.id];if(!l)return'<span style="font-size:10px;color:var(--red);font-weight:600">✗ Lisans yok</span>';const st=licStatus(l.expiryDate);const col=st.key==='expired'?'var(--red)':st.key==='expiring'?'var(--orange)':'#22c55e';return`<span style="font-size:10px;color:${col};font-weight:600" title="${st.label}">${st.key==='expired'?'✗':'✓'} ${st.label}</span>`;})()}</div></td>
+      <td><div><strong style="color:${nameColor}">${a.ig?`<span style="font-size:10px;opacity:.7">📷 </span>`:''}${esc(a.name)}${a.waUrl?` <a href="${esc(a.waUrl)}" target="_blank" title="World Athletics" style="color:var(--accent);text-decoration:none;font-size:11px;vertical-align:middle;margin-left:2px">🌐</a>`:''}</strong></div><div style="margin-top:3px">${(()=>{const l=licMap[a.id];if(!l)return'<span style="font-size:10px;color:var(--red);font-weight:600">✗ Lisans yok</span>';const st=licStatus(l.expiryDate);const col=st.key==='expired'?'var(--red)':st.key==='expiring'?'var(--orange)':'#22c55e';return`<span style="font-size:10px;color:${col};font-weight:600" title="${st.label}">${st.key==='expired'?'✗':'✓'} ${st.label}</span>`;})()}</div></td>
       <td>${a.license?`<span class="badge bb">${esc(a.license)}</span>`:'—'}</td>
       <td style="color:var(--muted)">${esc(a.bdate)||'—'}</td>
       <td>${ag?`<span class="badge bb">${ag}</span>`:'—'}</td>
@@ -1613,6 +2036,7 @@ function fillAthFilter(){
 }
 
 function renderExpenses(){
+  renderFinSummary('exp-fin-summary');
   fillAthFilter();
   const athletes=load('athletes');
   let expenses=load('expenses');
@@ -1639,25 +2063,113 @@ function renderExpenses(){
 }
 
 const DOC_META={
+  'PDF':        {icon:'📄',color:'#ef4444',bg:'rgba(239,68,68,.15)'},
+  'DOC':        {icon:'📝',color:'#4285f4',bg:'rgba(66,133,244,.15)'},
+  'DOCX':       {icon:'📝',color:'#4285f4',bg:'rgba(66,133,244,.15)'},
+  'DOC / DOCX': {icon:'📝',color:'#4285f4',bg:'rgba(66,133,244,.15)'},
+  'XLS':        {icon:'📊',color:'#22c55e',bg:'rgba(34,197,94,.15)'},
+  'XLSX':       {icon:'📊',color:'#22c55e',bg:'rgba(34,197,94,.15)'},
+  'XLS / XLSX': {icon:'📊',color:'#22c55e',bg:'rgba(34,197,94,.15)'},
+  'JPG':        {icon:'🖼️',color:'#f97316',bg:'rgba(249,115,22,.15)'},
+  'JPEG':       {icon:'🖼️',color:'#f97316',bg:'rgba(249,115,22,.15)'},
+  'PNG':        {icon:'🖼️',color:'#f97316',bg:'rgba(249,115,22,.15)'},
+  'Görsel':     {icon:'🖼️',color:'#f97316',bg:'rgba(249,115,22,.15)'},
+  'Bağlantı':   {icon:'🔗',color:'#FFD700',bg:'rgba(255,215,0,.12)'},
   'Google Classroom':{icon:'🎓',color:'#4caf50',bg:'rgba(76,175,80,.15)'},
-  'PDF':{icon:'📄',color:'#ef4444',bg:'rgba(239,68,68,.15)'},
-  'Video':{icon:'🎬',color:'#ff6b35',bg:'rgba(255,107,53,.15)'},
+  'Video':      {icon:'🎬',color:'#ff6b35',bg:'rgba(255,107,53,.15)'},
   'Google Docs':{icon:'📝',color:'#4285f4',bg:'rgba(66,133,244,.15)'},
-  'Diğer':{icon:'🔗',color:'#FFD700',bg:'rgba(255,215,0,.12)'},
+  'Diğer':      {icon:'📂',color:'#8b5cf6',bg:'rgba(139,92,246,.15)'},
 };
 
-function renderDocs(){
-  const docs=load('documents');
-  const g=document.getElementById('docs-grid');
-  if(!docs.length){ g.innerHTML=`<div style="grid-column:1/-1">${emptyHtml('📁','Belge yok','Google Classroom ve diğer materyallere bağlantı ekleyin')}</div>`; return; }
-  g.innerHTML=docs.map(d=>{
-    const m=DOC_META[d.cat]||DOC_META['Diğer'];
-    return `<div class="doc-card">
-      <div class="doc-card-top"><div class="doc-icon" style="background:${m.bg}">${m.icon}</div><div style="display:flex;gap:5px">${cardActions('documents',d.id)}</div></div>
-      <h4>${esc(d.title)}</h4><p>${esc(d.desc)}</p>
-      <div style="margin-top:8px"><span class="badge" style="background:${m.bg};color:${m.color}">${esc(d.cat)}</span></div>
-      ${d.url?`<a class="doc-link" href="${esc(d.url)}" target="_blank">↗ Bağlantıyı Aç</a>`:''}
-    </div>`;
+let _docUploadUrl='', _docOrigName='', _docFileType='', _docFileSize=0, _docUploading=false;
+
+async function uploadDocument(file){
+  return new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=async e=>{
+      try{
+        const r=await fetch(getApiUrl()+'?action=upload_document',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({base64:e.target.result,filename:file.name})
+        });
+        const d=await r.json();
+        resolve(d.ok?d.url:null);
+      }catch{resolve(null);}
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function docFileSelected(input){
+  const file=input.files[0];
+  if(!file) return;
+  const info=document.getElementById('fdoc-file-info');
+  const ext=file.name.split('.').pop().toUpperCase();
+  _docOrigName=file.name; _docFileType=ext; _docFileSize=file.size;
+  _docUploadUrl=''; _docUploading=true;
+  if(info) info.innerHTML='<span style="color:var(--muted)">⏳ Yükleniyor...</span>';
+  const titEl=document.getElementById('ftit');
+  if(titEl&&!titEl.value) titEl.value=file.name.replace(/\.[^.]+$/,'').replace(/[_-]/g,' ');
+  const url=await uploadDocument(file);
+  _docUploading=false;
+  if(url){
+    _docUploadUrl=url;
+    if(info) info.innerHTML=`<span style="color:#22c55e">✅ ${esc(file.name)} (${(file.size/1024/1024).toFixed(1)} MB)</span>`;
+  } else {
+    if(info) info.innerHTML='<span style="color:var(--red)">❌ Yükleme hatası — URL ile devam edebilirsiniz</span>';
+  }
+}
+
+function renderDocuments(){
+  const q=(document.getElementById('fdoc-q')?.value||'').toLowerCase();
+  const catF=document.getElementById('fdoc-cat')?.value||'';
+  const typeF=document.getElementById('fdoc-type')?.value||'';
+  const isImg=ft=>['JPG','JPEG','PNG','GIF','WEBP','SVG'].includes(ft.toUpperCase());
+  const isDoc=ft=>['DOC','DOCX'].includes(ft.toUpperCase());
+  const isXls=ft=>['XLS','XLSX'].includes(ft.toUpperCase());
+  let docs=load('documents').sort((a,b)=>(b.uploadDate||b.id||'').localeCompare(a.uploadDate||a.id||''));
+  if(q) docs=docs.filter(d=>(d.title||'').toLowerCase().includes(q)||(d.desc||'').toLowerCase().includes(q)||(d.uploadedBy||'').toLowerCase().includes(q));
+  if(catF) docs=docs.filter(d=>d.cat===catF);
+  if(typeF) docs=docs.filter(d=>{
+    const ft=d.fileType||'';
+    if(typeF==='Bağlantı') return !d.fileUrl;
+    if(typeF==='Görsel') return isImg(ft);
+    if(typeF==='DOC / DOCX') return isDoc(ft);
+    if(typeF==='XLS / XLSX') return isXls(ft);
+    return ft.toUpperCase()===typeF.toUpperCase();
+  });
+  const tb=document.getElementById('docs-tb');
+  if(!docs.length){
+    tb.innerHTML=`<tr><td colspan="7">${emptyHtml('📁','Belge yok','Dosya veya bağlantı ekleyin')}</td></tr>`;
+    return;
+  }
+  tb.innerHTML=docs.map((d,i)=>{
+    const ft=d.fileType||(d.fileUrl?'Dosya':'Bağlantı');
+    const m=DOC_META[ft]||DOC_META[d.cat]||DOC_META['Diğer'];
+    const link=d.fileUrl||d.url;
+    const sizeStr=d.fileSize?` · ${(d.fileSize/1024/1024).toFixed(1)} MB`:'';
+    return `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px;flex-shrink:0">${m.icon}</span>
+          <div>
+            <div style="font-weight:600">${esc(d.title)}</div>
+            ${d.desc?`<div style="font-size:11px;color:var(--muted)">${esc(d.desc)}</div>`:''}
+            ${d.originalName?`<div style="font-size:10.5px;color:var(--muted)">${esc(d.originalName)}${sizeStr}</div>`:''}
+          </div>
+        </div>
+      </td>
+      <td><span class="badge" style="background:${m.bg};color:${m.color}">${esc(d.cat||'—')}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${esc(ft)}</td>
+      <td style="font-size:12px">${esc(d.uploadedBy||'—')}</td>
+      <td style="font-size:12px;color:var(--muted);white-space:nowrap">${esc(d.uploadDate||'—')}</td>
+      <td class="admin-only" style="white-space:nowrap">
+        ${link?`<a href="${esc(link)}" target="_blank" class="btn btn-secondary btn-sm" style="font-size:11px;margin-right:4px">↗ Aç</a>`:''}
+        ${cardActions('documents',d.id)}
+      </td>
+    </tr>`;
   }).join('');
 }
 
@@ -1749,6 +2261,23 @@ function fillCoachTrain(val){
   if(customEl) customEl.value=unmatched.join(', ');
 }
 
+function readCoachCat(){
+  const wrap=document.getElementById('fcoach-cats');
+  if(!wrap) return '';
+  return [...wrap.querySelectorAll('input:checked')].map(i=>i.value).join(', ');
+}
+function fillCoachCat(val){
+  const wrap=document.getElementById('fcoach-cats');
+  if(!wrap) return;
+  const parts=(val||'').split(/[,;]/).map(s=>s.trim().toLowerCase()).filter(Boolean);
+  wrap.querySelectorAll('input').forEach(cb=>{
+    const v=cb.value.toLowerCase();
+    const on=parts.some(p=>v.includes(p)||p.includes(v));
+    cb.checked=on;
+    cb.closest('.spec-opt').classList.toggle('checked',on);
+  });
+}
+
 function readSpec(){
   const wrap=document.getElementById('fsp-wrap');
   if(!wrap) return '';
@@ -1791,10 +2320,19 @@ const FORMS={
   coaches:{
     label:'Antrenör',
     html:()=>`<div class="form-grid">
+      <div class="fg full" style="text-align:center">
+        <div class="photo-upload-area" id="fphoto-area" onclick="document.getElementById('fphoto-input').click()" title="Fotoğraf yükle">
+          <img id="fphoto-preview" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%">
+          <div id="fphoto-hint" class="photo-upload-hint">📷<br>Fotoğraf<br>Yükle</div>
+        </div>
+        <input type="file" id="fphoto-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+      </div>
       <div class="fg full"><label>Ad Soyad *</label><input id="fn" placeholder="Ahmet Yılmaz"></div>
       <div class="fg"><label>Telefon</label><input id="fph" placeholder="+90 555 000 00 00"></div>
       <div class="fg"><label>E-posta</label><input id="fem" type="email" placeholder="antrenor@mail.com"></div>
-      <div class="fg"><label>Instagram</label><input id="fig" placeholder="https://instagram.com/username veya @nik"></div>
+      <div class="fg"><label>Instagram</label><input id="fig" placeholder="@kullanici veya URL"></div>
+      <div class="fg"><label>World Athletics URL</label><input id="fwau" placeholder="https://worldathletics.org/athletes/..."></div>
+      <div class="fg"><label>Şehir</label><input id="fcity" placeholder="İstanbul"></div>
       <div class="fg"><label>Doğum Tarihi</label><input id="fbd" type="date"></div>
       <div class="fg"><label>İşe Başlama</label><input id="fhd" type="date"></div>
       <div class="fg"><label>Antrenör Kategorisi</label>
@@ -1809,15 +2347,39 @@ const FORMS={
           <option value="Devlet Antrenörü">Devlet Antrenörü</option>
         </select>
       </div>
-      <div class="fg full"><label>Yetiştirdiği Branşlar (birden fazla seçilebilir)</label>${coachTrainGrid()}</div>
-      <div class="fg"><label>Maaş (₺)</label><input id="fsal" type="number" placeholder="15000" min="0"></div>
+      <div class="fg full"><label>Çalışma Kategorileri (birden fazla seçilebilir)</label>
+        <div id="fcoach-cats" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+          <label class="spec-opt"><input type="checkbox" value="Sprint" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">⚡ Sprint</label>
+          <label class="spec-opt"><input type="checkbox" value="Atlamalar" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">🦘 Atlamalar</label>
+          <label class="spec-opt"><input type="checkbox" value="Atmalar" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">🎯 Atmalar</label>
+          <label class="spec-opt"><input type="checkbox" value="Dayanıklılık" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">🏃 Dayanıklılık</label>
+          <label class="spec-opt"><input type="checkbox" value="Uzun Mesafe" onchange="this.closest('.spec-opt').classList.toggle('checked',this.checked)">🌬️ Uzun Mesafe</label>
+        </div>
+      </div>
+      <div class="fg"><label>Maaş</label>
+        <div style="display:flex;gap:6px">
+          <input id="fsal" type="number" placeholder="15000" min="0" style="flex:1">
+          <select id="fsalcur" style="width:72px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:9px 4px;color:var(--text);font-size:13px;outline:none">
+            <option value="TRY">TRY</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Dönemsel Ödeme/Ay (₺)</label><input id="fperiodicpay" type="number" placeholder="0" min="0"></div>
+      <div class="fg"><label>Bonus/Ay (₺)</label><input id="fbonus" type="number" placeholder="0" min="0"></div>
+      <div class="fg"><label>İmzalama Ücreti (₺)</label><input id="fsignbonus" type="number" placeholder="0" min="0"></div>
       <div class="fg"><label>T.C. Kimlik No</label><input id="ftc" placeholder="12345678901" maxlength="11" style="font-family:monospace"></div>
-      <div class="fg full"><label>IBAN (Banka Hesap No)</label><input id="fiban" placeholder="TR33 0006 1005 1978 6457 8413 26" style="font-family:monospace"></div>
+      <div class="fg full">
+        <label>IBAN (Banka Hesap No)</label>
+        <div id="coach-iban-bank-display" style="font-size:11.5px;min-height:17px;margin-bottom:3px;font-weight:600;white-space:nowrap;color:#22c55e"></div>
+        <input id="fiban" placeholder="TR33 0006 1005 1978 6457 8413 26" style="font-family:monospace;width:100%" oninput="detectIbanBank(this)" data-bank-display="coach-iban-bank-display">
+      </div>
       <div class="fg"><label>Adres</label><input id="fadr" placeholder="İstanbul, ..."></div>
       <div class="fg full"><label>Notlar</label><textarea id="fnt" rows="2" placeholder="Ek bilgiler..."></textarea></div>
     </div>`,
-    fill:d=>{V('fn',d.name);V('fph',d.phone);V('fem',d.email);V('fig',d.ig);V('fbd',d.bdate);V('fhd',d.hireDate);V('fccat',d.coachCategory||'');fillCoachTrain(d.spec);V('fsal',d.salary);V('ftc',d.tc);V('fiban',d.iban);V('fadr',d.addr);V('fnt',d.notes);},
-    read:()=>({name:G('fn'),phone:G('fph'),email:G('fem'),ig:G('fig'),bdate:G('fbd'),hireDate:G('fhd'),coachCategory:G('fccat'),spec:readCoachTrain(),salary:G('fsal'),tc:G('ftc'),iban:G('fiban'),addr:G('fadr'),notes:G('fnt')}),
+    fill:d=>{V('fn',d.name);V('fph',d.phone);V('fem',d.email);V('fig',d.ig);V('fwau',d.waUrl);V('fcity',d.city);V('fbd',d.bdate);V('fhd',d.hireDate);V('fccat',d.coachCategory||'');fillCoachCat(d.spec);V('fsal',d.salary);V('fsalcur',d.salaryCurrency||'TRY');V('fperiodicpay',d.periodicPay);V('fbonus',d.bonus);V('fsignbonus',d.signBonus);V('ftc',d.tc);V('fiban',d.iban);V('fadr',d.addr);V('fnt',d.notes);const prev=document.getElementById('fphoto-preview');const hint=document.getElementById('fphoto-hint');if(d.photo&&prev){prev.src=d.photo;prev.style.display='block';if(hint)hint.style.display='none';if(!d.photo.startsWith('data:'))prev.dataset.storageUrl=d.photo;else delete prev.dataset.storageUrl;}else{if(prev){prev.style.display='none';delete prev.dataset.storageUrl;}if(hint)hint.style.display='block';}},
+    read:()=>({name:G('fn'),phone:G('fph'),email:G('fem'),ig:G('fig'),waUrl:G('fwau'),city:G('fcity'),bdate:G('fbd'),hireDate:G('fhd'),coachCategory:G('fccat'),spec:readCoachCat(),salary:G('fsal'),salaryCurrency:G('fsalcur')||'TRY',periodicPay:G('fperiodicpay'),bonus:G('fbonus'),signBonus:G('fsignbonus'),tc:G('ftc'),iban:G('fiban'),addr:G('fadr'),notes:G('fnt'),photo:(()=>{const prev=document.getElementById('fphoto-preview');if(!prev||prev.style.display==='none')return'';return prev.dataset.storageUrl||(prev.src.startsWith('data:')?prev.src:'');})()}),
     valid:d=>d.name?null:'Ad Soyad giriniz',
   },
   athletes:{
@@ -1825,6 +2387,13 @@ const FORMS={
     html:()=>{
       const coaches=load('coaches');
       return `<div class="form-grid">
+        <div class="fg full" style="text-align:center">
+          <div class="photo-upload-area" id="fphoto-area" onclick="document.getElementById('fphoto-input').click()" title="Fotoğraf yükle">
+            <img id="fphoto-preview" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%">
+            <div id="fphoto-hint" class="photo-upload-hint">📷<br>Fotoğraf<br>Yükle</div>
+          </div>
+          <input type="file" id="fphoto-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+        </div>
         <div class="fg full"><label>Ad Soyad *</label><input id="fn" placeholder="Mehmet Kaya"></div>
         <div class="fg"><label>Doğum Tarihi</label><input id="fbd" type="date" oninput="updateAgeGroupDisplay()"><div id="fbd-ag" style="font-size:11.5px;min-height:18px;margin-top:4px"></div></div>
         <div class="fg"><label>Telefon</label><input id="fph" placeholder="+90 555 000 00 00"></div>
@@ -1857,11 +2426,19 @@ const FORMS={
           <select id="fco" onchange="fillCoachPhone()"><option value="">Antrenör seçin...</option>
             ${coaches.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
         <div class="fg"><label>Antrenör Telefonu</label><input id="fcph" readonly placeholder="Antrenör kartından" style="opacity:.75"></div>
+        <div class="fg full" id="fco-info" style="margin-top:-8px;min-height:18px"></div>
         <div class="fg full"><label>Uzmanlık (birden fazla seçilebilir)</label>${specGrid()}</div>
         <div class="fg"><label>Şehir</label><input id="fcity" placeholder="İstanbul"></div>
         <div class="fg"><label>Burs / Maaş (₺)</label><input id="fasal" type="number" placeholder="0" min="0"></div>
+        <div class="fg"><label>Dönemsel Ödeme/Ay (₺)</label><input id="faperiodicpay" type="number" placeholder="0" min="0"></div>
+        <div class="fg"><label>Bonus/Ay (₺)</label><input id="fabonus" type="number" placeholder="0" min="0"></div>
+        <div class="fg"><label>İmzalama Ücreti (₺)</label><input id="fasignbonus" type="number" placeholder="0" min="0"></div>
         <div class="fg"><label>T.C. Kimlik No</label><input id="fatc" placeholder="12345678901" maxlength="11" style="font-family:monospace"></div>
-        <div class="fg full"><label>IBAN (Banka Hesap No)</label><input id="faiban" placeholder="TR33 0006 1005 1978 6457 8413 26" style="font-family:monospace"></div>
+        <div class="fg full">
+          <label>IBAN (Banka Hesap No)</label>
+          <div id="iban-bank-display" style="font-size:11.5px;min-height:17px;margin-bottom:3px;font-weight:600;white-space:nowrap;overflow:visible"></div>
+          <input id="faiban" placeholder="TR33 0006 1005 1978 6457 8413 26" style="font-family:monospace;width:100%" oninput="detectIbanBank(this)" data-bank-display="iban-bank-display">
+        </div>
         <div class="fg full"><label>Adres</label><input id="fadr" placeholder="İstanbul, ..."></div>
         <div class="fg full" style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px"><span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">👕 Beden Ölçüleri</span></div>
         <div class="fg"><label>Kıyafet Bedeni</label>
@@ -1872,6 +2449,20 @@ const FORMS={
         <div class="fg"><label>Ayakkabı Numarası</label><input id="fshsz" placeholder="42" type="number" min="30" max="55" step="0.5"></div>
         <div class="fg"><label>Malzeme Sporcu</label><input id="fmalzspor" placeholder="Forma, ayakkabı..."></div>
         <div class="fg"><label>Malzeme Antrenör</label><input id="fmalzant" placeholder="Çanta, kıyafet..."></div>
+        <div class="fg full" style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">🏅 Kişisel Rekorlar</span>
+            <button type="button" onclick="addPersonalRecord()" style="background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);border-radius:6px;color:#FFD700;cursor:pointer;padding:3px 10px;font-size:12px;font-weight:600">＋ Ekle</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 80px 110px 1fr 28px;gap:6px;margin-bottom:4px">
+            <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Branş</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Derece</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Tarih</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Yer</div>
+            <div></div>
+          </div>
+          <div id="prec-list"></div>
+        </div>
         <div class="fg full"><label>Notlar</label><textarea id="fnt" rows="2"></textarea></div>
         <div class="fg"><label>Cinsiyet</label>
           <select id="fgnd"><option value="">—</option><option value="E">Erkek (E)</option><option value="K">Kadın (K)</option></select></div>
@@ -1882,8 +2473,14 @@ const FORMS={
         <div class="fg full"><label>Son İki Yılda Katıldığı Milli Şampiyonalar</label><textarea id="fnch" rows="2" placeholder="Türkiye Şampiyonası 2023 — 3. sıra"></textarea></div>
       </div>`;
     },
-    fill:d=>{V('fn',d.name);V('fbd',d.bdate);updateAgeGroupDisplay();V('fph',d.phone);V('fem',d.email);V('frelph',d.relPhone);V('frelname',d.relName);V('fig',d.ig);V('fwau',d.waUrl);V('flic',d.license);const _lic=load('licenses').find(l=>l.athId===editId);V('fiss-ath',_lic?.issueDate||'');V('fexp-ath',_lic?.expiryDate||'');if(!d.license&&_lic?.licNo)V('flic',_lic.licNo);V('fco',d.coachId);fillCoachPhone();fillSpec(d.spec);V('fcity',d.city);V('fasal',d.salary);V('fatc',d.tc);V('faiban',d.iban);V('fadr',d.addr);V('fnt',d.notes);V('fgnd',d.gender);V('ftcl',d.timeInClub);V('fibt',d.intlBest);V('fl2b',d.last2Best);V('fl2r',d.last2Records);V('fnch',d.nationalChamps);V('fclsz',d.clothSize);V('fshsz',d.shoeSize);V('fmalzspor',d.malzSpor);V('fmalzant',d.malzAnt);V('fclubrole',d.clubRole);V('funirec',d.uniformReceived);},
-    read:()=>({name:G('fn'),bdate:G('fbd'),phone:G('fph'),email:G('fem'),relPhone:G('frelph'),relName:G('frelname'),ig:G('fig'),waUrl:G('fwau'),license:G('flic'),_licIssue:G('fiss-ath'),_licExpiry:G('fexp-ath'),coachId:G('fco'),spec:readSpec(),city:G('fcity'),salary:G('fasal'),tc:G('fatc'),iban:G('faiban'),addr:G('fadr'),notes:G('fnt'),gender:G('fgnd'),timeInClub:G('ftcl'),intlBest:G('fibt'),last2Best:G('fl2b'),last2Records:G('fl2r'),nationalChamps:G('fnch'),clothSize:G('fclsz'),shoeSize:G('fshsz'),malzSpor:G('fmalzspor'),malzAnt:G('fmalzant'),clubRole:G('fclubrole'),uniformReceived:G('funirec')}),
+    fill:d=>{
+      V('fn',d.name);V('fbd',d.bdate);updateAgeGroupDisplay();V('fph',d.phone);V('fem',d.email);V('frelph',d.relPhone);V('frelname',d.relName);V('fig',d.ig);V('fwau',d.waUrl);V('flic',d.license);const _lic=load('licenses').find(l=>l.athId===editId);V('fiss-ath',_lic?.issueDate||'');V('fexp-ath',_lic?.expiryDate||'');if(!d.license&&_lic?.licNo)V('flic',_lic.licNo);V('fco',d.coachId);fillCoachPhone();fillSpec(d.spec);V('fcity',d.city);V('fasal',d.salary);V('faperiodicpay',d.periodicPay);V('fabonus',d.bonus);V('fasignbonus',d.signBonus);V('fatc',d.tc);V('faiban',d.iban);V('fadr',d.addr);V('fnt',d.notes);V('fgnd',d.gender);V('ftcl',d.timeInClub);V('fibt',d.intlBest);V('fl2b',d.last2Best);V('fl2r',d.last2Records);V('fnch',d.nationalChamps);V('fclsz',d.clothSize);V('fshsz',d.shoeSize);V('fmalzspor',d.malzSpor);V('fmalzant',d.malzAnt);V('fclubrole',d.clubRole);V('funirec',d.uniformReceived);
+      const prev=document.getElementById('fphoto-preview');const hint=document.getElementById('fphoto-hint');
+      if(d.photo&&prev){prev.src=d.photo;prev.style.display='block';if(hint)hint.style.display='none';if(!d.photo.startsWith('data:'))prev.dataset.storageUrl=d.photo;else delete prev.dataset.storageUrl;}
+      else{if(prev){prev.style.display='none';delete prev.dataset.storageUrl;}if(hint)hint.style.display='block';}
+      fillPersonalRecords(d.personalRecords);
+    },
+    read:()=>({name:G('fn'),bdate:G('fbd'),phone:G('fph'),email:G('fem'),relPhone:G('frelph'),relName:G('frelname'),ig:G('fig'),waUrl:G('fwau'),license:G('flic'),_licIssue:G('fiss-ath'),_licExpiry:G('fexp-ath'),coachId:G('fco'),spec:readSpec(),city:G('fcity'),salary:G('fasal'),periodicPay:G('faperiodicpay'),bonus:G('fabonus'),signBonus:G('fasignbonus'),tc:G('fatc'),iban:G('faiban'),addr:G('fadr'),notes:G('fnt'),gender:G('fgnd'),timeInClub:G('ftcl'),intlBest:G('fibt'),last2Best:G('fl2b'),last2Records:G('fl2r'),nationalChamps:G('fnch'),clothSize:G('fclsz'),shoeSize:G('fshsz'),malzSpor:G('fmalzspor'),malzAnt:G('fmalzant'),clubRole:G('fclubrole'),uniformReceived:G('funirec'),personalRecords:readPersonalRecords(),photo:(()=>{const prev=document.getElementById('fphoto-preview');if(!prev||prev.style.display==='none')return'';return prev.dataset.storageUrl||(prev.src.startsWith('data:')?prev.src:'');})()}),
     valid:d=>d.name?null:'Ad Soyad giriniz',
   },
   expenses:{
@@ -1914,18 +2511,59 @@ const FORMS={
     },
   },
   documents:{
-    label:'Belge / Materyal',
-    html:()=>`<div class="form-grid">
-      <div class="fg full"><label>Başlık *</label><input id="ftit" placeholder="Sprint Eğitim Programı..."></div>
-      <div class="fg full"><label>Tür</label>
-        <select id="fcat"><option>Google Classroom</option><option>PDF</option>
-          <option>Video</option><option>Google Docs</option><option>Diğer</option></select></div>
-      <div class="fg full"><label>Bağlantı (URL)</label><input id="furl" type="url" placeholder="https://classroom.google.com/..."></div>
-      <div class="fg full"><label>Açıklama</label><textarea id="fdesc" rows="2" placeholder="Kısa açıklama..."></textarea></div>
-    </div>`,
-    fill:d=>{V('ftit',d.title);V('fcat',d.cat);V('furl',d.url);V('fdesc',d.desc);},
-    read:()=>({title:G('ftit'),cat:G('fcat'),url:G('furl'),desc:G('fdesc')}),
-    valid:d=>d.title?null:'Başlık giriniz',
+    label:'Belge / Dosya',
+    html:()=>{
+      _docUploadUrl='';_docOrigName='';_docFileType='';_docFileSize=0;_docUploading=false;
+      const sess=getSession();
+      const uploader=sess?(sess.name||sess.login||''):'';
+      return `<div class="form-grid">
+        <div class="fg full">
+          <label>Dosya Yükle</label>
+          <input type="file" id="fdoc-file" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp,.txt,.zip,.rar,.pptx,.ppt"
+            style="background:var(--card-2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);width:100%;cursor:pointer"
+            onchange="docFileSelected(this)">
+          <div id="fdoc-file-info" style="font-size:11.5px;margin-top:4px;min-height:16px"></div>
+        </div>
+        <div class="fg full"><label>Başlık *</label><input id="ftit" placeholder="Sprint Eğitim Programı 2026..."></div>
+        <div class="fg">
+          <label>Kategori</label>
+          <select id="fcat">
+            <option>Antrenman Planı</option><option>Tıbbi Belgeler</option>
+            <option>Resmi Belgeler</option><option>Yarışma</option>
+            <option>Sözleşme</option><option>Bağlantı</option><option>Diğer</option>
+          </select>
+        </div>
+        <div class="fg"><label>Yükleyen</label><input id="fdoc-uploader" placeholder="Admin" value="${esc(uploader)}"></div>
+        <div class="fg full"><label>Bağlantı URL (dosya yoksa)</label><input id="furl" type="url" placeholder="https://..."></div>
+        <div class="fg full"><label>Açıklama / Yorum</label><textarea id="fdesc" rows="2" placeholder="Kısa açıklama..."></textarea></div>
+        <input type="hidden" id="fdoc-date-orig">
+      </div>`;
+    },
+    fill:d=>{
+      _docUploadUrl=d.fileUrl||'';_docOrigName=d.originalName||'';
+      _docFileType=d.fileType||'';_docFileSize=d.fileSize||0;_docUploading=false;
+      V('ftit',d.title);V('fcat',d.cat);V('furl',d.url||'');V('fdesc',d.desc);
+      V('fdoc-uploader',d.uploadedBy||'');V('fdoc-date-orig',d.uploadDate||'');
+      const info=document.getElementById('fdoc-file-info');
+      if(info&&d.fileUrl) info.innerHTML=`<span style="color:#22c55e">✅ ${esc(d.originalName||'Dosya yüklü')}</span>`;
+    },
+    read:()=>{
+      const today=new Date().toISOString().slice(0,10);
+      return {
+        title:G('ftit'),cat:G('fcat'),desc:G('fdesc'),
+        uploadedBy:G('fdoc-uploader'),
+        uploadDate:G('fdoc-date-orig')||today,
+        fileUrl:_docUploadUrl,
+        fileType:_docFileType,
+        originalName:_docOrigName,
+        fileSize:_docFileSize,
+        url:_docUploadUrl||G('furl'),
+      };
+    },
+    valid:d=>{
+      if(_docUploading) return 'Dosya yükleniyor, lütfen bekleyin...';
+      return d.title?null:'Başlık giriniz';
+    },
   },
   contacts:{
     label:'Kişi',
@@ -1967,10 +2605,22 @@ const FORMS={
           <option value="completed">Tamamlandı</option>
           <option value="cancelled">İptal edildi</option>
         </select></div>
+      <div class="fg full"><label>Branşlar (katılacak sporcular için)</label>
+        <div id="fsc-events-wrap" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+          ${['100m','200m','400m','800m','1500m','3000m','5000m','10000m','110m/100m Engel','400m Engel','3000m Engel','Uzun Atlama','Yüksek Atlama','Cırık Atlama','Üç Adım Atlama','Gülle','Disk','Cirit','Çekiç','4×100m','4×400m'].map(ev=>`<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" class="fsc-ev-chk" value="${ev}"> ${ev}</label>`).join('')}
+        </div>
+      </div>
       <div class="fg full"><label>Notlar</label><textarea id="fscnt" rows="2" placeholder="Ek bilgiler..."></textarea></div>
     </div>`,
-    fill:d=>{V('fscn',d.name);V('fscds',d.dateStart);V('fscde',d.dateEnd);V('fscloc',d.location);V('fsctyp',d.type);V('fscst',d.status||'planned');V('fscnt',d.notes);},
-    read:()=>({name:G('fscn'),dateStart:G('fscds'),dateEnd:G('fscde'),location:G('fscloc'),type:G('fsctyp'),status:G('fscst')||'planned',notes:G('fscnt')}),
+    fill:d=>{
+      V('fscn',d.name);V('fscds',d.dateStart);V('fscde',d.dateEnd);V('fscloc',d.location);V('fsctyp',d.type);V('fscst',d.status||'planned');V('fscnt',d.notes);
+      const evs=d.events||[];
+      document.querySelectorAll('.fsc-ev-chk').forEach(c=>{c.checked=evs.includes(c.value);});
+    },
+    read:()=>{
+      const evs=[...document.querySelectorAll('.fsc-ev-chk:checked')].map(c=>c.value);
+      return {name:G('fscn'),dateStart:G('fscds'),dateEnd:G('fscde'),location:G('fscloc'),type:G('fsctyp'),status:G('fscst')||'planned',notes:G('fscnt'),events:evs};
+    },
     valid:d=>!d.name?'Yarışma adını girin':!d.dateStart?'Başlangıç tarihini girin':null,
   },
   competitions:{
@@ -2010,6 +2660,61 @@ const FORMS={
     read:()=>({name:G('fn'),date:G('fdt'),location:G('floc'),type:G('ftyp'),notes:G('fnt'),scheduleId:G('fschedsel')==='__other__'?'':G('fschedsel')}),
     valid:d=>d.name?null:'Yarışma adını giriniz',
   },
+  participants:{
+    label:'Katılım Ekle',
+    html:()=>{
+      const athletes=load('athletes').sort((a,b)=>(a.name||'').localeCompare(b.name||'','tr'));
+      const sched=load('schedule').sort((a,b)=>(a.dateStart||'')>(b.dateStart||'')?1:-1);
+      const fmt=d=>d?d.split('-').reverse().join('.'):'';
+      const EVENTS=['100m','200m','400m','800m','1500m','3000m','5000m','10000m','110m/100m Engel','400m Engel','3000m Engel','Uzun Atlama','Yüksek Atlama','Cırık Atlama','Üç Adım Atlama','Gülle','Disk','Cirit','Çekiç','4×100m','4×400m','Diğer'];
+      return `<div class="form-grid">
+        <div class="fg full"><label>Sporcu *</label>
+          <select id="fpart-ath">
+            <option value="">— Sporcu seçin —</option>
+            ${athletes.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}
+          </select></div>
+        <div class="fg full"><label>Yarışma *</label>
+          <select id="fpart-comp" onchange="_fillPartFromSched(this.value)">
+            <option value="">— Takvimden seçin —</option>
+            ${sched.map(s=>`<option value="${s.id}">${s.dateStart?fmt(s.dateStart)+' – ':''} ${esc(s.name)} ${s.location?'('+esc(s.location)+')':''}</option>`).join('')}
+            <option value="__manual__">✏ Elle gir</option>
+          </select></div>
+        <div class="fg full" id="fpart-manual-row" style="display:none"><label>Yarışma Adı (elle) *</label><input id="fpart-compname" placeholder="İstanbul Kupası 2026"></div>
+        <div class="fg"><label>Tarih</label><input id="fpart-date" type="date"></div>
+        <div class="fg"><label>Branş *</label>
+          <select id="fpart-event">
+            <option value="">— Seçin —</option>
+            ${EVENTS.map(e=>`<option>${e}</option>`).join('')}
+          </select></div>
+        <div class="fg"><label>Derece / Sıralama</label><input id="fpart-place" placeholder="1. / Finale kaldı"></div>
+        <div class="fg"><label>Sonuç / Derece</label><input id="fpart-result" placeholder="10.45 / 7.20m"></div>
+        <div class="fg full"><label>Notlar</label><textarea id="fpart-notes" rows="2" placeholder="Ek bilgi..."></textarea></div>
+      </div>`;
+    },
+    fill:d=>{
+      V('fpart-ath',d.athId);
+      const compSel=document.getElementById('fpart-comp');
+      if(d.schedId&&compSel){compSel.value=d.schedId;document.getElementById('fpart-manual-row').style.display='none';}
+      else if(compSel){compSel.value='__manual__';document.getElementById('fpart-manual-row').style.display='';}
+      V('fpart-compname',d.compName);V('fpart-date',d.date);V('fpart-event',d.event);V('fpart-place',d.place);V('fpart-result',d.result);V('fpart-notes',d.notes);
+    },
+    read:()=>{
+      const compSel=document.getElementById('fpart-comp');
+      const schedId=compSel&&compSel.value!=='__manual__'&&compSel.value?compSel.value:'';
+      const schedObj=schedId?load('schedule').find(s=>s.id===schedId):null;
+      return {
+        athId:G('fpart-ath'),
+        schedId,
+        compName:schedObj?schedObj.name:G('fpart-compname'),
+        date:schedObj?schedObj.dateStart:G('fpart-date'),
+        event:G('fpart-event'),
+        place:G('fpart-place'),
+        result:G('fpart-result'),
+        notes:G('fpart-notes'),
+      };
+    },
+    valid:d=>!d.athId?'Sporcu seçiniz':!d.compName?'Yarışma adı giriniz':!d.event?'Branş seçiniz':null,
+  },
   inventory:{
     label:'Envanter',
     html:()=>{
@@ -2041,18 +2746,40 @@ const FORMS={
     label:'Lisans',
     html:()=>{
       const athletes=load('athletes');
+      const coaches=load('coaches');
+      const year=new Date().getFullYear();
       return `<div class="form-grid">
-        <div class="fg full"><label>Sporcu *</label>
+        <div class="fg full"><label>Tür</label>
+          <div class="view-toggle" style="margin-top:4px">
+            <button type="button" id="lic-type-ath" class="active" onclick="setLicType('athlete')">🏃 Sporcu</button>
+            <button type="button" id="lic-type-coa" onclick="setLicType('coach')">👨‍🏫 Antrenör</button>
+          </div></div>
+        <div class="fg full" id="lic-ath-row"><label>Sporcu *</label>
           <select id="fath"><option value="">— seçin —</option>${athletes.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select></div>
+        <div class="fg full" id="lic-coa-row" style="display:none"><label>Antrenör *</label>
+          <select id="fcoa"><option value="">— seçin —</option>${coaches.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
         <div class="fg"><label>Lisans No *</label><input id="flicn" placeholder="AZE-2024-001"></div>
         <div class="fg"><label>Verilme tarihi</label><input id="fiss" type="date"></div>
-        <div class="fg"><label>Geçerlilik tarihi *</label><input id="fexp" type="date" value="2026-10-31"></div>
+        <div class="fg"><label>Geçerlilik tarihi *</label><input id="fexp" type="date" value="${year}-10-31"></div>
         <div class="fg full"><label>Notlar</label><textarea id="fnt" rows="2" placeholder="Lisans türü, özel koşullar..."></textarea></div>
       </div>`;
     },
-    fill:d=>{V('fath',d.athId);V('flicn',d.licNo);V('fiss',d.issueDate);V('fexp',d.expiryDate);V('fnt',d.notes);},
-    read:()=>({athId:G('fath'),licNo:G('flicn'),issueDate:G('fiss'),expiryDate:G('fexp'),notes:G('fnt')}),
-    valid:d=>!d.athId?'Sporcu seçin':!d.licNo?'Lisans no girin':!d.expiryDate?'Geçerlilik tarihi girin':null,
+    fill:d=>{
+      const type=d.coachId?'coach':'athlete';
+      setLicType(type);
+      V('fath',d.athId);V('fcoa',d.coachId);V('flicn',d.licNo);V('fiss',d.issueDate);V('fexp',d.expiryDate);V('fnt',d.notes);
+    },
+    read:()=>{
+      const isCoach=document.getElementById('lic-coa-row')?.style.display!=='none';
+      return {type:isCoach?'coach':'athlete',athId:isCoach?'':G('fath'),coachId:isCoach?G('fcoa'):'',licNo:G('flicn'),issueDate:G('fiss'),expiryDate:G('fexp'),notes:G('fnt')};
+    },
+    valid:d=>{
+      if(d.type==='coach'&&!d.coachId) return 'Antrenör seçin';
+      if(d.type!=='coach'&&!d.athId) return 'Sporcu seçin';
+      if(!d.licNo) return 'Lisans no girin';
+      if(!d.expiryDate) return 'Geçerlilik tarihi girin';
+      return null;
+    },
   },
   management:{
     label:'Yönetim üyesi',
@@ -2497,6 +3224,26 @@ function openAdd(){
   document.getElementById('modal-ov').classList.add('open');
 }
 
+function openAddFromDash(){
+  const ov=document.getElementById('modal-ov');
+  document.getElementById('modal-title').textContent='Ne eklemek istersiniz?';
+  document.getElementById('modal-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0">
+      <button class="btn btn-primary" style="font-size:15px;padding:12px" onclick="closeModal();openAddSection('athletes')">🏃 Sporcu / Спортсмен</button>
+      <button class="btn btn-primary" style="font-size:15px;padding:12px" onclick="closeModal();openAddSection('coaches')">🧑‍🏫 Antrenör / Тренер</button>
+      <button class="btn btn-primary" style="font-size:15px;padding:12px" onclick="closeModal();openAddSection('licenses')">📋 Lisans / Лицензия</button>
+    </div>`;
+  document.getElementById('modal-save').style.display='none';
+  ov.classList.add('open');
+}
+
+function openAddSection(s){
+  document.getElementById('modal-save').style.display='';
+  const prevCur=cur; cur=s;
+  openAdd();
+  cur=prevCur;
+}
+
 function edit(s,id){
   editId=id;
   const items=load(s);
@@ -2509,58 +3256,218 @@ function edit(s,id){
   document.getElementById('modal-ov').classList.add('open');
 }
 
-function closeModal(){ document.getElementById('modal-ov').classList.remove('open'); editId=null; }
+function closeModal(){ document.getElementById('modal-ov').classList.remove('open'); document.getElementById('modal-save').style.display=''; editId=null; }
 
 function viewAthlete(id){
   const athletes=load('athletes');
   const coaches=load('coaches');
   const a=athletes.find(x=>x.id===id); if(!a) return;
   const co=coaches.find(c=>c.id===a.coachId);
-  const f=(lbl,val,full)=>`<div class="ath-field${full?' full':''}"><div class="lbl">${lbl}</div><div class="val${val?'':' empty'}">${val?esc(val):'belirtilmemiş'}</div></div>`;
+  const isAdmin=document.body.classList.contains('role-admin');
+  const pal=_gPalette[a.gender||''];
+  const [c1,c2]=pal[0];
+  const ini=(a.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+  const ag=ageGroup(a.bdate);
+  const gLabel=a.gender==='E'?'Erkek':a.gender==='K'?'Kadın':'';
+  const f=(lbl,val,full)=>`<div class="apf-field${full?' full':''}"><div class="lbl">${lbl}</div><div class="val${val?'':' empty'}">${val?esc(val):'belirtilmemiş'}</div></div>`;
+  const recs=load('records').filter(r=>r.athId===a.id).sort((x,y)=>(y.date||'').localeCompare(x.date||''));
+
   document.getElementById('ath-body').innerHTML=`
-    <div class="ath-profile-header">
-      <div class="ath-avatar">${esc((a.name||'?')[0].toUpperCase())}</div>
-      <div>
-        <h2>${esc(a.name)}${a.waUrl?` <a href="${esc(a.waUrl)}" target="_blank" title="World Athletics" style="color:var(--accent);font-size:15px;text-decoration:none;vertical-align:middle;margin-left:6px">🌐</a>`:''}</h2>
-        <p>${[a.spec,a.license].filter(Boolean).map(esc).join(' · ')}</p>
+    <div class="apf-hero">
+      ${a.photo
+        ?`<img class="apf-hero-img" src="${a.photo}" alt="">`
+        :`<div style="position:absolute;inset:0;background:linear-gradient(160deg,${c1},${c2} 60%,#020810);display:flex;align-items:center;justify-content:center;font-size:90px;font-weight:900;color:rgba(255,255,255,.12)">${esc(ini)}</div>`}
+      <div class="apf-hero-grad"></div>
+      <div class="apf-hero-info">
+        <div class="apf-hero-name">${esc(a.name)}${a.waUrl?` <a href="${esc(a.waUrl)}" target="_blank" style="color:#FFD700;font-size:14px;text-decoration:none;margin-left:8px" title="World Athletics">🌐</a>`:''}</div>
+        <div class="apf-hero-sub">${[a.spec,a.license].filter(Boolean).map(esc).join(' · ')||'&nbsp;'}</div>
       </div>
+      ${isAdmin?`<button class="apf-hero-edit" onclick="closeAthProfile();edit('athletes','${a.id}')">✏ Düzenle</button>`:''}
     </div>
-    <div class="ath-section">
-      <div class="ath-section-title">Kişisel Bilgiler</div>
-      <div class="ath-grid">
+    <div class="apf-chips">
+      ${ag?`<span class="apf-chip gold">🎂 ${esc(ag)}</span>`:''}
+      ${gLabel?`<span class="apf-chip ${a.gender==='E'?'blue':'pink'}">${a.gender==='E'?'👦':'👧'} ${gLabel}</span>`:''}
+      ${co?`<span class="apf-chip">🏋️ ${esc(co.name)}</span>`:''}
+      ${a.city?`<span class="apf-chip">📍 ${esc(a.city)}</span>`:''}
+      ${a.license?`<span class="apf-chip gold">🪪 ${esc(a.license)}</span>`:''}
+    </div>
+    ${(()=>{
+      const pr=(a.personalRecords||[]).filter(r=>r.discipline||r.result);
+      const combined=[...pr,...recs];
+      if(!combined.length) return '';
+      return `<div class="apf-section">
+        <div class="apf-section-title">🏆 Kişisel Rekorlar</div>
+        ${pr.map(r=>`<div class="apf-rec">
+          <div><div class="apf-rec-disc">${esc(r.discipline)}</div></div>
+          <div style="text-align:right">
+            <div class="apf-rec-val">${esc(r.result)}</div>
+            <div class="apf-rec-meta">${[r.date,r.venue].filter(Boolean).map(esc).join(' · ')}</div>
+          </div>
+        </div>`).join('')}
+        ${recs.map(r=>`<div class="apf-rec">
+          <div><div class="apf-rec-disc">${esc(r.discipline)}</div></div>
+          <div style="text-align:right">
+            <div class="apf-rec-val">${esc(r.result)}</div>
+            <div class="apf-rec-meta">${[r.date,r.location].filter(Boolean).map(esc).join(' · ')}</div>
+          </div>
+        </div>`).join('')}
+      </div>`;
+    })()}
+    <div class="apf-section">
+      <div class="apf-section-title">Kişisel Bilgiler</div>
+      <div class="apf-grid">
         ${f('Doğum Tarihi',a.bdate)}
-        ${f('Yaş Kategorisi',ageGroup(a.bdate))}
-        ${f('Cinsiyet',a.gender==='E'?'Erkek':a.gender==='K'?'Kadın':a.gender)}
-        ${f('Şehir',a.city)}
+        ${f('Cinsiyet',gLabel||a.gender)}
         ${f('Telefon',a.phone)}
         ${f('E-posta',a.email)}
-        ${(a.relPhone||a.relName)?`<div class="ath-field"><div class="lbl">Acil Durum Tel.</div><div class="val">${a.relName?`<span style="color:var(--muted);margin-right:6px">${esc(a.relName)}</span>`:''}${esc(a.relPhone||'')}</div></div>`:''}
-        ${a.ig?`<div class="ath-field"><div class="lbl">Instagram</div><div class="val">${igLink(a.ig)}</div></div>`:''}
-        ${f('Antrenör',co?co.name:'')}
-        ${co&&co.phone?`<div class="ath-field"><div class="lbl">Antrenör Telefonu</div><div class="val">${esc(co.phone)}</div></div>`:''}
-        ${co&&co.spec?`<div class="ath-field"><div class="lbl">Antrenör Uzmanlığı</div><div class="val">${esc(co.spec)}</div></div>`:''}
+        ${(a.relPhone||a.relName)?`<div class="apf-field"><div class="lbl">Acil Durum</div><div class="val">${a.relName?`<span style="color:var(--muted);margin-right:5px">${esc(a.relName)}</span>`:''}${esc(a.relPhone||'')}</div></div>`:''}
+        ${a.ig?`<div class="apf-field"><div class="lbl">Instagram</div><div class="val">${igLink(a.ig)}</div></div>`:''}
+        ${co?`<div class="apf-field"><div class="lbl">Antrenör</div><div class="val">${esc(co.name)}${co.phone?`<span style="color:var(--muted);margin-left:8px;font-size:11px">${esc(co.phone)}</span>`:''}</div></div>`:''}
         ${f('Kulüpteki Görevi',a.clubRole)}
         ${f('Kulüpte Bulunduğu Süre',a.timeInClub)}
         ${f('Adres',a.addr,true)}
-        ${(a.clothSize||a.shoeSize||a.uniformReceived)?`<div class="ath-field"><div class="lbl">👕 Kıyafet</div><div class="val">${[a.clothSize?`Beden: ${esc(a.clothSize)}`:null,a.shoeSize?`Ayakkabı: ${esc(a.shoeSize)}`:null,a.uniformReceived?`Aldı mı: ${a.uniformReceived==='evet'?'✅ Evet':'❌ Hayır'}`:null].filter(Boolean).join(' · ')}</div></div>`:''}
+        ${(a.clothSize||a.shoeSize)?`<div class="apf-field"><div class="lbl">Kıyafet</div><div class="val">${[a.clothSize?`Beden ${esc(a.clothSize)}`:null,a.shoeSize?`Ayak ${esc(a.shoeSize)}`:null,a.uniformReceived?`Aldı: ${a.uniformReceived==='evet'?'✅':'❌'}`:null].filter(Boolean).join(' · ')}</div></div>`:''}
       </div>
     </div>
-    ${a.waUrl?`<div class="ath-section"><div class="ath-section-title">World Athletics</div><div style="padding:10px 0"><a href="${esc(a.waUrl)}" target="_blank" style="color:var(--accent);text-decoration:none">🌐 ${esc(a.waUrl)}</a></div></div>`:''}
-    ${(()=>{const recs=load('records').filter(r=>r.athId===a.id).sort((x,y)=>(y.date||'').localeCompare(x.date||''));if(!recs.length)return '';return `<div class="ath-section"><div class="ath-section-title">🏆 Kişisel Rekorlar</div><div class="ath-grid">${recs.map(r=>`<div class="ath-field"><div class="lbl">${esc(r.discipline)}</div><div class="val" style="color:var(--accent);font-weight:700">${esc(r.result)}<span style="font-size:10px;color:var(--muted);font-weight:400;margin-left:6px">${esc(r.date||'')} ${esc(r.location||'')}</span></div></div>`).join('')}</div></div>`;})()}
-    <div class="ath-section">
-      <div class="ath-section-title">Federasyon Kartı</div>
-      <div class="ath-grid">
-        ${f('Uluslararası En İyi Derecesi',a.intlBest,true)}
-        ${f('Son İki Yılda En İyi Derecesi (Ulusal / Uluslararası)',a.last2Best,true)}
-        ${f('Son İki Yıl İçindeki Rekorları',a.last2Records,true)}
-        ${f('Son İki Yılda Katıldığı Milli Şampiyonalar',a.nationalChamps,true)}
+    ${(a.intlBest||a.last2Best||a.last2Records||a.nationalChamps)?`<div class="apf-section">
+      <div class="apf-section-title">Federasyon Kartı</div>
+      <div class="apf-grid">
+        ${f('Uluslararası En İyi Derece',a.intlBest,true)}
+        ${f('Son 2 Yıl En İyi Derece',a.last2Best,true)}
+        ${f('Son 2 Yıl Rekorları',a.last2Records,true)}
+        ${f('Milli Şampiyonalar',a.nationalChamps,true)}
       </div>
+    </div>`:''}
+    ${a.notes?`<div class="apf-section"><div class="apf-section-title">Notlar</div><div style="font-size:13px;color:var(--muted);line-height:1.7;padding:4px 0">${esc(a.notes)}</div></div>`:''}
+    <div class="apf-section">
+      <div class="apf-section-title">🌐 World Athletics</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="wa-url-input-${a.id}" type="text" value="${esc(a.waUrl||'')}"
+          placeholder="https://worldathletics.org/athletes/..."
+          style="flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:12px;outline:none">
+        <button onclick="window.open('https://worldathletics.org/athletes?query='+encodeURIComponent('${esc(a.name)}'),'_blank')"
+          style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap;transition:background .15s"
+          onmouseover="this.style.background='rgba(255,215,0,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">
+          🔍 WA'da Ara
+        </button>
+        <button onclick="saveWaUrlFromProfile('${a.id}')"
+          style="padding:8px 16px;border-radius:8px;border:1px solid rgba(255,215,0,.3);background:rgba(255,215,0,.1);color:#FFD700;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;transition:background .15s"
+          onmouseover="this.style.background='rgba(255,215,0,.22)'" onmouseout="this.style.background='rgba(255,215,0,.1)'">
+          💾 Kaydet
+        </button>
+        <button onclick="loadFromWa('${a.id}')"
+          style="padding:8px 14px;border-radius:8px;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08);color:#22c55e;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;transition:background .15s"
+          onmouseover="this.style.background='rgba(34,197,94,.2)'" onmouseout="this.style.background='rgba(34,197,94,.08)'">
+          📥 WA'dan Yükle
+        </button>
+      </div>
+      ${a.waUrl?`<div style="margin-top:7px;font-size:11px;color:var(--muted)">Mevcut: <a href="${esc(a.waUrl)}" target="_blank" style="color:var(--accent);text-decoration:none">${esc(a.waUrl)}</a></div>`:'<div style="margin-top:6px;font-size:11px;color:var(--muted)">Henüz eklenmemiş — WA\'da ara, linki kopyala ve yapıştır</div>'}
+      <div id="wa-result-${a.id}"></div>
+      ${a.wa&&(a.wa.personalBests||[]).length?`<div style="margin-top:10px">
+        <div style="font-size:10.5px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">WA Kişisel Rekorlar</div>
+        ${(a.wa.personalBests||[]).map(pb=>`<div class="apf-rec">
+          <div><div class="apf-rec-disc">${esc(pb.discipline||'')}</div></div>
+          <div style="text-align:right"><div class="apf-rec-val">${esc(pb.result||'')}</div><div class="apf-rec-meta">${esc(pb.date||'')}</div></div>
+        </div>`).join('')}
+      </div>`:''}
+      ${a.wa&&(a.wa.competitions||[]).length?`<div style="margin-top:8px">
+        <div style="font-size:10.5px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">WA Yarışmalar</div>
+        ${(a.wa.competitions||[]).slice(0,5).map(c=>`<div style="font-size:12px;color:var(--muted);padding:3px 0">${esc(c.name||'')} — ${esc(c.result||'')}</div>`).join('')}
+      </div>`:''}
     </div>
-    ${a.notes?`<div class="ath-section"><div class="ath-section-title">Notlar</div><div style="font-size:13px;color:var(--muted);line-height:1.6">${esc(a.notes)}</div></div>`:''}
+    ${co?`<div class="apf-section">
+      <div class="apf-section-title">🏋️ Antrenör</div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:background .15s" onclick="closeAthProfile();viewCoach('${co.id}')" onmouseover="this.style.background='rgba(255,215,0,.06)'" onmouseout="this.style.background='rgba(255,255,255,.03)'">
+        ${co.photo
+          ?`<img src="${co.photo}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">`
+          :`<div style="width:44px;height:44px;border-radius:50%;background:var(--accent-d);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--accent);flex-shrink:0">${esc((co.name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase())}</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600">${esc(co.name)}</div>
+          ${co.spec?`<div style="font-size:11px;color:var(--muted)">${esc(co.spec.split(',')[0].trim())}</div>`:''}
+          ${co.phone?`<div style="font-size:11px;color:var(--muted)">📞 ${esc(co.phone)}</div>`:''}
+        </div>
+        <div style="font-size:11px;color:var(--muted)">→</div>
+      </div>
+    </div>`:''}
+    ${isAdmin?`<div style="padding-top:4px"><button class="btn btn-primary" style="width:100%" onclick="closeAthProfile();edit('athletes','${a.id}')">✏ Düzenle</button></div>`:''}
   `;
   document.getElementById('ath-ov').classList.add('open');
 }
 function closeAthProfile(){ document.getElementById('ath-ov').classList.remove('open'); }
+
+function saveWaUrlFromProfile(id){
+  const input=document.getElementById('wa-url-input-'+id);
+  if(!input) return;
+  const url=(input.value||'').trim();
+  const athletes=load('athletes');
+  const idx=athletes.findIndex(a=>a.id===id);
+  if(idx===-1) return;
+  athletes[idx].waUrl=url;
+  save('athletes',athletes);
+  // Update display without closing modal
+  const curEl=input.closest('.apf-section').querySelector('div[style*="Mevcut"], div[style*="Henüz"]');
+  if(curEl){
+    curEl.innerHTML=url
+      ?`Mevcut: <a href="${url}" target="_blank" style="color:var(--accent);text-decoration:none">${url}</a>`
+      :'Henüz eklenmemiş — WA\'da ara, linki kopyala ve yapıştır';
+  }
+  // Show brief confirmation
+  const btn=input.parentElement.querySelectorAll('button')[1];
+  if(btn){ const orig=btn.textContent; btn.textContent='✅ Kaydedildi'; setTimeout(()=>btn.textContent=orig,1500); }
+  renderAthletes();
+}
+
+async function loadFromWa(id){
+  const input=document.getElementById('wa-url-input-'+id);
+  const resultEl=document.getElementById('wa-result-'+id);
+  const url=(input?.value||'').trim();
+  if(!url){alert('Önce WA URL yapıştırın');return;}
+  if(resultEl)resultEl.textContent='⏳ Yükleniyor…';
+  try{
+    const r=await fetch(getApiUrl()+'?action=wa_fetch&url='+encodeURIComponent(url));
+    const data=await r.json();
+    if(!data.ok||!data.parsed){
+      if(resultEl)resultEl.textContent='❌ WA\'dan veri alınamadı. Lütfen verileri elle girin.';
+      return;
+    }
+    const p=data.parsed;
+    const athletes=load('athletes');
+    const idx=athletes.findIndex(a=>a.id===id);
+    let savedFields=[];
+    if(p.bdate&&idx!==-1&&!athletes[idx].bdate){athletes[idx].bdate=p.bdate;savedFields.push('doğum tarihi');}
+    if(savedFields.length)save('athletes',athletes);
+    // Build result using DOM API to avoid innerHTML XSS
+    const wrap=document.createElement('div');
+    wrap.style.cssText='margin-top:10px;padding:10px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;font-size:12px';
+    if(savedFields.length){const s=document.createElement('div');s.style.cssText='color:#22c55e;margin-bottom:6px';s.textContent='✅ Kaydedildi: '+savedFields.join(', ');wrap.appendChild(s);}
+    if(p.bdate){const d=document.createElement('div');d.style.marginBottom='3px';d.textContent='📅 Doğum: '+p.bdate;wrap.appendChild(d);}
+    if(p.spec){const d=document.createElement('div');d.style.marginBottom='3px';d.textContent='🏃 Branş: '+p.spec;wrap.appendChild(d);}
+    if(p.personalBests?.length){
+      const t=document.createElement('div');t.style.cssText='margin-top:8px;font-weight:700;margin-bottom:5px';t.textContent='🏆 Kişisel Rekorlar (WA)';wrap.appendChild(t);
+      const g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:5px';
+      p.personalBests.forEach(pb=>{
+        const c=document.createElement('div');c.style.cssText='background:rgba(255,215,0,.07);border-radius:6px;padding:5px 8px';
+        const ev=document.createElement('div');ev.style.cssText='font-weight:600;font-size:11px';ev.textContent=pb.event||'';c.appendChild(ev);
+        const mk=document.createElement('div');mk.style.cssText='color:var(--accent);font-weight:700;font-size:13px';mk.textContent=pb.mark||'';c.appendChild(mk);
+        if(pb.date){const dt=document.createElement('div');dt.style.cssText='color:var(--muted);font-size:10px';dt.textContent=pb.date;c.appendChild(dt);}
+        g.appendChild(c);
+      });
+      wrap.appendChild(g);
+    }
+    if(p.honours?.length){
+      const t=document.createElement('div');t.style.cssText='margin-top:8px;font-weight:700;margin-bottom:4px';t.textContent='🥇 Başarılar';wrap.appendChild(t);
+      p.honours.slice(0,8).forEach(h=>{
+        const d=document.createElement('div');d.style.cssText='color:var(--muted);font-size:11px;padding:2px 0';
+        d.textContent=[h.year,h.competition,h.event,h.place].filter(Boolean).join(' · ');
+        wrap.appendChild(d);
+      });
+    }
+    if(resultEl){resultEl.textContent='';resultEl.appendChild(wrap);}
+    if(savedFields.length)renderAthletes();
+  }catch(e){
+    if(resultEl)resultEl.textContent='❌ Hata: '+e.message;
+  }
+}
 
 function saveModal(){
   const s=document.getElementById('modal-save').dataset.s;
@@ -3014,7 +3921,7 @@ function updateAgeGroupDisplay(){
 function waSearch(){
   const name=G('fn');
   if(!name){ alert('Ad Soyad alanını doldurun'); return; }
-  window.open('https://worldathletics.org/athletes/search?query='+encodeURIComponent(name),'_blank');
+  window.open('https://worldathletics.org/athletes?query='+encodeURIComponent(name),'_blank');
 }
 
 // ── VIEW COACH ──
@@ -3033,19 +3940,25 @@ function viewCoach(id){
   document.getElementById('modal-save').style.display='none';
   document.getElementById('modal-body').innerHTML=`
     <div style="background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(59,130,246,0.1));border-radius:12px;padding:18px;margin-bottom:16px;display:flex;align-items:center;gap:16px">
-      <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#cc8800);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#000;flex-shrink:0">${ini}</div>
-      <div><h2 style="font-size:18px;font-weight:700;margin-bottom:4px">${esc(c.name)}</h2>
-      <p style="font-size:12px;color:var(--muted)">${specDisplay(c.spec,'bt')}</p>
-      ${c.coachCategory?`<span style="display:inline-block;margin-top:5px;font-size:11px;font-weight:600;color:#FFD700;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:2px 10px">🏅 ${esc(c.coachCategory)}</span>`:''}</div>
+      ${c.photo
+        ?`<img src="${esc(c.photo)}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,215,0,.3)">`
+        :`<div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#cc8800);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#000;flex-shrink:0">${ini}</div>`}
+      <div style="flex:1;min-width:0">
+        <h2 style="font-size:18px;font-weight:700;margin-bottom:4px">${esc(c.name)}${c.ig?` <span title="Instagram" style="font-size:14px;cursor:pointer" onclick="window.open('${c.ig.startsWith('http')?esc(c.ig):'https://instagram.com/'+esc(c.ig.replace('@',''))}','_blank')">📷</span>`:''}${c.waUrl?` <a href="${esc(c.waUrl)}" target="_blank" style="font-size:14px;text-decoration:none" title="World Athletics">🌐</a>`:''}</h2>
+        <p style="font-size:12px;color:var(--muted)">${specDisplay(c.spec,'bt')}${c.city?` · 📍 ${esc(c.city)}`:''}</p>
+        ${c.coachCategory?`<span style="display:inline-block;margin-top:5px;font-size:11px;font-weight:600;color:#FFD700;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:2px 10px">🏅 ${esc(c.coachCategory)}</span>`:''}
+      </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
       ${c.phone?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">Telefon</div><div style="font-size:13px;font-weight:500">${esc(c.phone)}</div></div>`:''}
       ${c.email?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">E-posta</div><div style="font-size:13px;font-weight:500">${esc(c.email)}</div></div>`:''}
-      ${canSeeFinance()&&c.salary?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">Maaş</div><div style="font-size:13px;font-weight:500;color:var(--accent)">${money(c.salary)}</div></div>`:''}
+      ${c.city?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">Şehir</div><div style="font-size:13px;font-weight:500">${esc(c.city)}</div></div>`:''}
+      ${c.ig?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">Instagram</div><div style="font-size:13px;font-weight:500">${igLink(c.ig)}</div></div>`:''}
+      ${c.waUrl?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">World Athletics</div><div style="font-size:13px"><a href="${esc(c.waUrl)}" target="_blank" style="color:var(--accent);text-decoration:none">🌐 WA Profil</a></div></div>`:''}
+      ${canSeeFinance()&&c.salary?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">Maaş</div><div style="font-size:13px;font-weight:500;color:var(--accent)">${Number(c.salary||0).toLocaleString('tr-TR')} ${c.salaryCurrency||'TRY'}</div></div>`:''}
       ${canSeeFinance()&&c.iban?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">IBAN</div><div style="font-size:11px;font-weight:500;font-family:monospace;color:var(--muted)">${esc(c.iban)}</div></div>`:''}
       ${canSeeFinance()&&c.tc?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">T.C.</div><div style="font-size:12px;font-weight:500;font-family:monospace">${esc(c.tc)}</div></div>`:''}
       ${c.hireDate?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">İşe Başlama</div><div style="font-size:13px;font-weight:500">${esc(c.hireDate)}</div></div>`:''}
-      ${c.ig?`<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px"><div style="font-size:10.5px;color:var(--muted)">Instagram</div><div style="font-size:13px;font-weight:500">${igLink(c.ig)}</div></div>`:''}
     </div>
     <h4 style="margin:16px 0 10px;font-size:13px;text-transform:uppercase;color:var(--accent)">Sporcular (${myAthletes.length} kişi)</h4>
     <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">
@@ -3121,9 +4034,81 @@ function renderSeason2026(){
 }
 
 // ── SALARIES ──
+function viewSalaryDetail(type, id){
+  const isCoach = type==='coach';
+  const item = isCoach ? load('coaches').find(c=>c.id===id) : load('athletes').find(a=>a.id===id);
+  if(!item) return;
+  const expenses = load('expenses').filter(e=>e.athId===id);
+  const totalExp = expenses.reduce((s,e)=>s+Number(e.amount||0),0);
+  const baseSal = Number(item.salary||0);
+  const periodic = Number(item.periodicPay||0);
+  const bonus = Number(item.bonus||0);
+  const sign = Number(item.signBonus||0);
+  const totalMonthly = baseSal + periodic + bonus;
+  const status = item.leftDate ? `<span style="color:var(--red)">Ayrıldı (${esc(item.leftDate)})</span>` : `<span style="color:#22c55e">Aktif</span>`;
+  const html=`<div style="padding:4px 0">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+      ${item.photo?`<img src="${esc(item.photo)}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;flex-shrink:0">`:`<div style="width:56px;height:56px;border-radius:50%;background:var(--card-2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${isCoach?'👨‍🏫':'🏃'}</div>`}
+      <div>
+        <div style="font-size:18px;font-weight:700">${esc(item.name)}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">${isCoach?'Antrenör':'Sporcu'} · ${status}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      ${[
+        {lbl:'Maaş / Burs',val:baseSal?money(baseSal):'—',color:'var(--accent)',ico:'💰'},
+        {lbl:'Dönemsel Ödeme/Ay',val:periodic?money(periodic):'—',color:'var(--blue)',ico:'🔄'},
+        {lbl:'Bonus/Ay',val:bonus?money(bonus):'—',color:'#22c55e',ico:'⭐'},
+        {lbl:'İmzalama Ücreti',val:sign?money(sign):'—',color:'var(--orange)',ico:'✍️'},
+        {lbl:'Toplam/Ay',val:totalMonthly?money(totalMonthly):'—',color:'var(--orange)',ico:'📅'},
+        {lbl:'Harcamalar',val:totalExp?money(totalExp):'—',color:'var(--red)',ico:'🧾'},
+      ].map(f=>`<div style="background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${f.ico} ${f.lbl}</div>
+        <div style="font-size:16px;font-weight:700;color:${f.color}">${f.val}</div>
+      </div>`).join('')}
+    </div>
+    ${expenses.length?`<div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Son Harcamalar</div>
+    ${expenses.slice(-5).reverse().map(e=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12.5px">
+      <span style="color:var(--muted)">${esc(e.date||'—')} · ${esc(e.cat||'—')}</span>
+      <span style="color:var(--red);font-weight:600">${money(e.amount)}</span>
+    </div>`).join('')}`:''}
+  </div>`;
+  openModal(`${isCoach?'👨‍🏫':'🏃'} ${esc(item.name.split(' ').slice(0,2).join(' '))} — Finansal Bilgi`,html);
+  document.getElementById('modal-save').style.display='none';
+}
+
+function renderFinSummary(elId){
+  const el=document.getElementById(elId);
+  if(!el||!canSeeFinance()){if(el)el.innerHTML='';return;}
+  const activeAths=load('athletes').filter(a=>!a.leftDate);
+  const activeCoachs=load('coaches').filter(c=>!c.leftDate);
+  const totalAthSal=activeAths.reduce((s,a)=>s+Number(a.salary||0)+Number(a.periodicPay||0),0);
+  const totalCoachSal=activeCoachs.reduce((s,c)=>s+Number(c.salary||0)+Number(c.periodicPay||0),0);
+  const totalBonus=[...activeAths,...activeCoachs].reduce((s,p)=>s+Number(p.bonus||0),0);
+  const totalExp=load('expenses').reduce((s,e)=>s+Number(e.amount||0),0);
+  const totalInv=load('inventory').reduce((s,i)=>s+(Number(i.price||0)*Number(i.qty||1)),0);
+  const grand=totalAthSal+totalCoachSal+totalBonus+totalExp+totalInv;
+  const items=[
+    {ico:'💰',lbl:'Maaşlar/Ay',val:money(totalAthSal+totalCoachSal),color:'var(--accent)'},
+    {ico:'⭐',lbl:'Bonuslar/Ay',val:money(totalBonus),color:'#22c55e'},
+    {ico:'🧾',lbl:'Harcamalar',val:money(totalExp),color:'var(--red)'},
+    {ico:'📦',lbl:'Envanter',val:money(totalInv),color:'var(--blue)'},
+    {ico:'📊',lbl:'Genel Toplam',val:money(grand),color:'var(--orange)'},
+  ];
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+    ${items.map(k=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div style="font-size:20px">${k.ico}</div>
+      <div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">${k.lbl}</div>
+        <div style="font-size:15px;font-weight:700;color:${k.color}">${k.val}</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
 function renderSalaries(){
-  const coaches=load('coaches').sort((a,b)=>(a.name||'').localeCompare(b.name||'','tr'));
-  const athletes=load('athletes').sort((a,b)=>(a.name||'').localeCompare(b.name||'','tr'));
+  const coaches=load('coaches').filter(c=>!c.leftDate).sort((a,b)=>(a.name||'').localeCompare(b.name||'','tr'));
+  const athletes=load('athletes').filter(a=>!a.leftDate).sort((a,b)=>(a.name||'').localeCompare(b.name||'','tr'));
   const coachTb=document.getElementById('sal-coaches-tb');
   const totalCoach=coaches.reduce((s,c)=>s+Number(c.salary||0),0);
   const coachAthCount={};
@@ -3132,13 +4117,17 @@ function renderSalaries(){
   // ── KPI DASHBOARD ──
   const kpiEl=document.getElementById('sal-kpi');
   if(kpiEl){
-    const totalAthSal=athletes.reduce((s,a)=>s+Number(a.salary||0),0);
+    const totalAthSal=athletes.reduce((s,a)=>s+Number(a.salary||0)+Number(a.periodicPay||0),0);
+    const totalAthBonus=athletes.reduce((s,a)=>s+Number(a.bonus||0),0);
+    const totalCoachBonus=coaches.reduce((s,c)=>s+Number(c.bonus||0),0);
+    const totalCoachFull=coaches.reduce((s,c)=>s+Number(c.salary||0)+Number(c.periodicPay||0),0);
+    const totalBonus=totalAthBonus+totalCoachBonus;
     const withSalary=athletes.filter(a=>Number(a.salary||0)>0);
     const noSalary=athletes.filter(a=>!Number(a.salary||0));
     const avgAthSal=withSalary.length?Math.round(totalAthSal/withSalary.length):0;
     const avgCoachSal=coaches.filter(c=>Number(c.salary||0)>0).length
-      ?Math.round(totalCoach/coaches.filter(c=>Number(c.salary||0)>0).length):0;
-    const totalMonthly=totalAthSal+totalCoach;
+      ?Math.round(totalCoachFull/coaches.filter(c=>Number(c.salary||0)>0).length):0;
+    const totalMonthly=totalAthSal+totalCoachFull;
     const totalYearly=totalMonthly*12;
 
     // Top 5 athletes by salary
@@ -3164,12 +4153,25 @@ function renderSalaries(){
                       low:athletes.filter(a=>Number(a.salary||0)>0&&Number(a.salary||0)<=p33).length};
 
     kpiEl.innerHTML=`
+      <!-- SUMMARY BAR -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+        ${[
+          {ico:'🏃',lbl:'Aktif Sporcu',val:athletes.length,color:'var(--blue)'},
+          {ico:'👨‍🏫',lbl:'Aktif Antrenör',val:coaches.length,color:'#a855f7'},
+          {ico:'💰',lbl:'Maaş Fonu/Ay',val:money(totalMonthly),color:'var(--accent)'},
+          {ico:'⭐',lbl:'Bonuslar/Ay',val:money(totalBonus),color:'#22c55e'},
+          {ico:'📊',lbl:'Yıllık Bütçe',val:money(totalYearly),color:'var(--orange)'},
+        ].map(k=>`<div style="text-align:center">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${k.ico} ${k.lbl}</div>
+          <div style="font-size:18px;font-weight:700;color:${k.color}">${k.val}</div>
+        </div>`).join('')}
+      </div>
       <!-- KPI CARDS -->
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:14px">
         ${[
-          {ico:'💰',lbl:'Toplam/Ay',val:money(totalMonthly),sub:'Sporcu + Antrenör',color:'var(--accent)'},
+          {ico:'💰',lbl:'Maaş + Dönemsel/Ay',val:money(totalMonthly),sub:'Sporcu + Antrenör',color:'var(--accent)'},
           {ico:'📅',lbl:'Yıllık Bütçe',val:money(totalYearly),sub:'12 ay × aylık toplam',color:'var(--orange)'},
-          {ico:'🏃',lbl:'Burslu Sporcu',val:withSalary.length,sub:`${noSalary.length} burssuz`,color:'#22c55e'},
+          {ico:'⭐',lbl:'Bonuslar/Ay',val:money(totalBonus),sub:`Sporcu + Antrenör`,color:'#22c55e'},
           {ico:'📊',lbl:'Ort. Sporcu Bursu',val:money(avgAthSal),sub:'Burslu sporcu başına',color:'var(--blue)'},
           {ico:'👨‍🏫',lbl:'Ort. Antrenör',val:money(avgCoachSal),sub:'Maaşlı antrenör başına',color:'#a855f7'},
           {ico:'💵',lbl:'Sporcu Bursu/Ay',val:money(totalAthSal),sub:`${withSalary.length} sporcu`,color:'var(--blue)'},
@@ -3245,64 +4247,78 @@ function renderSalaries(){
       </div>
     `;
   }
+  const totalCoachFull=coaches.reduce((s,c)=>s+Number(c.salary||0)+Number(c.periodicPay||0),0);
+  const totalCoachBonus=coaches.reduce((s,c)=>s+Number(c.bonus||0),0);
   if(!coaches.length){
-    coachTb.innerHTML=`<tr><td colspan="7">${emptyHtml('👨‍🏫','Antrenör yok','Maaş bilgisiyle antrenör ekleyin')}</td></tr>`;
+    coachTb.innerHTML=`<tr><td colspan="10">${emptyHtml('👨‍🏫','Antrenör yok','Maaş bilgisiyle antrenör ekleyin')}</td></tr>`;
     document.getElementById('sal-coaches-summary').innerHTML='';
   } else {
     coachTb.innerHTML=coaches.map((c,i)=>{
       const sal=Number(c.salary||0);
-      const pct=totalCoach>0?((sal/totalCoach)*100).toFixed(1):'0';
+      const periodic=Number(c.periodicPay||0);
+      const bonus=Number(c.bonus||0);
+      const sign=Number(c.signBonus||0);
+      const rowTotal=sal+periodic+bonus;
+      const pct=totalCoachFull>0?(((sal+periodic)/totalCoachFull)*100).toFixed(1):'0';
       const nAth=coachAthCount[c.id]||0;
-      return `<tr>
+      return `<tr style="cursor:pointer" onclick="viewSalaryDetail('coach','${c.id}')">
         <td style="color:var(--muted)">${i+1}</td>
-        <td><strong>${esc(c.name)}</strong></td>
+        <td><strong style="color:var(--accent)">${esc(c.name.split(' ').slice(0,2).join(' '))}</strong></td>
         <td><span class="badge bt" style="font-size:10.5px">${c.spec?c.spec.split(',')[0].trim():'Antrenör'}</span></td>
-        <td style="font-family:monospace;font-size:11px;color:var(--muted)">${c.tc?esc(c.tc):'—'}</td>
-        <td style="font-family:monospace;font-size:10.5px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c.iban)||''}">${esc(c.iban)||'—'}</td>
         <td style="color:var(--accent);font-weight:600">${sal?money(sal):'—'}</td>
+        <td style="color:var(--blue)">${periodic?money(periodic):'—'}</td>
+        <td style="color:#22c55e">${bonus?money(bonus):'—'}</td>
+        <td style="color:var(--orange);font-size:11.5px">${sign?money(sign):'—'}</td>
+        <td style="font-weight:700;color:var(--accent)">${rowTotal?money(rowTotal):'—'}</td>
         <td style="color:var(--muted);text-align:center">${nAth}</td>
         <td style="color:var(--muted)">${pct}%</td>
       </tr>`;
     }).join('');
     document.getElementById('sal-coaches-summary').innerHTML=`
       <div class="exp-sum-item"><div class="lbl">Antrenör Sayısı</div><div class="val">${coaches.length}</div></div>
-      <div class="exp-sum-item"><div class="lbl">Antrenör Fonu/Ay</div><div class="val" style="color:var(--accent)">${money(totalCoach)}</div></div>
-      <div class="exp-sum-item"><div class="lbl">Antrenör Fonu/Yıl</div><div class="val" style="color:var(--orange)">${money(totalCoach*12)}</div></div>`;
+      <div class="exp-sum-item"><div class="lbl">Maaş Fonu/Ay</div><div class="val" style="color:var(--accent)">${money(totalCoachFull)}</div></div>
+      <div class="exp-sum-item"><div class="lbl">Bonuslar/Ay</div><div class="val" style="color:#22c55e">${money(totalCoachBonus)}</div></div>
+      <div class="exp-sum-item"><div class="lbl">Toplam/Yıl</div><div class="val" style="color:var(--orange)">${money(totalCoachFull*12)}</div></div>`;
   }
   const athTb=document.getElementById('sal-athletes-tb');
-  const totalAthSal=athletes.reduce((s,a)=>s+Number(a.salary||0),0);
+  const totalAthSal=athletes.reduce((s,a)=>s+Number(a.salary||0)+Number(a.periodicPay||0),0);
+  const totalAthBonus=athletes.reduce((s,a)=>s+Number(a.bonus||0),0);
   if(!athletes.length){
-    athTb.innerHTML=`<tr><td colspan="7">${emptyHtml('🏃','Sporcu yok','Sporcu ekleyin')}</td></tr>`;
+    athTb.innerHTML=`<tr><td colspan="11">${emptyHtml('🏃','Sporcu yok','Sporcu ekleyin')}</td></tr>`;
     document.getElementById('sal-summary').innerHTML='';
   } else {
     let totalAthMonthly=0;
     const totalAthBudget=athletes.reduce((s,a)=>{
-      const athSal=Number(a.salary||0);
+      const athSal=Number(a.salary||0)+Number(a.periodicPay||0);
       const coach=coaches.find(c=>c.id===a.coachId);
-      const coachSal=coach?Number(coach.salary||0):0;
+      const coachSal=coach?Number(coach.salary||0)+Number(coach.periodicPay||0):0;
       const nAth=coach?coachAthCount[coach.id]||1:1;
       return s+athSal+(coachSal>0?Math.round(coachSal/nAth):0);
     },0);
     athTb.innerHTML=athletes.map((a,i)=>{
       const athSal=Number(a.salary||0);
+      const periodic=Number(a.periodicPay||0);
+      const bonus=Number(a.bonus||0);
+      const sign=Number(a.signBonus||0);
       const coach=coaches.find(c=>c.id===a.coachId);
-      const coachSal=coach?Number(coach.salary||0):0;
+      const coachSal=coach?Number(coach.salary||0)+Number(coach.periodicPay||0):0;
       const nAth=coach?coachAthCount[coach.id]||1:1;
       const coachShare=coachSal>0?Math.round(coachSal/nAth):0;
-      const total=athSal+coachShare;
+      const total=athSal+periodic+bonus+coachShare;
       totalAthMonthly+=total;
       const budgetPct=totalAthBudget>0?((total/totalAthBudget)*100).toFixed(1):'0';
       const tierColor=athSal>0?(athSal>=100000?'#22c55e':athSal>=50000?'var(--orange)':'var(--blue)'):'var(--muted)';
-      return `<tr>
+      return `<tr style="cursor:pointer" onclick="viewSalaryDetail('athlete','${a.id}')">
         <td style="color:var(--muted)">${i+1}</td>
         <td>
-          <strong>${esc(a.name.split(' ').slice(0,2).join(' '))}</strong>
+          <strong style="color:var(--accent)">${esc(a.name.split(' ').slice(0,2).join(' '))}</strong>
           ${a.spec?`<div style="font-size:10px;color:var(--muted)">${esc(a.spec.split(',')[0].trim())}</div>`:''}
         </td>
         <td>${coach?`<span style="font-size:11px">${esc(coach.name.split(' ').slice(0,2).join(' '))}</span>`:'<span style="color:var(--muted)">—</span>'}</td>
-        <td style="font-family:monospace;font-size:10.5px;color:var(--muted)">${a.tc?esc(a.tc):'—'}</td>
-        <td style="font-family:monospace;font-size:10px;color:var(--muted);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(a.iban)||''}">${a.iban?esc(a.iban):'—'}</td>
         <td style="color:${tierColor};font-weight:600">${athSal?money(athSal):'—'}</td>
+        <td style="color:var(--blue)">${periodic?money(periodic):'—'}</td>
+        <td style="color:#22c55e">${bonus?money(bonus):'—'}</td>
+        <td style="color:var(--orange);font-size:11.5px">${sign?money(sign):'—'}</td>
         <td style="color:var(--accent)">${coachShare?money(coachShare):'—'}</td>
         <td style="font-weight:700;color:var(--orange)">${total?money(total):'—'}</td>
         <td style="color:var(--muted);font-size:11.5px">${total?money(total*12):'—'}</td>
@@ -3311,8 +4327,8 @@ function renderSalaries(){
     }).join('');
     document.getElementById('sal-summary').innerHTML=`
       <div class="exp-sum-item"><div class="lbl">Sporcu Sayısı</div><div class="val">${athletes.length}</div></div>
-      <div class="exp-sum-item"><div class="lbl">Burs/Ay</div><div class="val" style="color:var(--blue)">${money(totalAthSal)}</div></div>
-      <div class="exp-sum-item"><div class="lbl">Antrenör Payları/Ay</div><div class="val" style="color:var(--accent)">${money(totalCoach)}</div></div>
+      <div class="exp-sum-item"><div class="lbl">Burs + Dönemsel/Ay</div><div class="val" style="color:var(--blue)">${money(totalAthSal)}</div></div>
+      <div class="exp-sum-item"><div class="lbl">Bonuslar/Ay</div><div class="val" style="color:#22c55e">${money(totalAthBonus)}</div></div>
       <div class="exp-sum-item"><div class="lbl">Sporcular Üzerinden/Ay</div><div class="val" style="color:var(--orange)">${money(totalAthMonthly)}</div></div>
       <div class="exp-sum-item"><div class="lbl">Toplam/Yıl</div><div class="val" style="font-size:20px;font-weight:700;color:var(--accent)">${money(totalAthMonthly*12)}</div></div>`;
   }
@@ -3352,6 +4368,7 @@ function renderSchedule() {
   }
 
   const MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const fmt = d => d ? d.split('-').reverse().join('.') : '—';
   const byMonth = {};
   items.forEach(i => {
     const m = i.dateStart ? parseInt(i.dateStart.split('-')[1], 10) - 1 : -1;
@@ -3359,64 +4376,120 @@ function renderSchedule() {
     byMonth[m].push(i);
   });
 
-  let html = '';
-  if (items.length) {
-    html = `<table style="width:100%;border-collapse:collapse">
-    <thead><tr style="border-bottom:2px solid var(--border);font-size:12px;color:var(--muted);text-transform:uppercase">
-      <th style="padding:8px 18px;text-align:left">Tarih</th>
-      <th style="padding:8px 12px;text-align:left">Yarışma Adı</th>
-      <th style="padding:8px 12px;text-align:left">Yer</th>
-      <th style="padding:8px 12px;text-align:left">Tür</th>
-      <th style="padding:8px 12px;text-align:left">Durum</th>
-      <th style="padding:8px 12px;text-align:left" class="admin-only"></th>
-    </tr></thead><tbody>`;
-  }
+  const today = new Date().toISOString().slice(0,10);
+
+  let html = '<div style="padding:8px 0">';
 
   Object.keys(byMonth).sort((a,b)=>Number(a)-Number(b)).forEach(m => {
     const mIdx = Number(m);
-    html += `<tr><td colspan="6" style="padding:10px 18px 4px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);background:var(--card-2)">${mIdx >= 0 ? MONTHS[mIdx] : '—'}</td></tr>`;
+    html += `<div style="padding:10px 18px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">${mIdx >= 0 ? MONTHS[mIdx] : '—'}</div>`;
+    html += '<div style="display:flex;flex-direction:column;gap:8px;padding:0 12px 12px">';
     byMonth[m].forEach(i => {
       const st = SCHED_STATUS[i.status] || SCHED_STATUS.planned;
-      const fmt = d => d ? d.split('-').reverse().join('.') : '—';
       const dateStr = i.dateEnd && i.dateEnd !== i.dateStart
         ? `${fmt(i.dateStart)} – ${fmt(i.dateEnd)}`
         : fmt(i.dateStart);
-      html += `<tr style="border-bottom:1px solid var(--border);font-size:13px" title="${esc(i.notes||'')}">
-        <td style="padding:9px 18px;white-space:nowrap;color:var(--muted)">${dateStr}</td>
-        <td style="padding:9px 12px;font-weight:600">${esc(i.name)}</td>
-        <td style="padding:9px 12px;color:var(--muted)">${esc(i.location||'—')}</td>
-        <td style="padding:9px 12px;color:var(--muted)">${esc(i.type||'—')}</td>
-        <td style="padding:9px 12px;${st.cls}">${st.label}</td>
-        <td style="padding:9px 12px" class="admin-only"><div style="display:flex;gap:5px">
+      const isPast = i.dateStart && i.dateStart < today;
+      const opacity = isPast && i.status==='planned' ? 'opacity:0.55;' : '';
+      html += `<div style="display:flex;align-items:center;gap:12px;background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;${opacity}transition:box-shadow .15s" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.25)'" onmouseleave="this.style.boxShadow=''">
+        <div style="min-width:70px;font-size:12px;color:var(--muted);white-space:nowrap">${dateStr}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(i.name)}">${esc(i.name)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${i.location?'📍 '+esc(i.location):''}${i.type?' · '+esc(i.type):''}</div>
+          ${i.events&&i.events.length?`<div style="font-size:11px;color:var(--muted);margin-top:3px">${i.events.map(e=>`<span style="background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 5px;margin-right:3px">${e}</span>`).join('')}</div>`:''}
+          ${i.notes?`<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">${esc(i.notes)}</div>`:''}
+        </div>
+        <div style="white-space:nowrap;font-size:12px;padding:3px 9px;border-radius:20px;${st.cls};border:1px solid transparent">${st.label}</div>
+        <div class="admin-only" style="display:flex;gap:5px;flex-shrink:0">
           <button class="btn btn-primary btn-sm" onclick="openCompFromSchedule('${i.id}')" title="Yarışmalar bölümüne ekle">🎽</button>
           <button class="btn btn-secondary btn-sm" onclick="edit('schedule','${i.id}')">✏</button>
           <button class="btn btn-danger btn-sm" onclick="del('schedule','${i.id}')">✕</button>
-        </div></td>
-      </tr>`;
+        </div>
+      </div>`;
     });
+    html += '</div>';
   });
-  if (items.length) html += '</tbody></table>';
+
   if (undated.length) {
-    const fmt = d => d ? d.split('-').reverse().join('.') : '—';
-    html += `<table style="width:100%;border-collapse:collapse;margin-top:12px">
-      <thead><tr><td colspan="6" style="padding:10px 18px 4px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);background:var(--card-2)">TARİHİ BELİRSİZ</td></tr></thead><tbody>`;
+    html += `<div style="padding:10px 18px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)">TARİHİ BELİRSİZ</div>`;
+    html += '<div style="display:flex;flex-direction:column;gap:8px;padding:0 12px 12px">';
     undated.forEach(i => {
       const st = SCHED_STATUS[i.status] || SCHED_STATUS.planned;
-      html += `<tr style="border-bottom:1px solid var(--border);font-size:13px">
-        <td style="padding:9px 18px;white-space:nowrap;color:var(--muted)">—</td>
-        <td style="padding:9px 12px;font-weight:600">${esc(i.name)}</td>
-        <td style="padding:9px 12px;color:var(--muted)">${esc(i.location||'—')}</td>
-        <td style="padding:9px 12px;color:var(--muted)">${esc(i.type||'—')}</td>
-        <td style="padding:9px 12px;${st.cls}">${st.label}</td>
-        <td style="padding:9px 12px" class="admin-only"><div style="display:flex;gap:5px">
+      html += `<div style="display:flex;align-items:center;gap:12px;background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;transition:box-shadow .15s" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.25)'" onmouseleave="this.style.boxShadow=''">
+        <div style="min-width:70px;font-size:12px;color:var(--muted)">—</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:14px">${esc(i.name)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${i.location?'📍 '+esc(i.location):''}${i.type?' · '+esc(i.type):''}</div>
+        </div>
+        <div style="white-space:nowrap;font-size:12px;padding:3px 9px;border-radius:20px;${st.cls};border:1px solid transparent">${st.label}</div>
+        <div class="admin-only" style="display:flex;gap:5px;flex-shrink:0">
           <button class="btn btn-secondary btn-sm" onclick="edit('schedule','${i.id}')">✏</button>
           <button class="btn btn-danger btn-sm" onclick="del('schedule','${i.id}')">✕</button>
-        </div></td>
-      </tr>`;
+        </div>
+      </div>`;
     });
-    html += '</tbody></table>';
+    html += '</div>';
   }
+
+  html += '</div>';
   body.innerHTML = html;
+}
+
+function _fillPartFromSched(val) {
+  const manualRow = document.getElementById('fpart-manual-row');
+  if (!manualRow) return;
+  if (val === '__manual__') {
+    manualRow.style.display = '';
+    V('fpart-date', '');
+  } else if (val) {
+    manualRow.style.display = 'none';
+    const s = load('schedule').find(x => x.id === val);
+    if (s) V('fpart-date', s.dateStart || '');
+  } else {
+    manualRow.style.display = 'none';
+  }
+}
+
+function renderParticipants() {
+  const q = (document.getElementById('part-search')?.value || '').toLowerCase();
+  const athletes = load('athletes');
+  const schedules = load('schedule');
+  const athMap = Object.fromEntries(athletes.map(a => [a.id, a]));
+  const schedMap = Object.fromEntries(schedules.map(s => [s.id, s]));
+
+  let items = load('participants');
+  if (q) items = items.filter(p => {
+    const ath = athMap[p.athId];
+    return (ath?.name||'').toLowerCase().includes(q) ||
+           (p.compName||'').toLowerCase().includes(q) ||
+           (p.event||'').toLowerCase().includes(q);
+  });
+  items.sort((a,b) => (b.date||'') > (a.date||'') ? 1 : -1);
+
+  const tb = document.getElementById('part-body');
+  if (!items.length) {
+    tb.innerHTML = `<tr><td colspan="8" style="padding:40px;text-align:center;color:var(--muted)"><div style="font-size:36px;margin-bottom:8px">📊</div><p>Henüz katılım kaydı yok.<br>«＋ Ekle» ile ekleyin.</p></td></tr>`;
+    return;
+  }
+  const fmt = d => d ? d.split('-').reverse().join('.') : '—';
+  tb.innerHTML = items.map((p, idx) => {
+    const ath = athMap[p.athId];
+    const athName = ath ? esc(ath.name) : `<span style="color:var(--muted)">—</span>`;
+    const compName = esc(p.compName || '—');
+    return `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 12px;color:var(--muted);font-size:12px">${idx+1}</td>
+      <td style="padding:8px 12px;font-weight:600">${athName}</td>
+      <td style="padding:8px 12px">${compName}</td>
+      <td style="padding:8px 12px;white-space:nowrap;color:var(--muted)">${fmt(p.date)}</td>
+      <td style="padding:8px 12px">${esc(p.event||'—')}</td>
+      <td style="padding:8px 12px;font-weight:500">${esc(p.place||'—')}</td>
+      <td style="padding:8px 12px;color:var(--accent)">${esc(p.result||'—')}</td>
+      <td style="padding:8px 12px" class="admin-only"><div style="display:flex;gap:5px">
+        <button class="btn btn-secondary btn-sm" onclick="edit('participants','${p.id}')">✏</button>
+        <button class="btn btn-danger btn-sm" onclick="del('participants','${p.id}')">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
 }
 
 // ── COMPETITIONS ──
@@ -3907,15 +4980,50 @@ function resetDiscs(){
 
 function fillCoachPhone(){
   const id=G('fco');
-  const el=document.getElementById('fcph');
-  if(!el) return;
-  if(!id){ el.value=''; return; }
+  const ph=document.getElementById('fcph');
+  const info=document.getElementById('fco-info');
+  if(!id){ if(ph) ph.value=''; if(info) info.innerHTML=''; return; }
   const coaches=load('coaches');
   const c=coaches.find(x=>x.id===id);
-  el.value=c?c.phone||'':'';
+  if(!c){ if(ph) ph.value=''; if(info) info.innerHTML=''; return; }
+  if(ph) ph.value=c.phone||'';
+  if(info){
+    const parts=[c.spec].filter(Boolean);
+    info.innerHTML=parts.length?`<span style="font-size:11px;color:#22c55e">✓ ${parts.map(p=>`<span style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:1px 8px;margin-right:4px">${esc(p)}</span>`).join('')}</span>`:'';
+  }
+}
+
+function addPersonalRecord(disc,result,date,venue){
+  const list=document.getElementById('prec-list');
+  if(!list) return;
+  const idx=list.children.length;
+  const row=document.createElement('div');
+  row.className='prec-row';
+  row.style.cssText='display:grid;grid-template-columns:1fr 80px 110px 1fr 28px;gap:6px;margin-bottom:6px;align-items:center';
+  row.innerHTML=`
+    <input placeholder="Branş" value="${esc(disc||'')}" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;width:100%">
+    <input placeholder="Derece" value="${esc(result||'')}" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;width:100%">
+    <input type="date" value="${esc(date||'')}" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;width:100%">
+    <input placeholder="Yer" value="${esc(venue||'')}" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:12px;outline:none;width:100%">
+    <button type="button" onclick="this.closest('.prec-row').remove()" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:6px;color:#ef4444;cursor:pointer;padding:4px 7px;font-size:13px">✕</button>`;
+  list.appendChild(row);
+}
+function fillPersonalRecords(recs){
+  const list=document.getElementById('prec-list');
+  if(!list) return;
+  list.innerHTML='';
+  (recs||[]).forEach(r=>addPersonalRecord(r.discipline,r.result,r.date,r.venue));
+}
+function readPersonalRecords(){
+  const rows=document.querySelectorAll('#prec-list .prec-row');
+  return Array.from(rows).map(row=>{
+    const inp=row.querySelectorAll('input');
+    return{discipline:inp[0].value.trim(),result:inp[1].value.trim(),date:inp[2].value.trim(),venue:inp[3].value.trim()};
+  }).filter(r=>r.discipline||r.result);
 }
 
 function renderInventory(){
+  renderFinSummary('inv-fin-summary');
   const items=load('inventory');
   const athletes=load('athletes');
   const cat=document.getElementById('finv-cat')?.value||'';
@@ -4061,6 +5169,14 @@ document.getElementById('left-modal-ov').addEventListener('click',e=>{
 });
 
 // ── LICENSES ──
+function setLicType(type){
+  document.getElementById('lic-type-ath')?.classList.toggle('active',type==='athlete');
+  document.getElementById('lic-type-coa')?.classList.toggle('active',type==='coach');
+  const athRow=document.getElementById('lic-ath-row');
+  const coaRow=document.getElementById('lic-coa-row');
+  if(athRow) athRow.style.display=type==='athlete'?'':'none';
+  if(coaRow) coaRow.style.display=type==='coach'?'':'none';
+}
 function licStatus(expiryDate){
   if(!expiryDate) return {key:'active',label:'✅ Geçerli',cls:'bt'};
   const today=new Date(); today.setHours(0,0,0,0);
@@ -4072,11 +5188,24 @@ function licStatus(expiryDate){
 }
 function renderLicenses(){
   const athletes=load('athletes');
+  const coaches=load('coaches');
   const licenses=load('licenses');
-  const selAth=document.getElementById('lic-filter-ath');
-  if(selAth){const v=selAth.value;selAth.innerHTML='<option value="">Tüm sporcular</option>'+athletes.map(a=>`<option value="${a.id}"${a.id===v?' selected':''}>${esc(a.name)}</option>`).join('');}
+  const selPerson=document.getElementById('lic-filter-ath');
+  if(selPerson){
+    const v=selPerson.value;
+    selPerson.innerHTML='<option value="">Tüm kişiler</option>'
+      +'<optgroup label="Sporcular">'+athletes.map(a=>`<option value="ath:${a.id}"${`ath:${a.id}`===v?' selected':''}>${esc(a.name)}</option>`).join('')+'</optgroup>'
+      +'<optgroup label="Antrenörler">'+coaches.map(c=>`<option value="coa:${c.id}"${`coa:${c.id}`===v?' selected':''}>${esc(c.name)}</option>`).join('')+'</optgroup>';
+  }
   const filterStatus=document.getElementById('lic-filter-status')?.value||'';
-  const filterAth=selAth?.value||'';
+  const filterPerson=selPerson?.value||'';
+  const personName=l=>{
+    if(l.type==='coach'||l.coachId){const c=coaches.find(x=>x.id===l.coachId);return c?esc(c.name):'—';}
+    const a=athletes.find(x=>x.id===l.athId);return a?esc(a.name):'—';
+  };
+  const personBadge=l=>(l.type==='coach'||l.coachId)
+    ?`<span class="badge bt" style="font-size:9px;margin-left:4px">Ant.</span>`
+    :`<span class="badge bo" style="font-size:9px;margin-left:4px">Spc.</span>`;
   const expiring=licenses.filter(l=>{const s=licStatus(l.expiryDate);return s.key==='expiring'||s.key==='expired';});
   const banner=document.getElementById('lic-expiry-banner');
   if(banner){
@@ -4091,17 +5220,19 @@ function renderLicenses(){
     } else { banner.style.display='none'; }
   }
   let filtered=licenses;
-  if(filterAth) filtered=filtered.filter(l=>l.athId===filterAth);
+  if(filterPerson){
+    const [ptype,pid]=filterPerson.split(':');
+    filtered=filtered.filter(l=>ptype==='coa'?(l.coachId===pid||l.type==='coach'&&l.coachId===pid):(l.athId===pid&&l.type!=='coach'));
+  }
   if(filterStatus) filtered=filtered.filter(l=>licStatus(l.expiryDate).key===filterStatus);
-  const sorted=[...filtered].sort((a,b)=>{const na=(athletes.find(x=>x.id===a.athId)?.name||'');const nb=(athletes.find(x=>x.id===b.athId)?.name||'');return na.localeCompare(nb,'tr');});
+  const sorted=[...filtered].sort((a,b)=>personName(a).localeCompare(personName(b),'tr'));
   const tb=document.getElementById('licenses-tb');
-  if(!sorted.length){tb.innerHTML=`<tr><td colspan="9">${emptyHtml('🪪','Lisans yok','İlk lisansı ekleyin')}</td></tr>`;return;}
+  if(!sorted.length){tb.innerHTML=`<tr><td colspan="8">${emptyHtml('🪪','Lisans yok','İlk lisansı ekleyin')}</td></tr>`;return;}
   tb.innerHTML=sorted.map((l,i)=>{
-    const ath=athletes.find(a=>a.id===l.athId);
     const st=licStatus(l.expiryDate);
     return `<tr>
       <td style="color:var(--muted)">${i+1}</td>
-      <td><strong>${ath?esc(ath.name):'—'}</strong></td>
+      <td><strong>${personName(l)}</strong>${personBadge(l)}</td>
       <td style="font-family:monospace;color:var(--accent)">${esc(l.licNo)||'—'}</td>
       <td style="color:var(--muted)">${esc(l.issueDate)||'—'}</td>
       <td style="font-weight:600">${esc(l.expiryDate)||'—'}</td>
@@ -4350,6 +5481,13 @@ function renderManagement(){
 // ═══════════════════════════════════════
 //  STATISTICS
 // ═══════════════════════════════════════
+function _statExpTab(tab){
+  document.getElementById('exp-tab-cat-body').style.display=tab==='cat'?'':'none';
+  document.getElementById('exp-tab-mon-body').style.display=tab==='mon'?'':'none';
+  document.getElementById('exp-tab-cat-btn').className='btn btn-sm '+(tab==='cat'?'btn-primary':'btn-secondary');
+  document.getElementById('exp-tab-mon-btn').className='btn btn-sm '+(tab==='mon'?'btn-primary':'btn-secondary');
+}
+
 function renderStatistics(){
   const athletes=load('athletes');
   const coaches=load('coaches');
@@ -4357,8 +5495,9 @@ function renderStatistics(){
   const competitions=load('competitions');
   const records=load('records');
   const active=athletes.filter(a=>!a.leftDate);
+  const athMap=Object.fromEntries(athletes.map(a=>[a.id,a]));
 
-  const athPts={},athComps={},discPtsMap={};
+  const athPts={},athComps={};
   for(const comp of competitions){
     const roster=migrateRoster(comp.roster);
     const athInComp=new Set();
@@ -4369,14 +5508,12 @@ function renderStatistics(){
           const pts=Number(e.points||0);
           athPts[id]=(athPts[id]||0)+pts;
           if(!athInComp.has(id)){athInComp.add(id);athComps[id]=(athComps[id]||0)+1;}
-          discPtsMap[ev]=(discPtsMap[ev]||0)+pts;
         }
       }
     }
   }
-
   const athExpenses={};
-  for(const e of expenses){ if(e.athleteId) athExpenses[e.athleteId]=(athExpenses[e.athleteId]||0)+Number(e.amount||0); }
+  for(const e of expenses){ if(e.athId) athExpenses[e.athId]=(athExpenses[e.athId]||0)+Number(e.amount||0); }
   const coachAthCount={};
   for(const a of athletes){ if(a.coachId) coachAthCount[a.coachId]=(coachAthCount[a.coachId]||0)+1; }
   const athSalaryShare={};
@@ -4387,7 +5524,6 @@ function renderStatistics(){
     athSalaryShare[a.id]=Number(c.salary||0)*12/(coachAthCount[a.coachId]||1);
   }
   function athInv(id){ return (athExpenses[id]||0)+(athSalaryShare[id]||0); }
-  const totalTeamPts=Object.values(athPts).reduce((s,p)=>s+p,0);
   const totalExp=expenses.reduce((s,e)=>s+Number(e.amount||0),0);
   const men=active.filter(a=>a.gender==='E'||a.gender==='М');
   const women=active.filter(a=>a.gender==='K'||a.gender==='Ж');
@@ -4400,108 +5536,200 @@ function renderStatistics(){
     ${canSeeFinance()?`<div class="stat-card"><div class="stat-icon si-p">💸</div><div class="stat-info"><h3 style="font-size:17px">${money(totalExp)}</h3><p>Toplam harcama</p></div></div>`:''}
     <div class="stat-card"><div class="stat-icon si-b">🏆</div><div class="stat-info"><h3>${records.length}</h3><p>Kişisel rekor</p></div></div>`;
 
+  function barRows(items,colorVar){
+    const max=Math.max(...items.map(x=>x.val),1);
+    return items.map(it=>`
+      <div style="margin-bottom:11px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:12.5px">${it.label}</span>
+          <span style="font-size:12.5px;font-weight:700;color:${colorVar}">${it.display||it.val}</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:6px;overflow:hidden">
+          <div style="width:${(it.val/max*100).toFixed(1)}%;height:100%;background:${colorVar};border-radius:4px"></div>
+        </div>
+      </div>`).join('');
+  }
   function barChart(title,icon,items,colorVar){
     if(!items.length) return `<div class="card"><div class="card-header"><h3>${icon} ${title}</h3></div><div style="padding:32px;text-align:center;color:var(--muted)">Veri yok</div></div>`;
-    const max=Math.max(...items.map(x=>x.val),1);
-    return `<div class="card">
-      <div class="card-header"><h3>${icon} ${title}</h3></div>
-      <div style="padding:16px 20px">${items.map(it=>`
-        <div style="margin-bottom:13px">
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-            <span style="font-size:12.5px">${it.label}</span>
-            <span style="font-size:12.5px;font-weight:700;color:${colorVar}">${it.display||it.val}</span>
-          </div>
-          <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:7px;overflow:hidden">
-            <div style="width:${(it.val/max*100).toFixed(1)}%;height:100%;background:${colorVar};border-radius:4px;transition:width .6s"></div>
-          </div>
-        </div>`).join('')}
-      </div>
-    </div>`;
+    return `<div class="card"><div class="card-header"><h3>${icon} ${title}</h3></div><div style="padding:14px 18px">${barRows(items,colorVar)}</div></div>`;
   }
 
+  // ── 1. Yaş grupları: erkek / kadın / toplam ──
   const AG_LIST=['U14','U16','U18','U20','Senior'];
-  const agCount={};
-  for(const a of active){ const ag=ageGroup(a.bdate)||'Grupsuz'; agCount[ag]=(agCount[ag]||0)+1; }
-  const agItems=[...AG_LIST,'Grupsuz'].filter(k=>agCount[k]).map(k=>({label:k,val:agCount[k]}));
-  document.getElementById('stat-top-pts').innerHTML=barChart('Yaş Grupları','👥',agItems,'var(--blue)');
+  const agM={},agF={},agAll={};
+  for(const a of active){
+    const ag=ageGroup(a.bdate)||'Grupsuz';
+    agAll[ag]=(agAll[ag]||0)+1;
+    if(a.gender==='E'||a.gender==='М') agM[ag]=(agM[ag]||0)+1;
+    else if(a.gender==='K'||a.gender==='Ж') agF[ag]=(agF[ag]||0)+1;
+  }
+  const agKeys=[...AG_LIST,'Grupsuz'].filter(k=>agAll[k]);
+  document.getElementById('stat-top-pts').innerHTML=`<div class="card">
+    <div class="card-header"><h3>👥 Yaş Grupları</h3></div>
+    <div style="padding:10px 16px">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="border-bottom:2px solid var(--border)">
+          <th style="padding:6px 8px;text-align:left;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase">Grup</th>
+          <th style="padding:6px 8px;text-align:center;color:#60a5fa;font-size:11px">♂ Erkek</th>
+          <th style="padding:6px 8px;text-align:center;color:#f472b6;font-size:11px">♀ Kadın</th>
+          <th style="padding:6px 8px;text-align:center;font-size:11px;text-transform:uppercase;color:var(--muted)">Toplam</th>
+        </tr></thead>
+        <tbody>
+          ${agKeys.map(k=>`<tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:8px 8px;font-weight:600">${k}</td>
+            <td style="padding:8px;text-align:center;color:#60a5fa;font-weight:600">${agM[k]||0}</td>
+            <td style="padding:8px;text-align:center;color:#f472b6;font-weight:600">${agF[k]||0}</td>
+            <td style="padding:8px;text-align:center;font-weight:700">${agAll[k]}</td>
+          </tr>`).join('')}
+        </tbody>
+        <tfoot><tr style="border-top:2px solid var(--border)">
+          <td style="padding:8px 8px;font-weight:700;font-size:13px">Toplam</td>
+          <td style="padding:8px;text-align:center;font-weight:700;color:#60a5fa">${men.length}</td>
+          <td style="padding:8px;text-align:center;font-weight:700;color:#f472b6">${women.length}</td>
+          <td style="padding:8px;text-align:center;font-weight:700;color:var(--accent)">${active.length}</td>
+        </tr></tfoot>
+      </table>
+    </div>
+  </div>`;
 
-  const mCount=men.length,wCount=women.length,total=active.length||1;
-  const mPct=Math.round(mCount/total*100),wPct=100-mPct;
-  const r=54,cx=70,cy=70,circ=2*Math.PI*r;
-  const mArc=circ*(mCount/total),wArc=circ*(wCount/total);
-  document.getElementById('stat-roi-card').innerHTML=`<div class="card">
+  // ── 2. Cinsiyet dağılımı — compact ──
+  const mPct=Math.round(men.length/(active.length||1)*100);
+  const wPct=100-mPct;
+  document.getElementById('stat-roi-card').innerHTML=`<div class="card" style="height:100%">
     <div class="card-header"><h3>⚥ Cinsiyet Dağılımı</h3></div>
-    <div style="padding:16px 20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
-      <svg width="140" height="140" viewBox="0 0 140 140">
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="18"/>
-        ${total>0?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#60a5fa" stroke-width="18"
-          stroke-dasharray="${mArc} ${circ}" stroke-dashoffset="${circ*0.25}" stroke-linecap="round"/>
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f472b6" stroke-width="18"
-          stroke-dasharray="${wArc} ${circ}" stroke-dashoffset="${circ*0.25-mArc}" stroke-linecap="round"/>`:''}
-        <text x="${cx}" y="${cy-6}" text-anchor="middle" fill="var(--text)" font-size="20" font-weight="700">${active.length}</text>
-        <text x="${cx}" y="${cy+14}" text-anchor="middle" fill="var(--muted)" font-size="11">sporcu</text>
-      </svg>
-      <div style="flex:1;min-width:120px">
-        <div style="margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <div style="width:12px;height:12px;border-radius:50%;background:#60a5fa;flex-shrink:0"></div>
-            <span style="font-size:13px">♂ Erkekler</span>
-          </div>
-          <div style="font-size:22px;font-weight:700;color:#60a5fa;margin-left:20px">${mCount} <span style="font-size:13px;color:var(--muted)">(${mPct}%)</span></div>
+    <div style="padding:16px 18px">
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div style="flex:1;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.2);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:32px;font-weight:700;color:#60a5fa;line-height:1">${men.length}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">♂ Erkekler</div>
+          <div style="font-size:12px;font-weight:600;color:#60a5fa;margin-top:2px">${mPct}%</div>
         </div>
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <div style="width:12px;height:12px;border-radius:50%;background:#f472b6;flex-shrink:0"></div>
-            <span style="font-size:13px">♀ Kadınlar</span>
-          </div>
-          <div style="font-size:22px;font-weight:700;color:#f472b6;margin-left:20px">${wCount} <span style="font-size:13px;color:var(--muted)">(${wPct}%)</span></div>
+        <div style="flex:1;background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:32px;font-weight:700;color:#f472b6;line-height:1">${women.length}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">♀ Kadınlar</div>
+          <div style="font-size:12px;font-weight:600;color:#f472b6;margin-top:2px">${wPct}%</div>
         </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border-radius:6px;height:10px;overflow:hidden">
+        <div style="height:100%;width:${mPct}%;background:#60a5fa;border-radius:6px 0 0 6px"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px">
+        <span>♂ ${mPct}%</span><span>♀ ${wPct}%</span>
       </div>
     </div>
   </div>`;
 
+  // ── 3. Branşlar ──
   const discAthCount={};
   for(const a of active){
     const specs=(a.spec||'').split(',').map(s=>s.trim()).filter(Boolean);
-    for(const sp of specs){ discAthCount[sp]=(discAthCount[sp]||0)+1; }
+    for(const sp of specs) discAthCount[sp]=(discAthCount[sp]||0)+1;
   }
   const discItems=Object.entries(discAthCount).sort(([,a],[,b])=>b-a).slice(0,8).map(([k,v])=>({label:k,val:v}));
-  document.getElementById('stat-disc-card').innerHTML=barChart('Branşlar (sporcu sayısı)','🎯',discItems,'var(--orange)');
+  document.getElementById('stat-disc-card').innerHTML=barChart('Branşlar (sporcu)','🎯',discItems,'var(--orange)');
 
-  const catExp={};
-  for(const e of expenses){ const c=e.cat||'Diğer'; catExp[c]=(catExp[c]||0)+Number(e.amount||0); }
+  // ── 4. Harcamalar: kategori + aylık tab ──
+  const catExp={},monExp={};
+  const MONTH_NAMES=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  for(const e of expenses){
+    const c=e.cat||'Diğer';
+    catExp[c]=(catExp[c]||0)+Number(e.amount||0);
+    if(e.date){
+      const parts=e.date.split('-');
+      const mIdx=parseInt(parts[1],10)-1;
+      const key=`${parts[0]}-${parts[1]} ${MONTH_NAMES[mIdx]||''}`;
+      monExp[key]=(monExp[key]||0)+Number(e.amount||0);
+    }
+  }
   const catItems=Object.entries(catExp).sort(([,a],[,b])=>b-a).slice(0,7).map(([k,v])=>({label:k,val:v,display:money(v)}));
-  document.getElementById('stat-cost-card').innerHTML=barChart('Kategoriye Göre Harcama','💰',catItems,'var(--red)');
+  const monItems=Object.entries(monExp).sort(([a],[b])=>a>b?1:-1).map(([k,v])=>({label:k,val:v,display:money(v)}));
+  if(canSeeFinance()){
+    const noDataHtml=`<div style="padding:32px;text-align:center;color:var(--muted)">Veri yok</div>`;
+    document.getElementById('stat-cost-card').innerHTML=`<div class="card">
+      <div class="card-header">
+        <h3>💰 Harcamalar</h3>
+        <div style="display:flex;gap:4px">
+          <button id="exp-tab-cat-btn" class="btn btn-primary btn-sm" onclick="_statExpTab('cat')">Kategori</button>
+          <button id="exp-tab-mon-btn" class="btn btn-secondary btn-sm" onclick="_statExpTab('mon')">Aylar</button>
+        </div>
+      </div>
+      <div id="exp-tab-cat-body" style="padding:14px 18px">${catItems.length?barRows(catItems,'var(--red)'):noDataHtml}</div>
+      <div id="exp-tab-mon-body" style="padding:14px 18px;display:none">${monItems.length?barRows(monItems,'var(--red)'):noDataHtml}</div>
+    </div>`;
+  } else {
+    document.getElementById('stat-cost-card').innerHTML='';
+  }
 
-  const recDisc={};
-  for(const rec of records){ const d=rec.discipline||'Diğer'; recDisc[d]=(recDisc[d]||0)+1; }
-  const recItems=Object.entries(recDisc).sort(([,a],[,b])=>b-a).slice(0,6).map(([k,v])=>({label:k,val:v}));
-  const coachLoad=coaches.map(c=>({label:c.name.split(' ').slice(0,2).join(' '),val:coachAthCount[c.id]||0})).filter(x=>x.val>0).sort((a,b)=>b.val-a.val);
+  // ── 5. Rekorlar: branşa göre + yaş grubuna göre ──
+  const recDisc={},recAg={};
+  for(const rec of records){
+    const d=rec.discipline||'Diğer';
+    recDisc[d]=(recDisc[d]||0)+1;
+    const ath=athMap[rec.athId];
+    const ag=ath?(ageGroup(ath.bdate)||'Grupsuz'):'Grupsuz';
+    recAg[ag]=(recAg[ag]||0)+1;
+  }
+  const recDiscItems=Object.entries(recDisc).sort(([,a],[,b])=>b-a).slice(0,6).map(([k,v])=>({label:k,val:v}));
+  const recAgItems=[...AG_LIST,'Grupsuz'].filter(k=>recAg[k]).map(k=>({label:k,val:recAg[k]}));
+
+  // ── 6. Antrenör yükü — detaylı tablo ──
+  const coachRows=coaches.map(c=>{
+    const cAths=active.filter(a=>a.coachId===c.id);
+    const agBrk={};
+    const discBrk={};
+    for(const a of cAths){
+      const ag=ageGroup(a.bdate)||'?';
+      agBrk[ag]=(agBrk[ag]||0)+1;
+      (a.spec||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(sp=>{discBrk[sp]=(discBrk[sp]||0)+1;});
+    }
+    const topDisc=Object.entries(discBrk).sort(([,a],[,b])=>b-a)[0]?.[0]||'—';
+    return {c,total:cAths.length,agBrk,topDisc};
+  }).filter(x=>x.total>0).sort((a,b)=>b.total-a.total);
+
+  const coachTableRows=coachRows.map(({c,total,agBrk,topDisc})=>`<tr style="border-bottom:1px solid var(--border)">
+    <td style="padding:8px 12px;font-weight:600">${esc(c.name.split(' ').slice(0,2).join(' '))}</td>
+    <td style="padding:8px 12px;text-align:center;font-weight:700;color:var(--accent)">${total}</td>
+    ${AG_LIST.map(ag=>`<td style="padding:8px 12px;text-align:center;color:var(--muted)">${agBrk[ag]||'—'}</td>`).join('')}
+    <td style="padding:8px 12px;font-size:12px;color:var(--muted)">${esc(topDisc)}</td>
+  </tr>`).join('');
+
+  // ── 7. En iyi sporcular ──
+  const topAthRows=athletes.filter(a=>athPts[a.id]>0).sort((a,b)=>(athPts[b.id]||0)-(athPts[a.id]||0)).slice(0,10).map((a,i)=>{
+    const inv=athInv(a.id);
+    return `<tr>
+      <td>${['🥇','🥈','🥉'][i]||i+1}</td>
+      <td><strong>${esc(a.name.split(' ').slice(0,2).join(' '))}</strong></td>
+      <td>${ageGroup(a.bdate)?`<span class="badge bb">${ageGroup(a.bdate)}</span>`:'—'}</td>
+      <td style="color:var(--muted)">${athComps[a.id]||0}</td>
+      <td style="font-weight:700;color:var(--orange)">${athPts[a.id]||0}</td>
+      <td style="color:var(--muted)">${inv?money(inv):'—'}</td>
+    </tr>`;
+  }).join('');
 
   document.getElementById('stat-value-card').innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
-      ${barChart('Branşa Göre Rekorlar','🏆',recItems,'var(--accent)')}
-      ${barChart('Antrenör Yükü (sporcu)','👨‍🏫',coachLoad,'var(--purple)')}
+      ${barChart('Branşa Göre Rekorlar','🏆',recDiscItems,'var(--accent)')}
+      ${barChart('Yaş Grubuna Göre Rekorlar','🏅',recAgItems,'var(--blue)')}
+    </div>
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-header"><h3>👨‍🏫 Antrenör Yükü</h3></div>
+      ${coachRows.length?`<div class="table-wrap"><table>
+        <thead><tr style="font-size:11px;text-transform:uppercase;color:var(--muted)">
+          <th style="padding:8px 12px;text-align:left">Antrenör</th>
+          <th style="padding:8px 12px;text-align:center">Toplam</th>
+          ${AG_LIST.map(ag=>`<th style="padding:8px 12px;text-align:center">${ag}</th>`).join('')}
+          <th style="padding:8px 12px;text-align:left">Ağırlıklı Branş</th>
+        </tr></thead>
+        <tbody>${coachTableRows}</tbody>
+      </table></div>`:`<div style="padding:32px;text-align:center;color:var(--muted)">Antrenör verisi yok</div>`}
     </div>
     <div class="card">
       <div class="card-header"><h3>⭐ Yarışma Puanına Göre En İyi Sporcular</h3></div>
       <div class="table-wrap"><table>
         <thead><tr><th>#</th><th>Sporcu</th><th>Kategori</th><th>Yarışma</th><th>Puan</th><th>Yatırım</th></tr></thead>
-        <tbody>${athletes.filter(a=>athPts[a.id]>0).sort((a,b)=>(athPts[b.id]||0)-(athPts[a.id]||0)).slice(0,10).map((a,i)=>{
-          const inv=athInv(a.id);
-          return `<tr>
-            <td>${['🥇','🥈','🥉'][i]||i+1}</td>
-            <td><strong>${esc(a.name.split(' ').slice(0,2).join(' '))}</strong></td>
-            <td>${ageGroup(a.bdate)?`<span class="badge bb">${ageGroup(a.bdate)}</span>`:'—'}</td>
-            <td style="color:var(--muted)">${athComps[a.id]||0}</td>
-            <td style="font-weight:700;color:var(--orange)">${athPts[a.id]||0}</td>
-            <td style="color:var(--muted)">${inv?money(inv):'—'}</td>
-          </tr>`;
-        }).join('')||`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Yarışma verisi yok</td></tr>`}
-        </tbody>
-      </table>
-    </div>
-  </div>`;
+        <tbody>${topAthRows||`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Yarışma verisi yok</td></tr>`}</tbody>
+      </table></div>
+    </div>`;
 }
 
 // Override closeModal to restore save button
@@ -4517,9 +5745,8 @@ closeModal=function(){
 // ═══════════════════════════════════════
 function getApiUrl() {
   const h = window.location.hostname;
-  return (h === 'localhost' || h === '127.0.0.1' || window.location.protocol === 'file:')
-    ? 'https://atletikpro.vercel.app/api/data'
-    : '/api/data';
+  if (h === 'localhost' || h === '127.0.0.1') return `http://localhost:${window.location.port||3000}/api/data`;
+  return '/api/data';
 }
 async function hashPassword(pass) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('atletikpro_salt' + pass));
@@ -4802,8 +6029,8 @@ function deleteUser(id) {
 // ═══════════════════════════════════════
 //  SYNC WITH SERVER (cross-device)
 // ═══════════════════════════════════════
-const SECTIONS = ['coaches','athletes','coordinators','expenses','contacts','documents','social','competitions','inventory','users','management','records','licenses','schedule','tracking','raceplan'];
-const CACHE_VERSION = '2026-05-06-v2';
+const SECTIONS = ['coaches','athletes','coordinators','expenses','contacts','documents','social','competitions','inventory','users','management','records','licenses','schedule','tracking','raceplan','participants','season2026'];
+const CACHE_VERSION = '2026-05-07-v1';
 (function(){
   if(localStorage.getItem('ak_cache_version')!==CACHE_VERSION){
     SECTIONS.forEach(k=>localStorage.removeItem('ak_'+k));
@@ -4949,8 +6176,13 @@ async function initApp() {
   } catch { setSyncIndicator('offline'); }
   _serverSyncDone = true; // now allow pushToServer
 
-  renderDash();
-  render(cur);
+  const hashSection = location.hash.slice(1);
+  if (hashSection && SECTIONS.includes(hashSection)) {
+    go(hashSection);
+  } else {
+    renderDash();
+    render(cur);
+  }
 
   // Periodic sync every 5min (skip when tab is hidden to save function calls)
   setInterval(async () => {
@@ -5155,6 +6387,19 @@ function initLoginAnimation() {
   window._stopLoginAnim = () => { cancelAnimationFrame(animId); renderer.dispose(); };
 }
 initLoginAnimation();
+
+// Populate login screen stats from cached data
+(function(){
+  try {
+    const ath = (JSON.parse(localStorage.getItem('ak_athletes')||'[]')).filter(a=>!a.leftDate).length;
+    const coa = (JSON.parse(localStorage.getItem('ak_coaches')||'[]')).length;
+    const com = (JSON.parse(localStorage.getItem('ak_competitions')||'[]')).length;
+    const set = (id, val) => { const el = document.getElementById(id); if(el && val) el.textContent = val; };
+    set('ls-ath', ath || null);
+    set('ls-coa', coa || null);
+    set('ls-com', com || null);
+  } catch {}
+})();
 </script>
 </body>
 </html>
